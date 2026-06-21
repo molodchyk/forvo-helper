@@ -1,0 +1,132 @@
+@import "../../styles/tokens.css";
+
+body {
+  margin: 0;
+  background: var(--fh-surface);
+  color: var(--fh-ink);
+  font: 14px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.page {
+  width: min(840px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 28px 0 40px;
+}
+
+.page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+h1,
+h2 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+h1 {
+  font-size: 24px;
+}
+
+h2 {
+  font-size: 16px;
+}
+
+.settings-form {
+  display: grid;
+  gap: 16px;
+}
+
+.settings-section {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--fh-border);
+  border-radius: 8px;
+  background: var(--fh-panel);
+}
+
+.check-row,
+.field-row {
+  display: grid;
+  gap: 8px;
+}
+
+.check-row {
+  grid-template-columns: 18px 1fr;
+  align-items: center;
+}
+
+.field-row {
+  grid-template-columns: minmax(180px, 260px) minmax(220px, 1fr);
+  align-items: center;
+}
+
+.field-row--stacked {
+  grid-template-columns: 1fr;
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="url"],
+select,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--fh-border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: #fff;
+  color: var(--fh-ink);
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.button {
+  border: 1px solid var(--fh-border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  background: #fff;
+  color: var(--fh-ink);
+  cursor: pointer;
+}
+
+.button--subtle:hover,
+.button--subtle:focus-visible {
+  border-color: var(--fh-accent);
+}
+
+.save-status {
+  min-height: 22px;
+  margin: 14px 0 0;
+  color: var(--fh-muted);
+}
+
+@media (max-width: 640px) {
+  .page__header,
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .page__header {
+    display: grid;
+  }
+}
+

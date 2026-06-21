@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="optionsTitle">Forvo Helper Options</title>
+    <link rel="stylesheet" href="./options.css">
+  </head>
+  <body>
+    <main class="page">
+      <header class="page__header">
+        <h1 data-i18n="optionsTitle">Forvo Helper Options</h1>
+        <button id="resetButton" class="button button--subtle" type="button" data-i18n="optionsReset">Reset settings</button>
+      </header>
+
+      <form id="optionsForm" class="settings-form">
+        <section class="settings-section" aria-labelledby="recordingHeading">
+          <h2 id="recordingHeading" data-i18n="optionsRecording">Recording</h2>
+
+          <label class="check-row">
+            <input id="hoverEnabled" name="hoverEnabled" type="checkbox">
+            <span data-i18n="optionsHoverEnabled">Start recording after hovering over the record button</span>
+          </label>
+
+          <label class="field-row">
+            <span data-i18n="optionsHoverDelay">Hover delay in milliseconds</span>
+            <input id="hoverDelayMs" name="hoverDelayMs" type="number" min="250" max="5000" step="50">
+          </label>
+
+          <label class="check-row">
+            <input id="gestureEnabled" name="gestureEnabled" type="checkbox">
+            <span data-i18n="optionsGestureEnabled">Start recording after circling the record button</span>
+          </label>
+
+          <label class="check-row">
+            <input id="pageHotkeyEnabled" name="pageHotkeyEnabled" type="checkbox">
+            <span data-i18n="optionsPageHotkeyEnabled">Use a page hotkey while Forvo is focused</span>
+          </label>
+
+          <label class="field-row">
+            <span data-i18n="optionsHotkey">Page hotkey</span>
+            <input id="hotkey" name="hotkey" type="text" autocomplete="off" spellcheck="false">
+          </label>
+        </section>
+
+        <section class="settings-section" aria-labelledby="lookupHeading">
+          <h2 id="lookupHeading" data-i18n="optionsLookup">Lookup</h2>
+
+          <label class="check-row">
+            <input id="autoGorohLookup" name="autoGorohLookup" type="checkbox">
+            <span data-i18n="optionsAutoLookup">Open Goroh when a Forvo word is detected</span>
+          </label>
+
+          <label class="field-row">
+            <span data-i18n="optionsGorohMode">Goroh lookup mode</span>
+            <select id="gorohLookupMode" name="gorohLookupMode">
+              <option value="direct-url" data-i18n="optionsGorohModeUrl">Direct result URL</option>
+              <option value="search-field" data-i18n="optionsGorohModeSearch">Search field submit</option>
+            </select>
+          </label>
+
+          <label class="check-row">
+            <input id="focusLookupTabs" name="focusLookupTabs" type="checkbox">
+            <span data-i18n="optionsFocusLookup">Focus lookup tabs when opened</span>
+          </label>
+
+          <label class="check-row">
+            <input id="chatGptFallbackEnabled" name="chatGptFallbackEnabled" type="checkbox">
+            <span data-i18n="optionsChatGptFallback">Open ChatGPT when Goroh has no stress mark</span>
+          </label>
+
+          <label class="field-row">
+            <span data-i18n="optionsChatGptUrl">ChatGPT URL</span>
+            <input id="chatGptUrl" name="chatGptUrl" type="url">
+          </label>
+
+          <label class="field-row field-row--stacked">
+            <span data-i18n="optionsChatGptPrompt">ChatGPT prompt template</span>
+            <textarea id="chatGptPromptTemplate" name="chatGptPromptTemplate" rows="4"></textarea>
+          </label>
+
+          <label class="check-row">
+            <input id="chatGptAutoSubmit" name="chatGptAutoSubmit" type="checkbox">
+            <span data-i18n="optionsChatGptAutoSubmit">Submit ChatGPT prompt automatically</span>
+          </label>
+        </section>
+      </form>
+
+      <p id="saveStatus" class="save-status" role="status" aria-live="polite"></p>
+    </main>
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>
+

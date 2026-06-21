@@ -1,0 +1,83 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extensionName__",
+  "short_name": "__MSG_extensionShortName__",
+  "version": "0.1.0",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "en",
+  "icons": {
+    "16": "assets/icon-16.png",
+    "32": "assets/icon-32.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
+  },
+  "action": {
+    "default_title": "__MSG_extensionName__",
+    "default_popup": "app/popup/popup.html",
+    "default_icon": {
+      "16": "assets/icon-16.png",
+      "32": "assets/icon-32.png"
+    }
+  },
+  "background": {
+    "service_worker": "app/background/index.js",
+    "type": "module"
+  },
+  "commands": {
+    "trigger-recording": {
+      "suggested_key": {
+        "default": "Alt+Shift+R"
+      },
+      "description": "__MSG_commandTriggerRecording__"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://forvo.com/word-record/*",
+        "https://*.forvo.com/word-record/*"
+      ],
+      "js": [
+        "app/content/forvo.js"
+      ],
+      "css": [
+        "app/content/forvo.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://goroh.pp.ua/*",
+        "https://www.goroh.pp.ua/*"
+      ],
+      "js": [
+        "app/content/goroh.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*"
+      ],
+      "js": [
+        "app/content/chatgpt.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_page": "app/options/options.html",
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://forvo.com/*",
+    "https://*.forvo.com/*",
+    "https://goroh.pp.ua/*",
+    "https://www.goroh.pp.ua/*",
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*"
+  ]
+}
+

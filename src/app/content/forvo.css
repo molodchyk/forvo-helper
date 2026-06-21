@@ -1,0 +1,25 @@
+.forvo-helper-record-ring {
+  --forvo-helper-progress: 0;
+  position: fixed;
+  z-index: 2147483647;
+  border-radius: 999px;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, transparent 58%, rgba(255, 255, 255, 0.88) 59%, rgba(255, 255, 255, 0.88) 68%, transparent 69%),
+    conic-gradient(#2563eb calc(var(--forvo-helper-progress) * 1turn), rgba(37, 99, 235, 0.16) 0);
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.22), 0 8px 22px rgba(15, 23, 42, 0.18);
+  transition: opacity 140ms ease, box-shadow 140ms ease;
+}
+
+.forvo-helper-record-ring[hidden] {
+  display: none;
+}
+
+.forvo-helper-record-ring.is-ok {
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.38), 0 8px 22px rgba(15, 23, 42, 0.18);
+}
+
+.forvo-helper-record-ring.is-error {
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.38), 0 8px 22px rgba(15, 23, 42, 0.18);
+}
+

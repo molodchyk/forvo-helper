@@ -1,0 +1,99 @@
+import { DEFAULT_SETTINGS, normalizeSettings } from "../core/settings.js";
+import { applyI18n, messageOrDefault } from "../../../platform/chrome/i18n.js";
+import { readSettings, resetSettings, writeSettings } from "../../../platform/chrome/storage.js";
+
+export async function startOptions(doc = document) {
+  applyI18n(doc);
+
+  const form = doc.getElementById("optionsForm");
+  const resetButton = doc.getElementById("resetButton");
+  const saveStatus = doc.getElementById("saveStatus");
+  let settings = await readSettings();
+
+  renderSettings(doc, settings);
+  form.addEventListener("input", () => {
+    settings = readSettingsFromForm(doc, settings);
+    saveSettings(settings, saveStatus);
+  });
+  form.addEventListener("change", () => {
+    settings = readSettingsFromForm(doc, settings);
+    saveSettings(settings, saveStatus);
+  });
+  resetButton.addEventListener("click", async () => {
+    settings = await resetSettings();
+    renderSettings(doc, settings);
+    showSaved(saveStatus);
+  });
+}
+
+function renderSettings(doc, settings) {
+  const normalized = normalizeSettings(settings);
+  setChecked(doc, "hoverEnabled", normalized.recording.hoverEnabled);
+  setValue(doc, "hoverDelayMs", normalized.recording.hoverDelayMs);
+  setChecked(doc, "gestureEnabled", normalized.recording.gestureEnabled);
+  setChecked(doc, "pageHotkeyEnabled", normalized.recording.pageHotkeyEnabled);
+  setValue(doc, "hotkey", normalized.recording.hotkey);
+  setChecked(doc, "autoGorohLookup", normalized.lookup.autoGorohLookup);
+  setValue(doc, "gorohLookupMode", normalized.lookup.gorohLookupMode);
+  setChecked(doc, "focusLookupTabs", normalized.lookup.focusLookupTabs);
+  setChecked(doc, "chatGptFallbackEnabled", normalized.lookup.chatGptFallbackEnabled);
+  setValue(doc, "chatGptUrl", normalized.lookup.chatGptUrl);
+  setValue(doc, "chatGptPromptTemplate", normalized.lookup.chatGptPromptTemplate);
+  setChecked(doc, "chatGptAutoSubmit", normalized.lookup.chatGptAutoSubmit);
+}
+
+function readSettingsFromForm(doc, previousSettings) {
+  return normalizeSettings({
+    ...previousSettings,
+    recording: {
+      hoverEnabled: getChecked(doc, "hoverEnabled"),
+      hoverDelayMs: getValue(doc, "hoverDelayMs"),
+      gestureEnabled: getChecked(doc, "gestureEnabled"),
+      pageHotkeyEnabled: getChecked(doc, "pageHotkeyEnabled"),
+      hotkey: getValue(doc, "hotkey"),
+      showRecordRing: true
+    },
+    lookup: {
+      ...DEFAULT_SETTINGS.lookup,
+      autoGorohLookup: getChecked(doc, "autoGorohLookup"),
+      gorohLookupMode: getValue(doc, "gorohLookupMode"),
+      focusLookupTabs: getChecked(doc, "focusLookupTabs"),
+      chatGptFallbackEnabled: getChecked(doc, "chatGptFallbackEnabled"),
+      chatGptUrl: getValue(doc, "chatGptUrl"),
+      chatGptPromptTemplate: getValue(doc, "chatGptPromptTemplate"),
+      chatGptAutoSubmit: getChecked(doc, "chatGptAutoSubmit")
+    }
+  });
+}
+
+async function saveSettings(settings, saveStatus) {
+  await writeSettings(settings);
+  showSaved(saveStatus);
+}
+
+function showSaved(saveStatus) {
+  saveStatus.textContent = messageOrDefault("optionsSaved", "Saved");
+  clearTimeout(showSaved.timeoutId);
+  showSaved.timeoutId = setTimeout(() => {
+    saveStatus.textContent = "";
+  }, 1200);
+}
+
+function getValue(doc, id) {
+  return doc.getElementById(id)?.value || "";
+}
+
+function setValue(doc, id, value) {
+  const element = doc.getElementById(id);
+  if (element) element.value = value;
+}
+
+function getChecked(doc, id) {
+  return Boolean(doc.getElementById(id)?.checked);
+}
+
+function setChecked(doc, id, value) {
+  const element = doc.getElementById(id);
+  if (element) element.checked = Boolean(value);
+}
+

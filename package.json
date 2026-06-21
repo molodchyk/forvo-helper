@@ -1,0 +1,26 @@
+{
+  "name": "forvo-helper",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Browser extension that helps Forvo contributors record without mouse clicks and check Ukrainian stress via Goroh.",
+  "scripts": {
+    "generate:media": "node scripts/generate-media.mjs",
+    "build": "npm run generate:media && node scripts/build-extension.mjs",
+    "audit:file-sizes": "node scripts/audit-file-sizes.mjs",
+    "audit:folder-density": "node scripts/audit-folder-density.mjs",
+    "verify:manifest": "node scripts/verify-manifest.mjs",
+    "verify:imports": "node scripts/verify-imports.mjs",
+    "verify:locales": "node scripts/verify-locales.mjs",
+    "verify:package": "node scripts/verify-package.mjs",
+    "verify": "npm run build && npm test && npm run audit:file-sizes && npm run audit:folder-density && npm run verify:manifest && npm run verify:imports && npm run verify:locales && npm run verify:package",
+    "package": "npm run build && node scripts/package-extension.mjs",
+    "release:check": "npm run verify && npm run package",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.5"
+  },
+  "license": "GPL-3.0-only"
+}
+

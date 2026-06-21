@@ -1,0 +1,106 @@
+{
+  "extensionName": {
+    "message": "Forvo Helper",
+    "description": "Extension name."
+  },
+  "extensionShortName": {
+    "message": "Forvo Helper",
+    "description": "Short extension name."
+  },
+  "extensionDescription": {
+    "message": "Start Forvo recordings without mouse clicks and check Ukrainian word stress through Goroh.",
+    "description": "Manifest description."
+  },
+  "commandTriggerRecording": {
+    "message": "Start the Forvo recording button on the current tab",
+    "description": "Keyboard command description."
+  },
+  "popupTitle": {
+    "message": "Forvo Helper"
+  },
+  "popupCurrentWord": {
+    "message": "Current word"
+  },
+  "popupNoWord": {
+    "message": "No Forvo word detected"
+  },
+  "popupStress": {
+    "message": "Stress"
+  },
+  "popupStressUnknown": {
+    "message": "Not checked yet"
+  },
+  "popupStressFound": {
+    "message": "Found on Goroh"
+  },
+  "popupStressMissing": {
+    "message": "Missing on Goroh"
+  },
+  "popupOpenOptions": {
+    "message": "Options"
+  },
+  "popupOpenGoroh": {
+    "message": "Open Goroh"
+  },
+  "popupStartRecording": {
+    "message": "Start recording"
+  },
+  "optionsTitle": {
+    "message": "Forvo Helper Options"
+  },
+  "optionsRecording": {
+    "message": "Recording"
+  },
+  "optionsLookup": {
+    "message": "Lookup"
+  },
+  "optionsHoverEnabled": {
+    "message": "Start recording after hovering over the record button"
+  },
+  "optionsHoverDelay": {
+    "message": "Hover delay in milliseconds"
+  },
+  "optionsGestureEnabled": {
+    "message": "Start recording after circling the record button"
+  },
+  "optionsPageHotkeyEnabled": {
+    "message": "Use a page hotkey while Forvo is focused"
+  },
+  "optionsHotkey": {
+    "message": "Page hotkey"
+  },
+  "optionsAutoLookup": {
+    "message": "Open Goroh when a Forvo word is detected"
+  },
+  "optionsGorohMode": {
+    "message": "Goroh lookup mode"
+  },
+  "optionsGorohModeUrl": {
+    "message": "Direct result URL"
+  },
+  "optionsGorohModeSearch": {
+    "message": "Search field submit"
+  },
+  "optionsFocusLookup": {
+    "message": "Focus lookup tabs when opened"
+  },
+  "optionsChatGptFallback": {
+    "message": "Open ChatGPT when Goroh has no stress mark"
+  },
+  "optionsChatGptUrl": {
+    "message": "ChatGPT URL"
+  },
+  "optionsChatGptPrompt": {
+    "message": "ChatGPT prompt template"
+  },
+  "optionsChatGptAutoSubmit": {
+    "message": "Submit ChatGPT prompt automatically"
+  },
+  "optionsReset": {
+    "message": "Reset settings"
+  },
+  "optionsSaved": {
+    "message": "Saved"
+  }
+}
+

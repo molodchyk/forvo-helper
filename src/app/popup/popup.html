@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="popupTitle">Forvo Helper</title>
+    <link rel="stylesheet" href="./popup.css">
+  </head>
+  <body>
+    <main class="popup">
+      <header class="popup__header">
+        <h1 data-i18n="popupTitle">Forvo Helper</h1>
+        <button id="optionsButton" class="icon-button" type="button" data-i18n-title="popupOpenOptions" title="Options">⚙</button>
+      </header>
+
+      <dl class="status-list">
+        <div>
+          <dt data-i18n="popupCurrentWord">Current word</dt>
+          <dd id="currentWord" data-i18n="popupNoWord">No Forvo word detected</dd>
+        </div>
+        <div>
+          <dt data-i18n="popupStress">Stress</dt>
+          <dd id="stressState" data-i18n="popupStressUnknown">Not checked yet</dd>
+        </div>
+      </dl>
+
+      <div class="actions">
+        <button id="recordButton" class="button button--primary" type="button" data-i18n="popupStartRecording">Start recording</button>
+        <button id="gorohButton" class="button" type="button" data-i18n="popupOpenGoroh">Open Goroh</button>
+      </div>
+    </main>
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>
+
