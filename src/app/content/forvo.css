@@ -47,19 +47,19 @@
 }
 
 .forvo-helper-stress-panel {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(64px, 1fr) auto minmax(64px, 1fr);
   align-items: center;
-  justify-content: center;
-  gap: 12px;
+  column-gap: 12px;
   width: min(100%, 610px);
   margin: 14px auto 0;
-  padding: 10px 14px;
+  padding: 10px 16px;
   border: 1px solid rgba(47, 143, 91, 0.28);
   border-radius: 8px;
   box-sizing: border-box;
   background: rgba(233, 248, 240, 0.92);
   color: #173825;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  font-family: "Segoe UI", Arial, sans-serif;
   text-align: center;
   text-shadow: none;
 }
@@ -72,37 +72,22 @@
   color: #2f6f49;
   font-size: 1.2rem;
   font-weight: 500;
+  justify-self: end;
 }
 
 .forvo-helper-stress-panel__value {
   font-size: 1.9rem;
-  font-weight: 600;
+  font-weight: 500;
+  justify-self: center;
   letter-spacing: 0;
-  line-height: 1.25;
-  padding-top: 0.15em;
-}
-
-.forvo-helper-stress-panel__stressed-letter {
-  position: relative;
-  display: inline-block;
-}
-
-.forvo-helper-stress-panel__stressed-letter::after {
-  content: "";
-  position: absolute;
-  top: -0.16em;
-  left: 58%;
-  width: 0.38em;
-  height: 0.08em;
-  border-radius: 999px;
-  background: currentColor;
-  transform: translateX(-50%) rotate(-58deg);
+  line-height: 1.2;
 }
 
 .forvo-helper-stress-panel__link {
   color: #00f;
   font-size: 1.2rem;
   font-weight: 600;
+  justify-self: start;
   text-decoration: none;
 }
 
@@ -114,7 +99,13 @@
 
 @media (max-width: 640px) {
   .forvo-helper-stress-panel {
-    display: grid;
+    grid-template-columns: 1fr;
     gap: 4px;
+  }
+
+  .forvo-helper-stress-panel__label,
+  .forvo-helper-stress-panel__value,
+  .forvo-helper-stress-panel__link {
+    justify-self: center;
   }
 }

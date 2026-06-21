@@ -26,7 +26,7 @@ export function createStressPanel() {
 
       ensureMounted(panel);
       panel.dataset.state = result.stressState || "unknown";
-      renderStressText(value, text);
+      value.textContent = text;
 
       if (result.gorohUrl) {
         link.href = result.gorohUrl;
@@ -88,22 +88,6 @@ export function matchDisplayCase(text, reference) {
   }
 
   return source;
-}
-
-function renderStressText(element, text) {
-  element.textContent = "";
-
-  for (const part of createStressTextParts(text)) {
-    if (!part.stressed) {
-      element.append(document.createTextNode(part.text));
-      continue;
-    }
-
-    const letter = document.createElement("span");
-    letter.className = "forvo-helper-stress-panel__stressed-letter";
-    letter.textContent = part.text;
-    element.append(letter);
-  }
 }
 
 function splitClusters(text) {
