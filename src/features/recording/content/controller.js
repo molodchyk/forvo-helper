@@ -5,6 +5,7 @@ import { createCircleGestureState, gestureProgress, updateCircleGesture } from "
 import { activateRecordButton } from "./activator.js";
 import { createRecordOverlay } from "./overlay.js";
 import { findRecordButton } from "./recordButtonFinder.js";
+import { getRecordActivationPoint } from "./recordGeometry.js";
 import { onSettingsChanged, readSettings } from "../../../platform/chrome/storage.js";
 
 export function startForvoController() {
@@ -166,11 +167,7 @@ class ForvoController {
       return;
     }
 
-    const rect = this.target.getBoundingClientRect();
-    const center = {
-      x: rect.left + rect.width / 2,
-      y: rect.top + rect.height / 2
-    };
+    const center = getRecordActivationPoint(this.target);
 
     if (!this.gestureState) {
       this.gestureState = createCircleGestureState(center);
@@ -223,4 +220,3 @@ function extractWordFromPage() {
 
   return candidates[0] || "";
 }
-

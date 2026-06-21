@@ -42,8 +42,16 @@ for (const permission of manifest.permissions || []) {
 }
 
 const listing = await readFile(path.join(root, "store-listing/chrome-web-store/listing/en.md"), "utf8");
-if (!listing.includes("https://github.com/molodchyk/forvo-helper") || !listing.includes("GPL-3.0")) {
-  failures.push("Store listing must include GitHub URL and GPL-3.0 license footer.");
+if (/^\s*#/m.test(listing) || /^\s*[-*]\s/m.test(listing) || /\[[^\]]+\]\([^)]+\)/.test(listing)) {
+  failures.push("Store listing must be direct-copy description text without markdown.");
+}
+
+if (/Forvo Helper/i.test(listing)) {
+  failures.push("Store listing direct-copy text must not include the extension name.");
+}
+
+if (/https?:\/\//i.test(listing) || /GPL-3\.0/i.test(listing)) {
+  failures.push("Store listing direct-copy text must not include source/license footer text.");
 }
 
 if (existsSync(path.join(root, "dist"))) {
@@ -94,4 +102,3 @@ async function collectFiles(relativePath) {
   }
   return nested;
 }
-

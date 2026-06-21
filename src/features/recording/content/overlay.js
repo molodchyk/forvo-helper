@@ -1,3 +1,5 @@
+import { getRecordOverlayBox } from "./recordGeometry.js";
+
 export function createRecordOverlay() {
   const ring = document.createElement("div");
   ring.className = "forvo-helper-record-ring";
@@ -11,7 +13,7 @@ export function createRecordOverlay() {
         return;
       }
 
-      const rect = target.getBoundingClientRect();
+      const rect = getRecordOverlayBox(target);
       const size = Math.max(rect.width, rect.height) + 28;
 
       ring.style.width = `${size}px`;
@@ -36,4 +38,3 @@ export function createRecordOverlay() {
     }
   };
 }
-

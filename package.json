@@ -1,6 +1,6 @@
 {
   "name": "forvo-helper",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "Browser extension that helps Forvo contributors record without mouse clicks and check Ukrainian stress via Goroh.",
@@ -23,4 +23,3 @@
   },
   "license": "GPL-3.0-only"
 }
-

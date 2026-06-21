@@ -1,3 +1,5 @@
+import { getRecordActivationPoint, isForvoCanvasRecorder } from "./recordGeometry.js";
+
 export function activateRecordButton(element) {
   if (!element) {
     return false;
@@ -6,15 +8,22 @@ export function activateRecordButton(element) {
   element.scrollIntoView({ block: "center", inline: "center", behavior: "instant" });
   element.focus?.({ preventScroll: true });
 
-  const rect = element.getBoundingClientRect();
-  const x = rect.left + rect.width / 2;
-  const y = rect.top + rect.height / 2;
+  const point = getRecordActivationPoint(element);
+  const x = point.x;
+  const y = point.y;
 
+  dispatchMouseEvent(element, "mouseover", x, y);
+  dispatchMouseEvent(element, "mousemove", x, y);
   dispatchPointerEvent(element, "pointerdown", x, y);
   dispatchMouseEvent(element, "mousedown", x, y);
   dispatchPointerEvent(element, "pointerup", x, y);
   dispatchMouseEvent(element, "mouseup", x, y);
-  element.click?.();
+
+  if (isForvoCanvasRecorder(element)) {
+    dispatchMouseEvent(element, "click", x, y);
+  } else if (element instanceof HTMLElement) {
+    element.click();
+  }
 
   return true;
 }
@@ -31,7 +40,10 @@ function dispatchPointerEvent(element, type, clientX, clientY) {
     pointerType: "mouse",
     isPrimary: true,
     clientX,
-    clientY
+    clientY,
+    screenX: clientX,
+    screenY: clientY,
+    composed: true
   }));
 }
 
@@ -42,7 +54,10 @@ function dispatchMouseEvent(element, type, clientX, clientY) {
     button: 0,
     buttons: type.endsWith("down") ? 1 : 0,
     clientX,
-    clientY
+    clientY,
+    screenX: clientX,
+    screenY: clientY,
+    detail: type === "click" ? 1 : 0,
+    composed: true
   }));
 }
-

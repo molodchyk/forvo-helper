@@ -17,6 +17,12 @@ const RECORD_TEXT_PATTERN = /(press\s+to\s+record|record|recorder|microphone|mic
 const NEGATIVE_TEXT_PATTERN = /(send\s+pronunciation|search|language|blog|users|categories)/i;
 
 export function findRecordButton(doc = document) {
+  const forvoCanvas = findForvoCanvasRecorder(doc);
+
+  if (forvoCanvas) {
+    return forvoCanvas;
+  }
+
   const candidates = new Set();
 
   for (const selector of SELECTORS) {
@@ -37,6 +43,17 @@ export function findRecordButton(doc = document) {
     .sort((a, b) => b.score - a.score);
 
   return scored[0]?.element || null;
+}
+
+function findForvoCanvasRecorder(doc) {
+  const canvas = doc.querySelector("canvas#canvas-recorder");
+
+  if (canvas && isVisible(canvas)) {
+    return canvas;
+  }
+
+  const fallback = doc.querySelector("#animation_container canvas[id*='recorder' i], #recorder canvas[id*='recorder' i]");
+  return fallback && isVisible(fallback) ? fallback : null;
 }
 
 function scoreCandidate(element, doc) {
@@ -142,4 +159,3 @@ function isVisible(element) {
     && style.visibility !== "hidden"
     && Number(style.opacity || 1) > 0.05;
 }
-
