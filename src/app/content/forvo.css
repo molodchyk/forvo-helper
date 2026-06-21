@@ -45,3 +45,57 @@
 .forvo-helper-record-ring.is-fading {
   opacity: 0;
 }
+
+.forvo-helper-stress-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: min(100%, 610px);
+  margin: 14px auto 0;
+  padding: 10px 14px;
+  border: 1px solid rgba(47, 143, 91, 0.28);
+  border-radius: 8px;
+  box-sizing: border-box;
+  background: rgba(233, 248, 240, 0.92);
+  color: #173825;
+  font-family: cabinetGrotesk, Arial, sans-serif;
+  text-align: center;
+}
+
+.forvo-helper-stress-panel[hidden] {
+  display: none;
+}
+
+.forvo-helper-stress-panel__label {
+  color: #2f6f49;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.forvo-helper-stress-panel__value {
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.forvo-helper-stress-panel__link {
+  color: #00f;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.forvo-helper-stress-panel[data-state="missing"] {
+  border-color: rgba(148, 163, 184, 0.4);
+  background: rgba(248, 250, 252, 0.94);
+  color: #334155;
+}
+
+@media (max-width: 640px) {
+  .forvo-helper-stress-panel {
+    display: grid;
+    gap: 4px;
+  }
+}

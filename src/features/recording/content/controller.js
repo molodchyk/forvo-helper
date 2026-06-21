@@ -10,6 +10,7 @@ import { activateRecordButton } from "./activator.js";
 import { createRecordOverlay } from "./overlay.js";
 import { findRecordButton } from "./recordButtonFinder.js";
 import { getRecordActivationPoint, isPointInRecordHoverArea } from "./recordGeometry.js";
+import { createStressPanel } from "./stressPanel.js";
 import { addRuntimeMessageListener, sendRuntimeMessage } from "../../../platform/chrome/runtime.js";
 import { onSettingsChanged, readSettings } from "../../../platform/chrome/storage.js";
 
@@ -24,6 +25,7 @@ class ForvoController {
     this.settings = null;
     this.target = null;
     this.overlay = createRecordOverlay();
+    this.stressPanel = createStressPanel();
     this.lastWord = "";
     this.hoverTimer = null;
     this.hoverFrame = null;
@@ -41,6 +43,7 @@ class ForvoController {
     this.refreshTarget();
     this.scheduleLayoutRefreshes();
     this.notifyWordDetected();
+    this.refreshStressPanelFromStatus();
 
     this.observer = new MutationObserver(() => {
       this.scheduleRefresh();
@@ -63,12 +66,18 @@ class ForvoController {
     window.addEventListener("scroll", () => this.scheduleRefresh(), { passive: true });
     document.fonts?.ready?.then(() => this.scheduleLayoutRefreshes());
     addRuntimeMessageListener((message, _sender, sendResponse) => {
-      if (message?.type !== MESSAGE_TYPES.START_RECORDING) {
+      if (message?.type === MESSAGE_TYPES.START_RECORDING) {
+        sendResponse({ ok: this.triggerRecording("command") });
+        return true;
+      }
+
+      if (message?.type === MESSAGE_TYPES.FORVO_STRESS_PANEL_UPDATE) {
+        this.renderStressPanel(message);
+        sendResponse({ ok: true });
         return false;
       }
 
-      sendResponse({ ok: this.triggerRecording("command") });
-      return true;
+      return false;
     });
     onSettingsChanged((settings) => {
       this.settings = settings;
@@ -151,6 +160,7 @@ class ForvoController {
     }
 
     this.lastWord = word;
+    this.stressPanel.hide();
     sendRuntimeMessage({
       type: MESSAGE_TYPES.FORVO_WORD_DETECTED,
       word,
@@ -333,6 +343,32 @@ class ForvoController {
       normalizedUrl
     });
   }
+
+  async refreshStressPanelFromStatus() {
+    const response = await sendRuntimeMessage({ type: MESSAGE_TYPES.GET_STATUS });
+    const status = response?.status;
+
+    if (status) {
+      this.renderStressPanel(status);
+    }
+  }
+
+  renderStressPanel(result) {
+    const currentWord = extractForvoWordFromUrl(location.href) || this.lastWord || extractWordFromPage();
+
+    if (!wordsMatch(currentWord, result?.word || result?.lastWord)) {
+      this.stressPanel.hide();
+      return;
+    }
+
+    this.stressPanel.render({
+      word: currentWord,
+      stressState: result.stressState || result.lastStressState,
+      stressedWord: result.stressedWord || result.lastStressedWord,
+      stressSample: result.stressSample || result.lastStressSample,
+      gorohUrl: result.gorohUrl || result.lastGorohUrl
+    });
+  }
 }
 
 function extractWordFromPage() {
@@ -349,4 +385,11 @@ function extractWordFromPage() {
     .filter((text) => text.length > 1);
 
   return candidates[0] || "";
+}
+
+function wordsMatch(first, second) {
+  const normalizedFirst = normalizeLookupWord(first).toLocaleLowerCase("uk-UA");
+  const normalizedSecond = normalizeLookupWord(second).toLocaleLowerCase("uk-UA");
+
+  return Boolean(normalizedFirst && normalizedSecond && normalizedFirst === normalizedSecond);
 }

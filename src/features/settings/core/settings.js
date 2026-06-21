@@ -75,9 +75,12 @@ export function createDefaultStatus() {
   return {
     lastWord: "",
     lastForvoUrl: "",
+    lastForvoTabId: 0,
     lastGorohUrl: "",
     lastStressState: "unknown",
     lastStressCheckedAt: 0,
+    lastStressedWord: "",
+    lastStressSample: "",
     lastAction: "",
     lastError: ""
   };
@@ -90,9 +93,12 @@ export function normalizeStatus(input = {}) {
   return {
     lastWord: asString(source.lastWord, defaultStatus.lastWord),
     lastForvoUrl: asString(source.lastForvoUrl, defaultStatus.lastForvoUrl),
+    lastForvoTabId: clampInteger(source.lastForvoTabId, 0, Number.MAX_SAFE_INTEGER, defaultStatus.lastForvoTabId),
     lastGorohUrl: asString(source.lastGorohUrl, defaultStatus.lastGorohUrl),
     lastStressState: ["unknown", "found", "missing"].includes(source.lastStressState) ? source.lastStressState : defaultStatus.lastStressState,
     lastStressCheckedAt: clampInteger(source.lastStressCheckedAt, 0, Number.MAX_SAFE_INTEGER, defaultStatus.lastStressCheckedAt),
+    lastStressedWord: asString(source.lastStressedWord, defaultStatus.lastStressedWord),
+    lastStressSample: asString(source.lastStressSample, defaultStatus.lastStressSample),
     lastAction: asString(source.lastAction, defaultStatus.lastAction),
     lastError: asString(source.lastError, defaultStatus.lastError)
   };

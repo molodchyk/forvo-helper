@@ -3,6 +3,7 @@ export const MESSAGE_TYPES = Object.freeze({
   START_RECORDING: "forvo-helper:start-recording",
   RECORDING_TRIGGERED: "forvo-helper:recording-triggered",
   FORVO_PRONUNCIATION_SUBMITTED: "forvo-helper:forvo-pronunciation-submitted",
+  FORVO_STRESS_PANEL_UPDATE: "forvo-helper:forvo-stress-panel-update",
   GOROH_STRESS_RESULT: "forvo-helper:goroh-stress-result",
   FILL_GOROH_SEARCH: "forvo-helper:fill-goroh-search",
   SET_CHATGPT_PROMPT: "forvo-helper:set-chatgpt-prompt",

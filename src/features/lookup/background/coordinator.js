@@ -131,7 +131,10 @@ async function handleForvoWordDetected(message, sender) {
   await writeStatus({
     lastWord: word,
     lastForvoUrl: sender.url || message.url || "",
+    lastForvoTabId: sender.tab?.id || 0,
     lastStressState: "unknown",
+    lastStressedWord: "",
+    lastStressSample: "",
     lastAction: "forvo-word-detected",
     lastError: ""
   });
@@ -182,17 +185,34 @@ async function openGorohForWord(word, settings) {
 }
 
 async function handleGorohStressResult(message) {
-  const word = normalizeLookupWord(message.word) || (await readStatus()).lastWord;
+  const currentStatus = await readStatus();
+  const word = normalizeLookupWord(message.word) || currentStatus.lastWord;
   const hasStress = Boolean(message.hasStress);
+  const stressedWord = hasStress ? String(message.stressedWord || "").trim() : "";
+  const stressSample = String(message.sample || "").trim();
   const settings = await readSettings();
 
-  await writeStatus({
+  if (isStaleGorohResult(currentStatus.lastWord, word)) {
+    return { word, hasStress, stale: true };
+  }
+
+  const status = await writeStatus({
     lastWord: word,
     lastGorohUrl: message.url || "",
     lastStressState: hasStress ? "found" : "missing",
     lastStressCheckedAt: Date.now(),
+    lastStressedWord: stressedWord,
+    lastStressSample: stressSample,
     lastAction: hasStress ? "goroh-stress-found" : "goroh-stress-missing",
     lastError: ""
+  });
+
+  await sendForvoStressPanelUpdate(status.lastForvoTabId, {
+    word,
+    gorohUrl: status.lastGorohUrl,
+    stressState: status.lastStressState,
+    stressedWord: status.lastStressedWord,
+    stressSample: status.lastStressSample
   });
 
   if (!hasStress && word && settings.lookup.chatGptFallbackEnabled) {
@@ -200,6 +220,22 @@ async function handleGorohStressResult(message) {
   }
 
   return { word, hasStress };
+}
+
+function isStaleGorohResult(currentWord, resultWord) {
+  return Boolean(currentWord && resultWord)
+    && normalizeLookupWord(currentWord).toLocaleLowerCase("uk-UA") !== normalizeLookupWord(resultWord).toLocaleLowerCase("uk-UA");
+}
+
+async function sendForvoStressPanelUpdate(tabId, payload) {
+  if (!tabId) {
+    return;
+  }
+
+  await sendTabMessage(tabId, {
+    type: MESSAGE_TYPES.FORVO_STRESS_PANEL_UPDATE,
+    ...payload
+  });
 }
 
 async function openChatGptForWord(word, settings) {

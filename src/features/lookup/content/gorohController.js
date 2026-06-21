@@ -20,13 +20,15 @@ export function startGorohController() {
 function reportStressResult() {
   const text = collectVisibleText(document.body);
   const word = extractGorohWordFromUrl(location.href) || extractTitleWord();
-  const hasStress = hasStressMark(text);
+  const stressedWord = extractStressedHeadingWord(word);
+  const hasStress = hasStressMark(stressedWord) || hasStressMark(text);
 
   sendRuntimeMessage({
     type: MESSAGE_TYPES.GOROH_STRESS_RESULT,
     word,
     url: location.href,
     hasStress,
+    stressedWord,
     sample: summarizeStressResult(text)
   });
 }
@@ -78,6 +80,18 @@ function setNativeValue(field, value) {
 function extractTitleWord() {
   const title = document.title.split(/[—|-]/)[0] || "";
   return normalizeLookupWord(title);
+}
+
+function extractStressedHeadingWord(expectedWord) {
+  const expected = normalizeLookupWord(expectedWord).toLocaleLowerCase("uk-UA");
+  const candidates = [...document.querySelectorAll("h2 span.uppercase, span.uppercase")]
+    .map((element) => element.textContent?.replace(/\s+/g, " ").trim() || "")
+    .filter(Boolean);
+
+  return candidates.find((candidate) => {
+    return hasStressMark(candidate)
+      && normalizeLookupWord(candidate).toLocaleLowerCase("uk-UA") === expected;
+  }) || candidates.find(hasStressMark) || "";
 }
 
 function waitForPageToSettle() {

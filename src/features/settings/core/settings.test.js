@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { DEFAULT_SETTINGS, normalizeChatGptUrl, normalizeSettings } from "./settings.js";
+import { DEFAULT_SETTINGS, normalizeChatGptUrl, normalizeSettings, normalizeStatus } from "./settings.js";
 
 test("normalizes invalid settings to safe defaults", () => {
   const settings = normalizeSettings({
@@ -31,6 +31,18 @@ test("accepts supported UI themes", () => {
   assert.equal(normalizeSettings({ appearance: { theme: "dark" } }).appearance.theme, "dark");
   assert.equal(normalizeSettings({ appearance: { theme: "light" } }).appearance.theme, "light");
   assert.equal(normalizeSettings({ appearance: { theme: "system" } }).appearance.theme, "system");
+});
+
+test("normalizes stored Forvo stress panel status", () => {
+  const status = normalizeStatus({
+    lastForvoTabId: 42.4,
+    lastStressedWord: "ЧЕМНЕ́НЬКИЙ",
+    lastStressSample: "sample"
+  });
+
+  assert.equal(status.lastForvoTabId, 42);
+  assert.equal(status.lastStressedWord, "ЧЕМНЕ́НЬКИЙ");
+  assert.equal(status.lastStressSample, "sample");
 });
 
 test("accepts supported ChatGPT URLs", () => {
