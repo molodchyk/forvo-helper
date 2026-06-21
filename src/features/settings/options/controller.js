@@ -33,7 +33,7 @@ function renderSettings(doc, settings) {
   const normalized = normalizeSettings(settings);
   setValue(doc, "theme", normalized.appearance.theme);
   setChecked(doc, "hoverEnabled", normalized.recording.hoverEnabled);
-  setValue(doc, "hoverDelayMs", normalized.recording.hoverDelayMs);
+  setValue(doc, "hoverDelaySeconds", millisecondsToSeconds(normalized.recording.hoverDelayMs));
   setChecked(doc, "gestureEnabled", normalized.recording.gestureEnabled);
   setChecked(doc, "pageHotkeyEnabled", normalized.recording.pageHotkeyEnabled);
   setValue(doc, "hotkey", normalized.recording.hotkey);
@@ -54,7 +54,7 @@ function readSettingsFromForm(doc, previousSettings) {
     },
     recording: {
       hoverEnabled: getChecked(doc, "hoverEnabled"),
-      hoverDelayMs: getValue(doc, "hoverDelayMs"),
+      hoverDelayMs: secondsToMilliseconds(getValue(doc, "hoverDelaySeconds")),
       gestureEnabled: getChecked(doc, "gestureEnabled"),
       pageHotkeyEnabled: getChecked(doc, "pageHotkeyEnabled"),
       hotkey: getValue(doc, "hotkey"),
@@ -103,4 +103,12 @@ function getChecked(doc, id) {
 function setChecked(doc, id, value) {
   const element = doc.getElementById(id);
   if (element) element.checked = Boolean(value);
+}
+
+function millisecondsToSeconds(value) {
+  return Number(value / 1000).toFixed(2).replace(/\.?0+$/, "");
+}
+
+function secondsToMilliseconds(value) {
+  return Math.round(Number(value || 0) * 1000);
 }

@@ -73,7 +73,7 @@
     "message": "Start recording after hovering over the record button"
   },
   "optionsHoverDelay": {
-    "message": "Hover delay in milliseconds"
+    "message": "Hover delay in seconds"
   },
   "optionsGestureEnabled": {
     "message": "Start recording after circling the record button"

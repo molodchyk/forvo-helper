@@ -23,26 +23,37 @@ class ForvoController {
     this.hoverTimer = null;
     this.hoverFrame = null;
     this.gestureState = null;
+    this.layoutRefreshTimers = new Set();
+    this.layoutRefreshFrame = null;
+    this.resizeObserver = null;
   }
 
   async start() {
     this.settings = await readSettings();
     this.installListeners();
     this.refreshTarget();
+    this.scheduleLayoutRefreshes();
     this.notifyWordDetected();
 
     this.observer = new MutationObserver(() => {
-      this.refreshTarget();
+      this.scheduleRefresh();
       this.notifyWordDetected();
     });
-    this.observer.observe(document.body, { childList: true, subtree: true });
+    this.observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class", "height", "style", "width"],
+      childList: true,
+      subtree: true
+    });
   }
 
   installListeners() {
     document.addEventListener("keydown", (event) => this.handleKeyDown(event), true);
     document.addEventListener("pointermove", (event) => this.handlePointerMove(event), true);
-    window.addEventListener("resize", () => this.refreshTarget(), { passive: true });
-    window.addEventListener("scroll", () => this.refreshTarget(), { passive: true });
+    window.addEventListener("load", () => this.scheduleLayoutRefreshes(), { once: true });
+    window.addEventListener("resize", () => this.scheduleRefresh(), { passive: true });
+    window.addEventListener("scroll", () => this.scheduleRefresh(), { passive: true });
+    document.fonts?.ready?.then(() => this.scheduleLayoutRefreshes());
     chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       if (message?.type !== MESSAGE_TYPES.START_RECORDING) {
         return false;
@@ -55,7 +66,7 @@ class ForvoController {
       this.settings = settings;
       this.cancelHover();
       this.gestureState = null;
-      this.refreshTarget();
+      this.scheduleLayoutRefreshes();
     });
   }
 
@@ -66,6 +77,7 @@ class ForvoController {
       this.detachHover();
       this.target = nextTarget;
       this.attachHover();
+      this.observeTarget();
     }
 
     if (this.settings?.recording.showRecordRing && this.target) {
@@ -75,6 +87,52 @@ class ForvoController {
     }
 
     return this.target;
+  }
+
+  scheduleRefresh() {
+    if (this.layoutRefreshFrame) {
+      return;
+    }
+
+    this.layoutRefreshFrame = requestAnimationFrame(() => {
+      this.layoutRefreshFrame = null;
+      this.refreshTarget();
+    });
+  }
+
+  scheduleLayoutRefreshes() {
+    for (const timer of this.layoutRefreshTimers) {
+      clearTimeout(timer);
+    }
+    this.layoutRefreshTimers.clear();
+
+    this.scheduleRefresh();
+    requestAnimationFrame(() => requestAnimationFrame(() => this.refreshTarget()));
+
+    for (const delay of [80, 180, 360, 720, 1200, 2000]) {
+      const timer = setTimeout(() => {
+        this.layoutRefreshTimers.delete(timer);
+        this.refreshTarget();
+      }, delay);
+      this.layoutRefreshTimers.add(timer);
+    }
+  }
+
+  observeTarget() {
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
+
+    if (!this.target || !globalThis.ResizeObserver) {
+      return;
+    }
+
+    this.resizeObserver = new ResizeObserver(() => this.scheduleRefresh());
+    this.resizeObserver.observe(this.target);
+
+    const container = this.target.closest("#animation_container, #recorder");
+    if (container) {
+      this.resizeObserver.observe(container);
+    }
   }
 
   notifyWordDetected() {
