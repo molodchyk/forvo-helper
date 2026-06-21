@@ -35,7 +35,9 @@
     {
       "matches": [
         "https://forvo.com/word-record/*",
-        "https://*.forvo.com/word-record/*"
+        "https://*.forvo.com/word-record/*",
+        "https://forvo.com/word-quick-record/*",
+        "https://*.forvo.com/word-quick-record/*"
       ],
       "js": [
         "app/content/forvo.js"

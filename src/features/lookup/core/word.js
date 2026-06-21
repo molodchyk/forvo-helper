@@ -1,4 +1,4 @@
-const FORVO_RECORD_PATH = "word-record";
+const FORVO_RECORD_PATHS = new Set(["word-record", "word-quick-record"]);
 const GOROH_LOOKUP_PATH = "Тлумачення";
 const STRESS_MARK_PATTERN = /[\u0301\u0341]/g;
 
@@ -6,7 +6,7 @@ export function extractForvoWordFromUrl(href) {
   try {
     const url = new URL(href);
     const parts = url.pathname.split("/").filter(Boolean);
-    const recordIndex = parts.indexOf(FORVO_RECORD_PATH);
+    const recordIndex = parts.findIndex((part) => FORVO_RECORD_PATHS.has(part));
 
     if (recordIndex === -1 || !parts[recordIndex + 1]) {
       return "";
@@ -70,4 +70,3 @@ export function createChatGptPrompt(template, word) {
 export function isSupportedForvoUrl(href) {
   return Boolean(extractForvoWordFromUrl(href));
 }
-

@@ -14,6 +14,11 @@ test("extracts and normalizes Forvo record words", () => {
   assert.equal(word, "чемненько");
 });
 
+test("extracts and normalizes Forvo quick record words", () => {
+  const word = extractForvoWordFromUrl("https://forvo.com/word-quick-record/%D1%87%D0%B5%D0%BC%D0%BD%D1%96%D1%88%D0%B8%D0%B9/uk/");
+  assert.equal(word, "чемніший");
+});
+
 test("extracts Goroh lookup words", () => {
   const word = extractGorohWordFromUrl("https://goroh.pp.ua/%D0%A2%D0%BB%D1%83%D0%BC%D0%B0%D1%87%D0%B5%D0%BD%D0%BD%D1%8F/%D1%87%D0%B5%D0%BC%D0%BE%D0%B4%D0%B0%D0%BD%D0%B8%D1%89%D0%B5");
   assert.equal(word, "чемоданище");
@@ -34,4 +39,3 @@ test("builds Goroh lookup URLs", () => {
 test("creates ChatGPT prompt from template", () => {
   assert.equal(createChatGptPrompt("Stress: {word}", "чемненько"), "Stress: чемненько");
 });
-
