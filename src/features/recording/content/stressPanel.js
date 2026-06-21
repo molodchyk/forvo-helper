@@ -61,7 +61,7 @@ export function createStressTextParts(text) {
 
 function displayText(result) {
   if (result?.stressState === "found") {
-    return result.stressedWord || result.stressSample || "";
+    return matchDisplayCase(result.stressedWord || result.stressSample || "", result.word);
   }
 
   if (result?.stressState === "missing") {
@@ -69,6 +69,25 @@ function displayText(result) {
   }
 
   return "";
+}
+
+export function matchDisplayCase(text, reference) {
+  const source = String(text || "");
+  const style = detectCaseStyle(reference);
+
+  if (style === "lower") {
+    return source.toLocaleLowerCase("uk-UA");
+  }
+
+  if (style === "upper") {
+    return source.toLocaleUpperCase("uk-UA");
+  }
+
+  if (style === "title") {
+    return titleCaseFirstLetter(source);
+  }
+
+  return source;
 }
 
 function renderStressText(element, text) {
@@ -109,6 +128,48 @@ function splitClusters(text) {
   }
 
   return clusters;
+}
+
+function detectCaseStyle(reference) {
+  const letters = createStressTextParts(reference)
+    .flatMap((part) => [...part.text])
+    .filter((character) => /\p{L}/u.test(character));
+
+  if (!letters.length) {
+    return "asis";
+  }
+
+  const upperFlags = letters.map((letter) => letter === letter.toLocaleUpperCase("uk-UA"));
+  const lowerFlags = letters.map((letter) => letter === letter.toLocaleLowerCase("uk-UA"));
+  const allUpper = upperFlags.every(Boolean) && !lowerFlags.every(Boolean);
+  const allLower = lowerFlags.every(Boolean) && !upperFlags.every(Boolean);
+
+  if (allUpper) {
+    return "upper";
+  }
+
+  if (allLower) {
+    return "lower";
+  }
+
+  if (upperFlags[0] && letters.slice(1).every((letter) => letter === letter.toLocaleLowerCase("uk-UA"))) {
+    return "title";
+  }
+
+  return "asis";
+}
+
+function titleCaseFirstLetter(text) {
+  const lower = String(text || "").toLocaleLowerCase("uk-UA").normalize("NFD");
+  const clusters = splitClusters(lower);
+  const firstLetterIndex = clusters.findIndex((cluster) => /\p{L}/u.test(cluster));
+
+  if (firstLetterIndex === -1) {
+    return String(text || "");
+  }
+
+  clusters[firstLetterIndex] = clusters[firstLetterIndex].toLocaleUpperCase("uk-UA");
+  return clusters.join("").normalize("NFC");
 }
 
 function ensureMounted(panel) {

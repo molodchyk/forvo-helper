@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createStressTextParts } from "./stressPanel.js";
+import { createStressTextParts, matchDisplayCase } from "./stressPanel.js";
 
 test("splits stressed Goroh words into display parts", () => {
   assert.deepEqual(createStressTextParts("ЧЕМНЕ́НЬКИЙ"), [
@@ -25,4 +25,20 @@ test("keeps non-stress combining marks in display text", () => {
     { text: "Т", stressed: false },
     { text: "И", stressed: false }
   ]);
+});
+
+test("matches Goroh uppercase display to lowercase Forvo words", () => {
+  assert.equal(matchDisplayCase("ЧЕМНЕ́НЬКИЙ", "чемненький"), "чемне́нький");
+});
+
+test("matches Goroh uppercase display to title-case Forvo words", () => {
+  assert.equal(matchDisplayCase("ЧЕМНЕ́НЬКИЙ", "Чемненький"), "Чемне́нький");
+});
+
+test("preserves uppercase when the Forvo word is uppercase", () => {
+  assert.equal(matchDisplayCase("НАТО́", "НАТО"), "НАТО́");
+});
+
+test("preserves unusual mixed casing", () => {
+  assert.equal(matchDisplayCase("TEST́", "TeSt"), "TEST́");
 });
