@@ -23,7 +23,13 @@ This project is not affiliated with Forvo, Goroh, OpenAI, or ChatGPT.
 3. Open `chrome://extensions`.
 4. Enable Developer mode.
 5. Choose Load unpacked.
-6. Select `dist/chrome`.
+6. Select this generated folder:
+
+```text
+C:\Users\molod\Documents\Personal\settings\forvo-helper\dist\chrome
+```
+
+Do not select the project root folder `forvo-helper`. The root contains source files and build scripts, while Chrome needs the bundled extension output in `dist/chrome`. If Chrome shows `Could not load javascript 'app/content/forvo.js'`, the project root was selected instead of the generated extension folder.
 
 Chrome controls microphone permission. Forvo must still be allowed to use the microphone before the extension can start recording.
 
@@ -70,4 +76,3 @@ If this extension saves you time and you want to support its development:
 ## License
 
 GPL-3.0-only. See [LICENSE](LICENSE).
-
