@@ -11,13 +11,15 @@ Stored settings may include:
 - whether lookup tabs should be focused
 - ChatGPT fallback URL and prompt template
 - whether ChatGPT prompts should be submitted automatically
+- whether the toolbar badge should show today's submitted count
 
-The extension also stores a small local status record with the last detected word, the last Goroh stress result, and the most recent pending ChatGPT prompt. This status is used only to keep the popup and fallback workflow consistent.
+The extension also stores a small local status record with the last detected word, the last Goroh stress result, the most recent pending ChatGPT prompt, and today's submitted Forvo recording URLs. This status is used only to keep the popup, toolbar badge, and fallback workflow consistent.
 
 Browser permissions:
 
 - `storage`, used to save extension settings and local workflow status
 - `tabs`, used to open or reuse Goroh and ChatGPT tabs and send extension messages to supported tabs
+- `alarms`, used to refresh the local daily toolbar badge after midnight
 
 Host permissions:
 

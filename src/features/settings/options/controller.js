@@ -32,6 +32,7 @@ export async function startOptions(doc = document) {
 function renderSettings(doc, settings) {
   const normalized = normalizeSettings(settings);
   setValue(doc, "theme", normalized.appearance.theme);
+  setChecked(doc, "showDailyBadge", normalized.stats.showDailyBadge);
   setChecked(doc, "hoverEnabled", normalized.recording.hoverEnabled);
   setValue(doc, "hoverDelaySeconds", millisecondsToSeconds(normalized.recording.hoverDelayMs));
   setChecked(doc, "gestureEnabled", normalized.recording.gestureEnabled);
@@ -51,6 +52,9 @@ function readSettingsFromForm(doc, previousSettings) {
     ...previousSettings,
     appearance: {
       theme: getValue(doc, "theme")
+    },
+    stats: {
+      showDailyBadge: getChecked(doc, "showDailyBadge")
     },
     recording: {
       hoverEnabled: getChecked(doc, "hoverEnabled"),

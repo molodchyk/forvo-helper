@@ -2,6 +2,7 @@ export const MESSAGE_TYPES = Object.freeze({
   FORVO_WORD_DETECTED: "forvo-helper:forvo-word-detected",
   START_RECORDING: "forvo-helper:start-recording",
   RECORDING_TRIGGERED: "forvo-helper:recording-triggered",
+  FORVO_PRONUNCIATION_SUBMITTED: "forvo-helper:forvo-pronunciation-submitted",
   GOROH_STRESS_RESULT: "forvo-helper:goroh-stress-result",
   FILL_GOROH_SEARCH: "forvo-helper:fill-goroh-search",
   SET_CHATGPT_PROMPT: "forvo-helper:set-chatgpt-prompt",
@@ -10,4 +11,3 @@ export const MESSAGE_TYPES = Object.freeze({
   POPUP_OPEN_GOROH: "forvo-helper:popup-open-goroh",
   GET_STATUS: "forvo-helper:get-status"
 });
-

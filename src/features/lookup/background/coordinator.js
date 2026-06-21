@@ -1,9 +1,18 @@
 import { MESSAGE_TYPES } from "../core/messages.js";
-import { buildGorohLookupUrl, createChatGptPrompt, normalizeLookupWord } from "../core/word.js";
+import {
+  buildGorohLookupUrl,
+  createChatGptPrompt,
+  normalizeForvoRecordingUrl,
+  normalizeLookupWord
+} from "../core/word.js";
+import { formatDailyBadgeText } from "../../recording/core/dailySubmissions.js";
+import { SETTINGS_KEY } from "../../settings/core/settings.js";
 import {
   readPendingChatGptPrompt,
+  readDailySubmissionStats,
   readSettings,
   readStatus,
+  recordDailySubmission,
   writePendingChatGptPrompt,
   writeSettings,
   writeStatus
@@ -12,10 +21,29 @@ import { getActiveTab, openOrReuseTab, sendTabMessage, waitForTabComplete } from
 
 const GOROH_PATTERNS = ["https://goroh.pp.ua/*", "https://www.goroh.pp.ua/*"];
 const CHATGPT_PATTERNS = ["https://chatgpt.com/*", "https://chat.openai.com/*"];
+const DAILY_BADGE_ALARM = "forvo-helper:daily-badge-refresh";
 
 export function registerLookupCoordinator() {
   chrome.runtime.onInstalled.addListener(() => {
-    readSettings().then(writeSettings);
+    readSettings()
+      .then(writeSettings)
+      .then(() => refreshDailyBadge());
+    scheduleDailyBadgeAlarm();
+  });
+  chrome.runtime.onStartup.addListener(() => {
+    refreshDailyBadge();
+    scheduleDailyBadgeAlarm();
+  });
+  chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === DAILY_BADGE_ALARM) {
+      refreshDailyBadge();
+      scheduleDailyBadgeAlarm();
+    }
+  });
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === "sync" && changes[SETTINGS_KEY]) {
+      refreshDailyBadge();
+    }
   });
   chrome.commands.onCommand.addListener((command) => {
     if (command === "trigger-recording") {
@@ -29,6 +57,8 @@ export function registerLookupCoordinator() {
 
     return true;
   });
+  refreshDailyBadge();
+  scheduleDailyBadgeAlarm();
 }
 
 async function handleMessage(message, sender) {
@@ -36,7 +66,8 @@ async function handleMessage(message, sender) {
     case MESSAGE_TYPES.GET_STATUS:
       return {
         settings: await readSettings(),
-        status: await readStatus()
+        status: await readStatus(),
+        dailyStats: await readDailySubmissionStats()
       };
     case MESSAGE_TYPES.POPUP_START_RECORDING:
       return startRecordingOnActiveTab();
@@ -49,6 +80,8 @@ async function handleMessage(message, sender) {
         lastAction: message.ok ? `recording:${message.source}` : "recording-target-missing",
         lastError: message.ok ? "" : "Could not find the Forvo record button."
       });
+    case MESSAGE_TYPES.FORVO_PRONUNCIATION_SUBMITTED:
+      return handleForvoPronunciationSubmitted(message);
     case MESSAGE_TYPES.GOROH_STRESS_RESULT:
       return handleGorohStressResult(message, sender);
     case MESSAGE_TYPES.CHATGPT_PROMPT_INSERTED:
@@ -56,6 +89,35 @@ async function handleMessage(message, sender) {
     default:
       return {};
   }
+}
+
+async function handleForvoPronunciationSubmitted(message) {
+  const normalizedUrl = message.normalizedUrl || normalizeForvoRecordingUrl(message.url);
+
+  if (!normalizedUrl) {
+    throw new Error("Forvo recording URL was empty.");
+  }
+
+  const word = normalizeLookupWord(message.word);
+  const result = await recordDailySubmission({
+    normalizedUrl,
+    word,
+    sourceUrl: message.url || ""
+  });
+
+  await writeStatus({
+    lastWord: word || (await readStatus()).lastWord,
+    lastForvoUrl: message.url || "",
+    lastAction: result.added ? "pronunciation-submitted" : "pronunciation-resubmitted",
+    lastError: ""
+  });
+  await refreshDailyBadge(result.stats);
+
+  return {
+    added: result.added,
+    dailyCount: result.stats.count,
+    normalizedUrl
+  };
 }
 
 async function handleForvoWordDetected(message, sender) {
@@ -204,3 +266,28 @@ async function startRecordingOnActiveTab() {
   return { sent: Boolean(response?.ok) };
 }
 
+async function refreshDailyBadge(stats = null) {
+  const settings = await readSettings();
+  const dailyStats = stats || await readDailySubmissionStats();
+  const text = settings.stats.showDailyBadge ? formatDailyBadgeText(dailyStats.count) : "";
+
+  await chrome.action.setBadgeBackgroundColor({ color: "#2f8f5b" });
+  await chrome.action.setBadgeText({ text });
+}
+
+function scheduleDailyBadgeAlarm() {
+  chrome.alarms.create(DAILY_BADGE_ALARM, {
+    when: nextLocalMidnightTimestamp()
+  });
+}
+
+function nextLocalMidnightTimestamp(now = new Date()) {
+  return new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+    0,
+    0,
+    5
+  ).getTime();
+}

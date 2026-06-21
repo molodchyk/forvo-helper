@@ -1,11 +1,15 @@
 export const SETTINGS_KEY = "forvoHelperSettings";
 export const STATUS_KEY = "forvoHelperStatus";
 export const PENDING_CHATGPT_PROMPT_KEY = "forvoHelperPendingChatGptPrompt";
+export const DAILY_SUBMISSIONS_KEY = "forvoHelperDailySubmissions";
 
 export const DEFAULT_SETTINGS = Object.freeze({
   version: 1,
   appearance: {
     theme: "system"
+  },
+  stats: {
+    showDailyBadge: true
   },
   recording: {
     hoverEnabled: true,
@@ -34,6 +38,7 @@ const THEMES = new Set(["system", "light", "dark"]);
 export function normalizeSettings(input = {}) {
   const source = isPlainObject(input) ? input : {};
   const appearance = isPlainObject(source.appearance) ? source.appearance : {};
+  const stats = isPlainObject(source.stats) ? source.stats : {};
   const recording = isPlainObject(source.recording) ? source.recording : {};
   const lookup = isPlainObject(source.lookup) ? source.lookup : {};
 
@@ -41,6 +46,9 @@ export function normalizeSettings(input = {}) {
     version: 1,
     appearance: {
       theme: THEMES.has(appearance.theme) ? appearance.theme : DEFAULT_SETTINGS.appearance.theme
+    },
+    stats: {
+      showDailyBadge: asBoolean(stats.showDailyBadge, DEFAULT_SETTINGS.stats.showDailyBadge)
     },
     recording: {
       hoverEnabled: asBoolean(recording.hoverEnabled, DEFAULT_SETTINGS.recording.hoverEnabled),

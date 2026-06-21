@@ -17,8 +17,14 @@ test("normalizes invalid settings to safe defaults", () => {
   assert.equal(settings.recording.hoverDelayMs, 5000);
   assert.equal(settings.recording.hotkey, DEFAULT_SETTINGS.recording.hotkey);
   assert.equal(settings.appearance.theme, DEFAULT_SETTINGS.appearance.theme);
+  assert.equal(settings.stats.showDailyBadge, DEFAULT_SETTINGS.stats.showDailyBadge);
   assert.equal(settings.lookup.gorohLookupMode, DEFAULT_SETTINGS.lookup.gorohLookupMode);
   assert.equal(settings.lookup.chatGptUrl, DEFAULT_SETTINGS.lookup.chatGptUrl);
+});
+
+test("accepts daily badge visibility setting", () => {
+  assert.equal(normalizeSettings({ stats: { showDailyBadge: false } }).stats.showDailyBadge, false);
+  assert.equal(normalizeSettings({ stats: { showDailyBadge: true } }).stats.showDailyBadge, true);
 });
 
 test("accepts supported UI themes", () => {

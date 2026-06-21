@@ -36,6 +36,12 @@
   "popupStressMissing": {
     "message": "Missing on Goroh"
   },
+  "popupTodaySubmitted": {
+    "message": "Today"
+  },
+  "popupSubmittedCount": {
+    "message": "{count} submitted"
+  },
   "popupOpenOptions": {
     "message": "Options"
   },
@@ -62,6 +68,9 @@
   },
   "optionsThemeDark": {
     "message": "Dark"
+  },
+  "optionsShowDailyBadge": {
+    "message": "Show today's submitted count on the toolbar badge"
   },
   "optionsRecording": {
     "message": "Recording"

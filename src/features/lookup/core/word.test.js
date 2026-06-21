@@ -5,6 +5,7 @@ import {
   createChatGptPrompt,
   extractForvoWordFromUrl,
   extractGorohWordFromUrl,
+  normalizeForvoRecordingUrl,
   normalizeLookupWord,
   stripStress
 } from "./word.js";
@@ -17,6 +18,19 @@ test("extracts and normalizes Forvo record words", () => {
 test("extracts and normalizes Forvo quick record words", () => {
   const word = extractForvoWordFromUrl("https://forvo.com/word-quick-record/%D1%87%D0%B5%D0%BC%D0%BD%D1%96%D1%88%D0%B8%D0%B9/uk/");
   assert.equal(word, "чемніший");
+});
+
+test("normalizes Forvo recording URLs across record routes", () => {
+  const canonical = "https://forvo.com/word-record/%D1%87%D0%B5%D0%BC%D0%BD%D1%96%D1%88%D0%B8%D0%B9/uk/";
+
+  assert.equal(
+    normalizeForvoRecordingUrl("https://forvo.com/word-record/%D1%87%D0%B5%D0%BC%D0%BD%D1%96%D1%88%D0%B8%D0%B9/uk/?next=1"),
+    canonical
+  );
+  assert.equal(
+    normalizeForvoRecordingUrl("https://forvo.com/word-quick-record/%D1%87%D0%B5%D0%BC%D0%BD%D1%96%D1%88%D0%B8%D0%B9/uk/#again"),
+    canonical
+  );
 });
 
 test("extracts Goroh lookup words", () => {

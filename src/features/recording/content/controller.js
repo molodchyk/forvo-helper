@@ -1,5 +1,9 @@
 import { MESSAGE_TYPES } from "../../lookup/core/messages.js";
-import { extractForvoWordFromUrl, normalizeLookupWord } from "../../lookup/core/word.js";
+import {
+  extractForvoWordFromUrl,
+  normalizeForvoRecordingUrl,
+  normalizeLookupWord
+} from "../../lookup/core/word.js";
 import { eventMatchesHotkey } from "../core/hotkey.js";
 import { createCircleGestureState, gestureProgress, updateCircleGesture } from "../core/gesture.js";
 import { activateRecordButton } from "./activator.js";
@@ -53,6 +57,7 @@ class ForvoController {
   installListeners() {
     document.addEventListener("keydown", (event) => this.handleKeyDown(event), true);
     document.addEventListener("pointermove", (event) => this.handlePointerMove(event), true);
+    document.addEventListener("click", (event) => this.handleDocumentClick(event));
     window.addEventListener("load", () => this.scheduleLayoutRefreshes(), { once: true });
     window.addEventListener("resize", () => this.scheduleRefresh(), { passive: true });
     window.addEventListener("scroll", () => this.scheduleRefresh(), { passive: true });
@@ -165,6 +170,16 @@ class ForvoController {
     event.preventDefault();
     event.stopPropagation();
     this.triggerRecording("page-hotkey");
+  }
+
+  handleDocumentClick(event) {
+    const button = event.target instanceof Element ? event.target.closest("#sendAudio") : null;
+
+    if (!(button instanceof HTMLButtonElement) || button.disabled) {
+      return;
+    }
+
+    this.notifyPronunciationSubmitted();
   }
 
   attachHover() {
@@ -301,6 +316,22 @@ class ForvoController {
     });
 
     return ok;
+  }
+
+  notifyPronunciationSubmitted() {
+    const normalizedUrl = normalizeForvoRecordingUrl(location.href);
+    const word = extractForvoWordFromUrl(location.href) || this.lastWord || extractWordFromPage();
+
+    if (!normalizedUrl || !word) {
+      return;
+    }
+
+    sendRuntimeMessage({
+      type: MESSAGE_TYPES.FORVO_PRONUNCIATION_SUBMITTED,
+      word,
+      url: location.href,
+      normalizedUrl
+    });
   }
 }
 
