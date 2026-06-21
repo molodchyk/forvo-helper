@@ -78,6 +78,26 @@
   font-size: 1.9rem;
   font-weight: 800;
   letter-spacing: 0;
+  line-height: 1.25;
+  padding-top: 0.15em;
+}
+
+.forvo-helper-stress-panel__stressed-letter {
+  position: relative;
+  display: inline-block;
+}
+
+.forvo-helper-stress-panel__stressed-letter::after {
+  content: "\00b4";
+  position: absolute;
+  top: -0.52em;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #208052;
+  font-family: Arial, sans-serif;
+  font-size: 0.68em;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .forvo-helper-stress-panel__link {

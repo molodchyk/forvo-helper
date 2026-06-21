@@ -26,7 +26,7 @@ export function createStressPanel() {
 
       ensureMounted(panel);
       panel.dataset.state = result.stressState || "unknown";
-      value.textContent = text;
+      renderStressText(value, text);
 
       if (result.gorohUrl) {
         link.href = result.gorohUrl;
@@ -47,6 +47,18 @@ export function createStressPanel() {
   };
 }
 
+export function createStressTextParts(text) {
+  const normalized = String(text || "").normalize("NFD");
+  const clusters = splitClusters(normalized);
+
+  return clusters
+    .map((cluster) => ({
+      text: cluster.replace(/[\u0301\u0341]/gu, "").normalize("NFC"),
+      stressed: /[\u0301\u0341]/u.test(cluster)
+    }))
+    .filter((part) => part.text);
+}
+
 function displayText(result) {
   if (result?.stressState === "found") {
     return result.stressedWord || result.stressSample || "";
@@ -57,6 +69,46 @@ function displayText(result) {
   }
 
   return "";
+}
+
+function renderStressText(element, text) {
+  element.textContent = "";
+
+  for (const part of createStressTextParts(text)) {
+    if (!part.stressed) {
+      element.append(document.createTextNode(part.text));
+      continue;
+    }
+
+    const letter = document.createElement("span");
+    letter.className = "forvo-helper-stress-panel__stressed-letter";
+    letter.textContent = part.text;
+    element.append(letter);
+  }
+}
+
+function splitClusters(text) {
+  const clusters = [];
+  let current = "";
+
+  for (const character of text) {
+    if (/[\p{M}]/u.test(character) && current) {
+      current += character;
+      continue;
+    }
+
+    if (current) {
+      clusters.push(current);
+    }
+
+    current = character;
+  }
+
+  if (current) {
+    clusters.push(current);
+  }
+
+  return clusters;
 }
 
 function ensureMounted(panel) {
