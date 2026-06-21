@@ -37,3 +37,32 @@ export function getRecordOverlayBox(element) {
     height: size
   };
 }
+
+export function getRecordHoverBox(element) {
+  const rect = element.getBoundingClientRect();
+
+  if (!isForvoCanvasRecorder(element)) {
+    return rect;
+  }
+
+  const point = getRecordActivationPoint(element);
+  const size = Math.min(132, Math.max(88, rect.height * 0.56));
+
+  return {
+    left: point.x - size / 2,
+    top: point.y - size / 2,
+    right: point.x + size / 2,
+    bottom: point.y + size / 2,
+    width: size,
+    height: size
+  };
+}
+
+export function isPointInRecordHoverArea(element, point) {
+  const box = getRecordHoverBox(element);
+
+  return point.x >= box.left
+    && point.x <= box.left + box.width
+    && point.y >= box.top
+    && point.y <= box.top + box.height;
+}

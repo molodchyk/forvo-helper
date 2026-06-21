@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getRecordActivationPoint, getRecordOverlayBox, isForvoCanvasRecorder } from "./recordGeometry.js";
+import {
+  getRecordActivationPoint,
+  getRecordHoverBox,
+  getRecordOverlayBox,
+  isForvoCanvasRecorder,
+  isPointInRecordHoverArea
+} from "./recordGeometry.js";
 
 function fakeElement(rect, tagName = "DIV", id = "") {
   return {
@@ -34,3 +40,12 @@ test("keeps non-canvas activation at element center", () => {
   assert.equal(box.width, 100);
 });
 
+test("limits Forvo canvas hover activation to the recorder control area", () => {
+  const element = fakeElement({ left: 100, top: 40, width: 490, height: 238 }, "CANVAS", "canvas-recorder");
+  const point = getRecordActivationPoint(element);
+  const box = getRecordHoverBox(element);
+
+  assert.equal(box.width, 132);
+  assert.equal(isPointInRecordHoverArea(element, point), true);
+  assert.equal(isPointInRecordHoverArea(element, { x: 190, y: point.y }), false);
+});

@@ -5,7 +5,7 @@ import { createCircleGestureState, gestureProgress, updateCircleGesture } from "
 import { activateRecordButton } from "./activator.js";
 import { createRecordOverlay } from "./overlay.js";
 import { findRecordButton } from "./recordButtonFinder.js";
-import { getRecordActivationPoint } from "./recordGeometry.js";
+import { getRecordActivationPoint, isPointInRecordHoverArea } from "./recordGeometry.js";
 import { onSettingsChanged, readSettings } from "../../../platform/chrome/storage.js";
 
 export function startForvoController() {
@@ -22,6 +22,8 @@ class ForvoController {
     this.lastWord = "";
     this.hoverTimer = null;
     this.hoverFrame = null;
+    this.hoverZoneActive = false;
+    this.hoverTriggeredInZone = false;
     this.gestureState = null;
     this.layoutRefreshTimers = new Set();
     this.layoutRefreshFrame = null;
@@ -169,9 +171,15 @@ class ForvoController {
       return;
     }
 
-    this.pointerEnter = () => this.startHover();
-    this.pointerLeave = () => this.cancelHover();
+    this.pointerEnter = (event) => this.handleHoverPointer(event);
+    this.pointerMove = (event) => this.handleHoverPointer(event);
+    this.pointerLeave = () => {
+      this.hoverZoneActive = false;
+      this.hoverTriggeredInZone = false;
+      this.cancelHover();
+    };
     this.target.addEventListener("pointerenter", this.pointerEnter);
+    this.target.addEventListener("pointermove", this.pointerMove);
     this.target.addEventListener("pointerleave", this.pointerLeave);
   }
 
@@ -181,9 +189,40 @@ class ForvoController {
     }
 
     this.target.removeEventListener("pointerenter", this.pointerEnter);
+    this.target.removeEventListener("pointermove", this.pointerMove);
     this.target.removeEventListener("pointerleave", this.pointerLeave);
     this.pointerEnter = null;
+    this.pointerMove = null;
     this.pointerLeave = null;
+    this.hoverZoneActive = false;
+    this.hoverTriggeredInZone = false;
+  }
+
+  handleHoverPointer(event) {
+    if (!this.settings?.recording.hoverEnabled || !this.target) {
+      return;
+    }
+
+    const insideHoverArea = isPointInRecordHoverArea(this.target, {
+      x: event.clientX,
+      y: event.clientY
+    });
+
+    if (!insideHoverArea) {
+      this.hoverZoneActive = false;
+      this.hoverTriggeredInZone = false;
+      this.cancelHover();
+      return;
+    }
+
+    if (!this.hoverZoneActive) {
+      this.hoverZoneActive = true;
+      this.hoverTriggeredInZone = false;
+    }
+
+    if (!this.hoverTimer && !this.hoverTriggeredInZone) {
+      this.startHover();
+    }
   }
 
   startHover() {
@@ -196,6 +235,7 @@ class ForvoController {
 
     this.cancelHover();
     this.hoverTimer = setTimeout(() => {
+      this.hoverTriggeredInZone = true;
       this.triggerRecording("hover");
       this.cancelHover();
     }, delay);
