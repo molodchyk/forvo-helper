@@ -59,8 +59,9 @@
   box-sizing: border-box;
   background: rgba(233, 248, 240, 0.92);
   color: #173825;
-  font-family: cabinetGrotesk, Arial, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   text-align: center;
+  text-shadow: none;
 }
 
 .forvo-helper-stress-panel[hidden] {
@@ -70,12 +71,12 @@
 .forvo-helper-stress-panel__label {
   color: #2f6f49;
   font-size: 1.2rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .forvo-helper-stress-panel__value {
   font-size: 1.9rem;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0;
   line-height: 1.25;
   padding-top: 0.15em;
@@ -87,22 +88,21 @@
 }
 
 .forvo-helper-stress-panel__stressed-letter::after {
-  content: "\00b4";
+  content: "";
   position: absolute;
-  top: -0.42em;
-  left: 50%;
-  transform: translateX(-50%);
-  color: currentColor;
-  font-family: Arial, sans-serif;
-  font-size: 0.95em;
-  font-weight: 400;
-  line-height: 1;
+  top: -0.16em;
+  left: 58%;
+  width: 0.38em;
+  height: 0.08em;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translateX(-50%) rotate(-58deg);
 }
 
 .forvo-helper-stress-panel__link {
   color: #00f;
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
 }
 
