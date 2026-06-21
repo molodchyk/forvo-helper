@@ -1,8 +1,9 @@
 import { MESSAGE_TYPES } from "../core/messages.js";
+import { addRuntimeMessageListener, sendRuntimeMessage } from "../../../platform/chrome/runtime.js";
 import { readPendingChatGptPrompt } from "../../../platform/chrome/storage.js";
 
 export function startChatGptController() {
-  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  addRuntimeMessageListener((message, _sender, sendResponse) => {
     if (message?.type !== MESSAGE_TYPES.SET_CHATGPT_PROMPT) {
       return false;
     }
@@ -29,7 +30,7 @@ async function insertPromptWithRetries(prompt, autoSubmit = false) {
     const ok = insertPrompt(prompt, autoSubmit);
 
     if (ok) {
-      chrome.runtime.sendMessage({
+      sendRuntimeMessage({
         type: MESSAGE_TYPES.CHATGPT_PROMPT_INSERTED,
         prompt
       });
@@ -117,4 +118,3 @@ function isVisible(element) {
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
-

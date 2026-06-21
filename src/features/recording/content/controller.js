@@ -6,6 +6,7 @@ import { activateRecordButton } from "./activator.js";
 import { createRecordOverlay } from "./overlay.js";
 import { findRecordButton } from "./recordButtonFinder.js";
 import { getRecordActivationPoint, isPointInRecordHoverArea } from "./recordGeometry.js";
+import { addRuntimeMessageListener, sendRuntimeMessage } from "../../../platform/chrome/runtime.js";
 import { onSettingsChanged, readSettings } from "../../../platform/chrome/storage.js";
 
 export function startForvoController() {
@@ -56,7 +57,7 @@ class ForvoController {
     window.addEventListener("resize", () => this.scheduleRefresh(), { passive: true });
     window.addEventListener("scroll", () => this.scheduleRefresh(), { passive: true });
     document.fonts?.ready?.then(() => this.scheduleLayoutRefreshes());
-    chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    addRuntimeMessageListener((message, _sender, sendResponse) => {
       if (message?.type !== MESSAGE_TYPES.START_RECORDING) {
         return false;
       }
@@ -145,7 +146,7 @@ class ForvoController {
     }
 
     this.lastWord = word;
-    chrome.runtime.sendMessage({
+    sendRuntimeMessage({
       type: MESSAGE_TYPES.FORVO_WORD_DETECTED,
       word,
       url: location.href
@@ -291,7 +292,7 @@ class ForvoController {
     const ok = activateRecordButton(target);
 
     this.overlay.flash(ok ? "ok" : "error");
-    chrome.runtime.sendMessage({
+    sendRuntimeMessage({
       type: MESSAGE_TYPES.RECORDING_TRIGGERED,
       source,
       ok,

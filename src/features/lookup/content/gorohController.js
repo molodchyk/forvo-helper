@@ -1,10 +1,11 @@
 import { MESSAGE_TYPES } from "../core/messages.js";
 import { extractGorohWordFromUrl, normalizeLookupWord } from "../core/word.js";
 import { hasStressMark, summarizeStressResult } from "../core/stress.js";
+import { addRuntimeMessageListener, sendRuntimeMessage } from "../../../platform/chrome/runtime.js";
 import { collectVisibleText } from "../../../platform/dom/visibleText.js";
 
 export function startGorohController() {
-  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  addRuntimeMessageListener((message, _sender, sendResponse) => {
     if (message?.type !== MESSAGE_TYPES.FILL_GOROH_SEARCH) {
       return false;
     }
@@ -21,7 +22,7 @@ function reportStressResult() {
   const word = extractGorohWordFromUrl(location.href) || extractTitleWord();
   const hasStress = hasStressMark(text);
 
-  chrome.runtime.sendMessage({
+  sendRuntimeMessage({
     type: MESSAGE_TYPES.GOROH_STRESS_RESULT,
     word,
     url: location.href,
@@ -96,4 +97,3 @@ function waitForPageToSettle() {
     setTimeout(done, 4500);
   });
 }
-
