@@ -41,7 +41,7 @@ for (const permission of manifest.permissions || []) {
   }
 }
 
-const listing = await readFile(path.join(root, "store-listing/chrome-web-store/listing/en.md"), "utf8");
+const listing = await readFile(path.join(root, "store-listing/chrome-web-store/listing/en.txt"), "utf8");
 if (/^\s*#/m.test(listing) || /^\s*[-*]\s/m.test(listing) || /\[[^\]]+\]\([^)]+\)/.test(listing)) {
   failures.push("Store listing must be direct-copy description text without markdown.");
 }
