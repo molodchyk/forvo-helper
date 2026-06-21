@@ -14,7 +14,7 @@ export function createRecordOverlay() {
       }
 
       const rect = getRecordOverlayBox(target);
-      const size = Math.max(rect.width, rect.height) + 28;
+      const size = Math.max(rect.width, rect.height) + 56;
 
       ring.style.width = `${size}px`;
       ring.style.height = `${size}px`;
@@ -23,14 +23,22 @@ export function createRecordOverlay() {
       ring.hidden = false;
     },
     progress(value) {
+      ring.classList.remove("is-fading");
       ring.style.setProperty("--forvo-helper-progress", String(Math.max(0, Math.min(1, value))));
     },
     flash(kind) {
-      ring.classList.remove("is-ok", "is-error");
+      ring.classList.remove("is-ok", "is-error", "is-fading");
       ring.classList.add(kind === "error" ? "is-error" : "is-ok");
-      setTimeout(() => ring.classList.remove("is-ok", "is-error"), 550);
+      setTimeout(() => {
+        ring.classList.add("is-fading");
+      }, 260);
+      setTimeout(() => {
+        ring.classList.remove("is-ok", "is-error", "is-fading");
+        ring.hidden = true;
+      }, 560);
     },
     hide() {
+      ring.classList.remove("is-ok", "is-error", "is-fading");
       ring.hidden = true;
     },
     destroy() {
