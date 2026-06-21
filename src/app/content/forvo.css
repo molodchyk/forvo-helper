@@ -70,8 +70,7 @@
 .forvo-helper-stress-panel__label {
   color: #2f6f49;
   font-size: 1.2rem;
-  font-weight: 700;
-  text-transform: uppercase;
+  font-weight: 600;
 }
 
 .forvo-helper-stress-panel__value {
@@ -90,13 +89,13 @@
 .forvo-helper-stress-panel__stressed-letter::after {
   content: "\00b4";
   position: absolute;
-  top: -0.52em;
+  top: -0.42em;
   left: 50%;
   transform: translateX(-50%);
-  color: #208052;
+  color: currentColor;
   font-family: Arial, sans-serif;
-  font-size: 0.68em;
-  font-weight: 900;
+  font-size: 0.95em;
+  font-weight: 400;
   line-height: 1;
 }
 
