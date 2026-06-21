@@ -14,7 +14,7 @@ export function createRecordOverlay() {
       }
 
       const rect = getRecordOverlayBox(target);
-      const size = Math.max(rect.width, rect.height) + 56;
+      const size = Math.max(rect.width, rect.height) + 28;
 
       ring.style.width = `${size}px`;
       ring.style.height = `${size}px`;
