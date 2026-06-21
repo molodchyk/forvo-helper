@@ -4,6 +4,9 @@ export const PENDING_CHATGPT_PROMPT_KEY = "forvoHelperPendingChatGptPrompt";
 
 export const DEFAULT_SETTINGS = Object.freeze({
   version: 1,
+  appearance: {
+    theme: "system"
+  },
   recording: {
     hoverEnabled: true,
     hoverDelayMs: 900,
@@ -26,14 +29,19 @@ export const DEFAULT_SETTINGS = Object.freeze({
 
 const GOROH_LOOKUP_MODES = new Set(["direct-url", "search-field"]);
 const CHATGPT_HOSTS = new Set(["chatgpt.com", "chat.openai.com"]);
+const THEMES = new Set(["system", "light", "dark"]);
 
 export function normalizeSettings(input = {}) {
   const source = isPlainObject(input) ? input : {};
+  const appearance = isPlainObject(source.appearance) ? source.appearance : {};
   const recording = isPlainObject(source.recording) ? source.recording : {};
   const lookup = isPlainObject(source.lookup) ? source.lookup : {};
 
   return {
     version: 1,
+    appearance: {
+      theme: THEMES.has(appearance.theme) ? appearance.theme : DEFAULT_SETTINGS.appearance.theme
+    },
     recording: {
       hoverEnabled: asBoolean(recording.hoverEnabled, DEFAULT_SETTINGS.recording.hoverEnabled),
       hoverDelayMs: clampInteger(recording.hoverDelayMs, 250, 5000, DEFAULT_SETTINGS.recording.hoverDelayMs),
@@ -138,4 +146,3 @@ function asString(value, fallback) {
 function isPlainObject(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
-

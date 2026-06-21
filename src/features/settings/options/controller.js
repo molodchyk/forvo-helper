@@ -1,6 +1,7 @@
 import { DEFAULT_SETTINGS, normalizeSettings } from "../core/settings.js";
 import { applyI18n, messageOrDefault } from "../../../platform/chrome/i18n.js";
 import { readSettings, resetSettings, writeSettings } from "../../../platform/chrome/storage.js";
+import { applyTheme } from "../../../platform/dom/theme.js";
 
 export async function startOptions(doc = document) {
   applyI18n(doc);
@@ -10,6 +11,7 @@ export async function startOptions(doc = document) {
   const saveStatus = doc.getElementById("saveStatus");
   let settings = await readSettings();
 
+  applyTheme(doc, settings.appearance.theme);
   renderSettings(doc, settings);
   form.addEventListener("input", () => {
     settings = readSettingsFromForm(doc, settings);
@@ -21,6 +23,7 @@ export async function startOptions(doc = document) {
   });
   resetButton.addEventListener("click", async () => {
     settings = await resetSettings();
+    applyTheme(doc, settings.appearance.theme);
     renderSettings(doc, settings);
     showSaved(saveStatus);
   });
@@ -28,6 +31,7 @@ export async function startOptions(doc = document) {
 
 function renderSettings(doc, settings) {
   const normalized = normalizeSettings(settings);
+  setValue(doc, "theme", normalized.appearance.theme);
   setChecked(doc, "hoverEnabled", normalized.recording.hoverEnabled);
   setValue(doc, "hoverDelayMs", normalized.recording.hoverDelayMs);
   setChecked(doc, "gestureEnabled", normalized.recording.gestureEnabled);
@@ -45,6 +49,9 @@ function renderSettings(doc, settings) {
 function readSettingsFromForm(doc, previousSettings) {
   return normalizeSettings({
     ...previousSettings,
+    appearance: {
+      theme: getValue(doc, "theme")
+    },
     recording: {
       hoverEnabled: getChecked(doc, "hoverEnabled"),
       hoverDelayMs: getValue(doc, "hoverDelayMs"),
@@ -68,6 +75,7 @@ function readSettingsFromForm(doc, previousSettings) {
 
 async function saveSettings(settings, saveStatus) {
   await writeSettings(settings);
+  applyTheme(document, settings.appearance.theme);
   showSaved(saveStatus);
 }
 
@@ -96,4 +104,3 @@ function setChecked(doc, id, value) {
   const element = doc.getElementById(id);
   if (element) element.checked = Boolean(value);
 }
-

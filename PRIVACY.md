@@ -5,6 +5,7 @@ Forvo Helper is a local browser extension for Forvo recording and Ukrainian stre
 Stored settings may include:
 
 - recording trigger settings
+- extension appearance preference
 - hover delay and page hotkey
 - Goroh lookup mode
 - whether lookup tabs should be focused
@@ -39,4 +40,3 @@ Chrome sync:
 
 - Settings are stored in Chrome sync storage when available, so Chrome may sync them through the user's browser profile according to the user's Chrome sync settings.
 - Runtime status is stored locally and is not intended to sync between devices.
-

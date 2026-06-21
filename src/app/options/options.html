@@ -14,6 +14,19 @@
       </header>
 
       <form id="optionsForm" class="settings-form">
+        <section class="settings-section" aria-labelledby="appearanceHeading">
+          <h2 id="appearanceHeading" data-i18n="optionsAppearance">Appearance</h2>
+
+          <label class="field-row">
+            <span data-i18n="optionsTheme">Theme</span>
+            <select id="theme" name="theme">
+              <option value="system" data-i18n="optionsThemeSystem">System</option>
+              <option value="light" data-i18n="optionsThemeLight">Light</option>
+              <option value="dark" data-i18n="optionsThemeDark">Dark</option>
+            </select>
+          </label>
+        </section>
+
         <section class="settings-section" aria-labelledby="recordingHeading">
           <h2 id="recordingHeading" data-i18n="optionsRecording">Recording</h2>
 
@@ -91,4 +104,3 @@
     <script type="module" src="./index.js"></script>
   </body>
 </html>
-

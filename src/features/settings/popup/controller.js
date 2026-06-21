@@ -1,5 +1,6 @@
 import { MESSAGE_TYPES } from "../../lookup/core/messages.js";
 import { applyI18n, messageOrDefault } from "../../../platform/chrome/i18n.js";
+import { applyTheme } from "../../../platform/dom/theme.js";
 
 export async function startPopup(doc = document) {
   applyI18n(doc);
@@ -7,6 +8,7 @@ export async function startPopup(doc = document) {
   const state = await chrome.runtime.sendMessage({ type: MESSAGE_TYPES.GET_STATUS });
   const status = state?.status || {};
 
+  applyTheme(doc, state?.settings?.appearance?.theme);
   renderStatus(doc, status);
   doc.getElementById("recordButton").addEventListener("click", () => {
     chrome.runtime.sendMessage({ type: MESSAGE_TYPES.POPUP_START_RECORDING });
@@ -34,4 +36,3 @@ function stressLabel(state) {
   if (state === "missing") return messageOrDefault("popupStressMissing", "Missing on Goroh");
   return messageOrDefault("popupStressUnknown", "Not checked yet");
 }
-

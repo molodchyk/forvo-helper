@@ -5,7 +5,7 @@
 - Area: `chrome.storage.sync`
 - Owner: `src/features/settings`
 - Shape version: `1`
-- Purpose: user configuration for recording triggers, Goroh lookup, and ChatGPT fallback
+- Purpose: user configuration for appearance, recording triggers, Goroh lookup, and ChatGPT fallback
 - Retention: until reset or uninstall
 - Quota risk: low; values are short strings, booleans, and numbers
 
@@ -24,4 +24,3 @@
 - Purpose: handoff prompt for the ChatGPT content script
 - Retention: overwritten by new fallback and marked as inserted when filled
 - Quota risk: low
-

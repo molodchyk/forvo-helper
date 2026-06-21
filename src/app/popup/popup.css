@@ -34,7 +34,8 @@ h1 {
   place-items: center;
   border: 1px solid var(--fh-border);
   border-radius: 6px;
-  background: #fff;
+  background: var(--fh-control);
+  color: var(--fh-ink);
   cursor: pointer;
 }
 
@@ -71,7 +72,7 @@ dd {
   min-height: 36px;
   border: 1px solid var(--fh-border);
   border-radius: 6px;
-  background: #fff;
+  background: var(--fh-control);
   color: var(--fh-ink);
   cursor: pointer;
 }
@@ -79,11 +80,10 @@ dd {
 .button--primary {
   border-color: var(--fh-accent);
   background: var(--fh-accent);
-  color: #fff;
+  color: var(--fh-primary-ink);
 }
 
 button:disabled {
   opacity: 0.55;
   cursor: default;
 }
-

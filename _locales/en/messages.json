@@ -48,6 +48,21 @@
   "optionsTitle": {
     "message": "Forvo Helper Options"
   },
+  "optionsAppearance": {
+    "message": "Appearance"
+  },
+  "optionsTheme": {
+    "message": "Theme"
+  },
+  "optionsThemeSystem": {
+    "message": "System"
+  },
+  "optionsThemeLight": {
+    "message": "Light"
+  },
+  "optionsThemeDark": {
+    "message": "Dark"
+  },
   "optionsRecording": {
     "message": "Recording"
   },
@@ -103,4 +118,3 @@
     "message": "Saved"
   }
 }
-
