@@ -50,8 +50,8 @@ if (/Forvo Helper/i.test(listing)) {
   failures.push("Store listing direct-copy text must not include the extension name.");
 }
 
-if (/https?:\/\//i.test(listing) || /GPL-3\.0/i.test(listing)) {
-  failures.push("Store listing direct-copy text must not include source/license footer text.");
+if (!listing.includes("Open source under the GPL-3.0 license: https://github.com/molodchyk/forvo-helper")) {
+  failures.push("Store listing must include the plain source/license line.");
 }
 
 if (existsSync(path.join(root, "dist"))) {

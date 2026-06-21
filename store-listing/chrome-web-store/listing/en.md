@@ -16,3 +16,5 @@ Limitations:
 Browser microphone permission is still controlled by the browser and Forvo.
 ChatGPT automatic submission is off by default.
 Forvo, Goroh, and ChatGPT page changes may require extension updates.
+
+Open source under the GPL-3.0 license: https://github.com/molodchyk/forvo-helper
