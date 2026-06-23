@@ -1,6 +1,5 @@
 import { MESSAGE_TYPES } from "../../lookup/core/messages.js";
 import {
-  extractForvoWordFromUrl,
   normalizeForvoRecordingUrl,
   normalizeLookupWord
 } from "../../lookup/core/word.js";
@@ -8,6 +7,7 @@ import { eventMatchesHotkey } from "../core/hotkey.js";
 import { createCircleGestureState, gestureProgress, updateCircleGesture } from "../core/gesture.js";
 import { activateRecordButton } from "./activator.js";
 import { createRecordOverlay } from "./overlay.js";
+import { getCurrentForvoWord } from "./forvoWordExtractor.js";
 import { findRecordButton } from "./recordButtonFinder.js";
 import { getRecordActivationPoint, isPointInRecordHoverArea } from "./recordGeometry.js";
 import { createStressPanel } from "./stressPanel.js";
@@ -153,7 +153,7 @@ class ForvoController {
   }
 
   notifyWordDetected() {
-    const word = extractForvoWordFromUrl(location.href) || extractWordFromPage();
+    const word = getCurrentForvoWord();
 
     if (!word || word === this.lastWord) {
       return;
@@ -330,7 +330,7 @@ class ForvoController {
 
   notifyPronunciationSubmitted() {
     const normalizedUrl = normalizeForvoRecordingUrl(location.href);
-    const word = extractForvoWordFromUrl(location.href) || this.lastWord || extractWordFromPage();
+    const word = getCurrentForvoWord() || this.lastWord;
 
     if (!normalizedUrl || !word) {
       return;
@@ -354,7 +354,7 @@ class ForvoController {
   }
 
   renderStressPanel(result) {
-    const currentWord = extractForvoWordFromUrl(location.href) || this.lastWord || extractWordFromPage();
+    const currentWord = getCurrentForvoWord() || this.lastWord;
 
     if (!wordsMatch(currentWord, result?.word || result?.lastWord)) {
       this.stressPanel.hide();
@@ -369,22 +369,6 @@ class ForvoController {
       gorohUrl: result.gorohUrl || result.lastGorohUrl
     });
   }
-}
-
-function extractWordFromPage() {
-  const label = [...document.querySelectorAll("body *")]
-    .find((element) => /you are pronouncing/i.test(element.textContent || ""));
-
-  if (!label) {
-    return "";
-  }
-
-  const region = label.closest("section,article,main,div") || document.body;
-  const candidates = [...region.querySelectorAll("strong,b,h1,h2,h3")]
-    .map((element) => normalizeLookupWord(element.textContent))
-    .filter((text) => text.length > 1);
-
-  return candidates[0] || "";
 }
 
 function wordsMatch(first, second) {

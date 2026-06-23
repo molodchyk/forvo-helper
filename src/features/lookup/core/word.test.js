@@ -7,6 +7,7 @@ import {
   extractGorohWordFromUrl,
   normalizeForvoRecordingUrl,
   normalizeLookupWord,
+  preferReferenceWordCasing,
   stripStress
 } from "./word.js";
 
@@ -41,6 +42,12 @@ test("extracts Goroh lookup words", () => {
 test("strips stress marks but keeps letters", () => {
   assert.equal(stripStress("ЧЕМОДА́НИЩЕ"), "ЧЕМОДАНИЩЕ");
   assert.equal(normalizeLookupWord("  ЧЕМОДА́НИЩЕ!  "), "ЧЕМОДАНИЩЕ");
+});
+
+test("preserves visible Forvo casing when Goroh returns the same lowercase word", () => {
+  assert.equal(preferReferenceWordCasing("Чемерлієве", "чемерлієве"), "Чемерлієве");
+  assert.equal(preferReferenceWordCasing("", "чемерлієве"), "чемерлієве");
+  assert.equal(preferReferenceWordCasing("Крисин", "чемерлієве"), "чемерлієве");
 });
 
 test("builds Goroh lookup URLs", () => {

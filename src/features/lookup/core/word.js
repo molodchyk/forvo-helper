@@ -64,6 +64,23 @@ export function normalizeLookupWord(word) {
     .trim();
 }
 
+export function preferReferenceWordCasing(referenceWord, fallbackWord) {
+  const reference = normalizeLookupWord(referenceWord);
+  const fallback = normalizeLookupWord(fallbackWord);
+
+  if (!fallback) {
+    return reference;
+  }
+
+  if (!reference) {
+    return fallback;
+  }
+
+  return reference.toLocaleLowerCase("uk-UA") === fallback.toLocaleLowerCase("uk-UA")
+    ? reference
+    : fallback;
+}
+
 export function stripStress(word) {
   return String(word || "")
     .normalize("NFD")

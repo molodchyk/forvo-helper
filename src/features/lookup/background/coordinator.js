@@ -3,7 +3,8 @@ import {
   buildGorohLookupUrl,
   createChatGptPrompt,
   normalizeForvoRecordingUrl,
-  normalizeLookupWord
+  normalizeLookupWord,
+  preferReferenceWordCasing
 } from "../core/word.js";
 import { formatDailyBadgeText } from "../../recording/core/dailySubmissions.js";
 import { SETTINGS_KEY } from "../../settings/core/settings.js";
@@ -197,13 +198,14 @@ async function openGorohForWord(word, settings) {
 
 async function handleGorohStressResult(message) {
   const currentStatus = await readStatus();
-  const word = normalizeLookupWord(message.word) || currentStatus.lastWord;
+  const resultWord = normalizeLookupWord(message.word);
+  const word = preferReferenceWordCasing(currentStatus.lastWord, resultWord);
   const hasStress = Boolean(message.hasStress);
   const stressedWord = hasStress ? String(message.stressedWord || "").trim() : "";
   const stressSample = String(message.sample || "").trim();
   const settings = await readSettings();
 
-  if (isStaleGorohResult(currentStatus.lastWord, word)) {
+  if (isStaleGorohResult(currentStatus.lastWord, resultWord || word)) {
     return { word, hasStress, stale: true };
   }
 
