@@ -9,6 +9,7 @@ const outDir = path.join(root, "dist", "chrome");
 const entries = [
   ["src/app/background/index.js", "app/background/index.js", "esm"],
   ["src/app/content/forvo.js", "app/content/forvo.js", "iife"],
+  ["src/app/content/forvoProfile.js", "app/content/forvoProfile.js", "iife"],
   ["src/app/content/goroh.js", "app/content/goroh.js", "iife"],
   ["src/app/content/chatgpt.js", "app/content/chatgpt.js", "iife"],
   ["src/app/options/index.js", "app/options/index.js", "esm"],
@@ -55,4 +56,3 @@ async function copyFile(from, to = from) {
 async function copyDirectory(from, to = from) {
   await cp(path.join(root, from), path.join(outDir, to), { recursive: true });
 }
-

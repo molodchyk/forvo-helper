@@ -49,6 +49,18 @@
     },
     {
       "matches": [
+        "https://forvo.com/account-info/*",
+        "https://*.forvo.com/account-info/*",
+        "https://forvo.com/user/*",
+        "https://*.forvo.com/user/*"
+      ],
+      "js": [
+        "app/content/forvoProfile.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
         "https://goroh.pp.ua/*",
         "https://www.goroh.pp.ua/*"
       ],

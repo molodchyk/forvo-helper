@@ -84,10 +84,6 @@ async function handleMessage(message, sender) {
         dailyStats: await readDailySubmissionStats(),
         profileStats: await readForvoProfileStats()
       };
-    case MESSAGE_TYPES.POPUP_START_RECORDING:
-      return startRecordingOnActiveTab();
-    case MESSAGE_TYPES.POPUP_OPEN_GOROH:
-      return openGorohFromStatus();
     case MESSAGE_TYPES.POPUP_REFRESH_FORVO_PROFILE_STATS:
       return { profileStats: await refreshForvoProfileStats() };
     case MESSAGE_TYPES.FORVO_WORD_DETECTED:
@@ -182,18 +178,6 @@ async function handleForvoWordDetected(message, sender) {
   }
 
   return { word };
-}
-
-async function openGorohFromStatus() {
-  const settings = await readSettings();
-  const status = await readStatus();
-
-  if (!status.lastWord) {
-    throw new Error("No current word is available.");
-  }
-
-  await openGorohForWord(status.lastWord, settings);
-  return { word: status.lastWord };
 }
 
 async function openGorohForWord(word, settings) {

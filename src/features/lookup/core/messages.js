@@ -8,8 +8,9 @@ export const MESSAGE_TYPES = Object.freeze({
   FILL_GOROH_SEARCH: "forvo-helper:fill-goroh-search",
   SET_CHATGPT_PROMPT: "forvo-helper:set-chatgpt-prompt",
   CHATGPT_PROMPT_INSERTED: "forvo-helper:chatgpt-prompt-inserted",
-  POPUP_START_RECORDING: "forvo-helper:popup-start-recording",
-  POPUP_OPEN_GOROH: "forvo-helper:popup-open-goroh",
   POPUP_REFRESH_FORVO_PROFILE_STATS: "forvo-helper:popup-refresh-forvo-profile-stats",
+  FORVO_PROFILE_STATS_UPDATED: "forvo-helper:forvo-profile-stats-updated",
+  SCAN_FORVO_ACCOUNT_USERNAME: "forvo-helper:scan-forvo-account-username",
+  SCAN_FORVO_PROFILE_COUNT: "forvo-helper:scan-forvo-profile-count",
   GET_STATUS: "forvo-helper:get-status"
 });

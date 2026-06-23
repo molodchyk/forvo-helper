@@ -60,6 +60,9 @@
   "popupProfileRefreshing": {
     "message": "Refreshing..."
   },
+  "popupProfileCounting": {
+    "message": "Finding total..."
+  },
   "popupProfileError": {
     "message": "Could not refresh"
   },
@@ -68,12 +71,6 @@
   },
   "popupOpenOptions": {
     "message": "Options"
-  },
-  "popupOpenGoroh": {
-    "message": "Open Goroh"
-  },
-  "popupStartRecording": {
-    "message": "Start recording"
   },
   "optionsTitle": {
     "message": "Forvo Helper Options"

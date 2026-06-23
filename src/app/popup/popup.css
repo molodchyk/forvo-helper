@@ -102,12 +102,6 @@ dd {
   overflow-wrap: anywhere;
 }
 
-.actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
 .button {
   min-height: 36px;
   border: 1px solid var(--fh-border);
@@ -115,12 +109,6 @@ dd {
   background: var(--fh-control);
   color: var(--fh-ink);
   cursor: pointer;
-}
-
-.button--primary {
-  border-color: var(--fh-accent);
-  background: var(--fh-accent);
-  color: var(--fh-primary-ink);
 }
 
 button:disabled {

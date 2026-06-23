@@ -31,7 +31,7 @@ Network behavior:
 
 - The extension does not make background analytics, advertising, tracking, or telemetry requests.
 - The extension may open browser tabs to Goroh or ChatGPT when the user enables those workflow settings.
-- The extension may request the signed-in Forvo account page and public Forvo user profile page to refresh the popup's total pronounced-word count. It stores only the username, profile URL, total count, refresh time, and a short error message when refresh fails.
+- The extension may open temporary inactive Forvo account and public profile tabs to refresh the popup's total pronounced-word count. It stores only the username, profile URL, total count, refresh time, and a short error message when refresh fails.
 - The extension does not run remote hosted JavaScript.
 
 Data sale and sharing:

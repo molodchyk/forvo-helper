@@ -1,6 +1,7 @@
 import { MESSAGE_TYPES } from "../../lookup/core/messages.js";
 import { shouldRefreshForvoProfileStats } from "../../profile-stats/core/profileStats.js";
 import { applyI18n, messageOrDefault } from "../../../platform/chrome/i18n.js";
+import { addRuntimeMessageListener } from "../../../platform/chrome/runtime.js";
 import { applyTheme } from "../../../platform/dom/theme.js";
 
 export async function startPopup(doc = document) {
@@ -13,17 +14,20 @@ export async function startPopup(doc = document) {
 
   applyTheme(doc, state?.settings?.appearance?.theme);
   renderStatus(doc, status, dailyStats, profileStats);
-  doc.getElementById("recordButton").addEventListener("click", () => {
-    chrome.runtime.sendMessage({ type: MESSAGE_TYPES.POPUP_START_RECORDING });
-  });
-  doc.getElementById("gorohButton").addEventListener("click", () => {
-    chrome.runtime.sendMessage({ type: MESSAGE_TYPES.POPUP_OPEN_GOROH });
-  });
   doc.getElementById("optionsButton").addEventListener("click", () => {
     chrome.runtime.openOptionsPage();
   });
   doc.getElementById("refreshProfileStatsButton").addEventListener("click", () => {
     refreshProfileStats(doc);
+  });
+  addRuntimeMessageListener((message, _sender, sendResponse) => {
+    if (message?.type === MESSAGE_TYPES.FORVO_PROFILE_STATS_UPDATED) {
+      renderProfileStats(doc, message.profileStats);
+      sendResponse({ ok: true });
+      return false;
+    }
+
+    return false;
   });
 
   if (shouldRefreshForvoProfileStats(profileStats)) {
@@ -35,13 +39,11 @@ function renderStatus(doc, status, dailyStats, profileStats) {
   const wordElement = doc.getElementById("currentWord");
   const stressElement = doc.getElementById("stressState");
   const todayElement = doc.getElementById("todaySubmittedCount");
-  const hasWord = Boolean(status.lastWord);
 
   wordElement.textContent = status.lastWord || messageOrDefault("popupNoWord", "No Forvo word detected");
   stressElement.textContent = stressLabel(status.lastStressState);
   todayElement.textContent = submittedCountLabel(dailyStats.count || 0);
   renderProfileStats(doc, profileStats);
-  doc.getElementById("gorohButton").disabled = !hasWord;
 }
 
 function stressLabel(state) {
@@ -85,6 +87,8 @@ function renderProfileStats(doc, stats = {}) {
   if (Number.isFinite(count) && stats.updatedAt) {
     countElement.textContent = messageOrDefault("popupPronouncedCount", "{count} pronounced")
       .replace("{count}", new Intl.NumberFormat().format(count));
+  } else if (stats.username) {
+    countElement.textContent = stats.username;
   } else {
     countElement.textContent = messageOrDefault("popupProfileNotRefreshed", "Not refreshed yet");
   }
@@ -98,6 +102,11 @@ function renderProfileStats(doc, stats = {}) {
     metaElement.textContent = messageOrDefault("popupProfileMeta", "{username} - updated {date}")
       .replace("{username}", stats.username)
       .replace("{date}", new Date(stats.updatedAt).toLocaleString());
+    return;
+  }
+
+  if (stats.username) {
+    metaElement.textContent = messageOrDefault("popupProfileCounting", "Finding total...");
     return;
   }
 
