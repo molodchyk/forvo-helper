@@ -72,17 +72,17 @@
   "optionsShowDailyBadge": {
     "message": "Show today's submitted count on the toolbar badge"
   },
-  "optionsListenStats": {
-    "message": "Listen stats"
+  "optionsForvoStats": {
+    "message": "Forvo stats"
   },
-  "optionsForvoListenStatsEnabled": {
-    "message": "Enable Forvo listen stats"
+  "optionsForvoStatsEnabled": {
+    "message": "Enable Forvo stats source"
   },
-  "optionsForvoListenStatsUrl": {
-    "message": "Forvo pronunciations URL"
+  "optionsForvoStatsSourceUrl": {
+    "message": "Forvo pronunciations list URL"
   },
-  "optionsForvoListenStatsUrlPlaceholder": {
-    "message": "https://forvo.com/user/name/pronunciations/"
+  "optionsForvoStatsSourceUrlPlaceholder": {
+    "message": "https://uk.forvo.com/account-info/pronunciations/"
   },
   "optionsRecording": {
     "message": "Recording"

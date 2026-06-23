@@ -10,8 +10,8 @@ export const DEFAULT_SETTINGS = Object.freeze({
   },
   stats: {
     showDailyBadge: true,
-    forvoListenStatsEnabled: false,
-    forvoListenStatsUrl: ""
+    forvoStatsEnabled: false,
+    forvoStatsSourceUrl: ""
   },
   recording: {
     hoverEnabled: true,
@@ -52,8 +52,11 @@ export function normalizeSettings(input = {}) {
     },
     stats: {
       showDailyBadge: asBoolean(stats.showDailyBadge, DEFAULT_SETTINGS.stats.showDailyBadge),
-      forvoListenStatsEnabled: asBoolean(stats.forvoListenStatsEnabled, DEFAULT_SETTINGS.stats.forvoListenStatsEnabled),
-      forvoListenStatsUrl: normalizeForvoUrl(stats.forvoListenStatsUrl)
+      forvoStatsEnabled: asBoolean(
+        stats.forvoStatsEnabled,
+        asBoolean(stats.forvoListenStatsEnabled, DEFAULT_SETTINGS.stats.forvoStatsEnabled)
+      ),
+      forvoStatsSourceUrl: normalizeForvoUrl(stats.forvoStatsSourceUrl || stats.forvoListenStatsUrl)
     },
     recording: {
       hoverEnabled: asBoolean(recording.hoverEnabled, DEFAULT_SETTINGS.recording.hoverEnabled),

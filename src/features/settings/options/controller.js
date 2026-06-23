@@ -33,8 +33,8 @@ function renderSettings(doc, settings) {
   const normalized = normalizeSettings(settings);
   setValue(doc, "theme", normalized.appearance.theme);
   setChecked(doc, "showDailyBadge", normalized.stats.showDailyBadge);
-  setChecked(doc, "forvoListenStatsEnabled", normalized.stats.forvoListenStatsEnabled);
-  setValue(doc, "forvoListenStatsUrl", normalized.stats.forvoListenStatsUrl);
+  setChecked(doc, "forvoStatsEnabled", normalized.stats.forvoStatsEnabled);
+  setValue(doc, "forvoStatsSourceUrl", normalized.stats.forvoStatsSourceUrl);
   setChecked(doc, "hoverEnabled", normalized.recording.hoverEnabled);
   setValue(doc, "hoverDelaySeconds", millisecondsToSeconds(normalized.recording.hoverDelayMs));
   setChecked(doc, "gestureEnabled", normalized.recording.gestureEnabled);
@@ -57,8 +57,8 @@ function readSettingsFromForm(doc, previousSettings) {
     },
     stats: {
       showDailyBadge: getChecked(doc, "showDailyBadge"),
-      forvoListenStatsEnabled: getChecked(doc, "forvoListenStatsEnabled"),
-      forvoListenStatsUrl: getValue(doc, "forvoListenStatsUrl")
+      forvoStatsEnabled: getChecked(doc, "forvoStatsEnabled"),
+      forvoStatsSourceUrl: getValue(doc, "forvoStatsSourceUrl")
     },
     recording: {
       hoverEnabled: getChecked(doc, "hoverEnabled"),
