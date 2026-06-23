@@ -10,6 +10,7 @@ import { createRecordOverlay } from "./overlay.js";
 import { getCurrentForvoWord } from "./forvoWordExtractor.js";
 import { findRecordButton } from "./recordButtonFinder.js";
 import { getRecordActivationPoint, isPointInRecordHoverArea } from "./recordGeometry.js";
+import { findSendPronunciationButton } from "./sendButtonFinder.js";
 import { createStressPanel } from "./stressPanel.js";
 import { addRuntimeMessageListener, sendRuntimeMessage } from "../../../platform/chrome/runtime.js";
 import { onSettingsChanged, readSettings } from "../../../platform/chrome/storage.js";
@@ -60,7 +61,7 @@ class ForvoController {
   installListeners() {
     document.addEventListener("keydown", (event) => this.handleKeyDown(event), true);
     document.addEventListener("pointermove", (event) => this.handlePointerMove(event), true);
-    document.addEventListener("click", (event) => this.handleDocumentClick(event));
+    document.addEventListener("click", (event) => this.handleDocumentClick(event), true);
     window.addEventListener("load", () => this.scheduleLayoutRefreshes(), { once: true });
     window.addEventListener("resize", () => this.scheduleRefresh(), { passive: true });
     window.addEventListener("scroll", () => this.scheduleRefresh(), { passive: true });
@@ -183,9 +184,7 @@ class ForvoController {
   }
 
   handleDocumentClick(event) {
-    const button = event.target instanceof Element ? event.target.closest("#sendAudio") : null;
-
-    if (!(button instanceof HTMLButtonElement) || button.disabled) {
+    if (!findSendPronunciationButton(event.target)) {
       return;
     }
 
