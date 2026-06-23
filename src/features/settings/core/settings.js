@@ -9,7 +9,9 @@ export const DEFAULT_SETTINGS = Object.freeze({
     theme: "system"
   },
   stats: {
-    showDailyBadge: true
+    showDailyBadge: true,
+    forvoListenStatsEnabled: false,
+    forvoListenStatsUrl: ""
   },
   recording: {
     hoverEnabled: true,
@@ -33,6 +35,7 @@ export const DEFAULT_SETTINGS = Object.freeze({
 
 const GOROH_LOOKUP_MODES = new Set(["direct-url", "search-field"]);
 const CHATGPT_HOSTS = new Set(["chatgpt.com", "chat.openai.com"]);
+const FORVO_HOST_PATTERN = /(^|\.)forvo\.com$/;
 const THEMES = new Set(["system", "light", "dark"]);
 
 export function normalizeSettings(input = {}) {
@@ -48,7 +51,9 @@ export function normalizeSettings(input = {}) {
       theme: THEMES.has(appearance.theme) ? appearance.theme : DEFAULT_SETTINGS.appearance.theme
     },
     stats: {
-      showDailyBadge: asBoolean(stats.showDailyBadge, DEFAULT_SETTINGS.stats.showDailyBadge)
+      showDailyBadge: asBoolean(stats.showDailyBadge, DEFAULT_SETTINGS.stats.showDailyBadge),
+      forvoListenStatsEnabled: asBoolean(stats.forvoListenStatsEnabled, DEFAULT_SETTINGS.stats.forvoListenStatsEnabled),
+      forvoListenStatsUrl: normalizeForvoUrl(stats.forvoListenStatsUrl)
     },
     recording: {
       hoverEnabled: asBoolean(recording.hoverEnabled, DEFAULT_SETTINGS.recording.hoverEnabled),
@@ -116,6 +121,30 @@ export function normalizeChatGptUrl(value) {
     return url.toString();
   } catch {
     return fallback;
+  }
+}
+
+export function normalizeForvoUrl(value) {
+  let text = asString(value, "").trim();
+
+  if (!text) {
+    return "";
+  }
+
+  if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(text)) {
+    text = `https://${text}`;
+  }
+
+  try {
+    const url = new URL(text);
+    if (url.protocol !== "https:" || !FORVO_HOST_PATTERN.test(url.hostname)) {
+      return "";
+    }
+
+    url.hash = "";
+    return url.toString();
+  } catch {
+    return "";
   }
 }
 

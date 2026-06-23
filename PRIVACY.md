@@ -12,6 +12,7 @@ Stored settings may include:
 - ChatGPT fallback URL and prompt template
 - whether ChatGPT prompts should be submitted automatically
 - whether the toolbar badge should show today's submitted count
+- whether Forvo listen stats are enabled and the Forvo pronunciations URL to scan
 
 The extension also stores local workflow records with the last detected word, the last Goroh stress result, the most recent pending ChatGPT prompt, and today's submitted Forvo recording URLs. These records are used only to keep the popup, toolbar badge, and fallback workflow consistent.
 

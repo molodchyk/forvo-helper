@@ -10,4 +10,5 @@ Initial stable release for local testing.
 - Detects combining acute stress marks on Goroh pages.
 - Opens ChatGPT fallback when Goroh does not expose a stress mark.
 - Shows today's unique submitted pronunciation count on the toolbar badge.
+- Adds options-page settings for a future Forvo listen-stats source URL.
 - Does not increase the daily count when Forvo warns that the word was previously pronounced.
