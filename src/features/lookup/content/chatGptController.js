@@ -61,7 +61,7 @@ function insertPrompt(prompt, autoSubmit) {
   }
 
   if (autoSubmit) {
-    setTimeout(clickSendButton, 250);
+    retryClickSendButton();
   }
 
   return true;
@@ -157,12 +157,35 @@ function dispatchTextInputEvents(element, prompt) {
   element.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
-function clickSendButton() {
-  const button = document.querySelector("button[data-testid='send-button'],button[aria-label*='Send' i],form button[type='submit']");
-
-  if (button instanceof HTMLButtonElement && !button.disabled) {
-    button.click();
+function retryClickSendButton(attempt = 0) {
+  if (clickSendButton() || attempt >= 10) {
+    return;
   }
+
+  setTimeout(() => retryClickSendButton(attempt + 1), 250);
+}
+
+function clickSendButton() {
+  const button = document.querySelector([
+    "#composer-submit-button",
+    "button[data-testid='send-button']",
+    "button[aria-label='Send prompt']",
+    "button[aria-label*='Send' i]",
+    "form button[type='submit']"
+  ].join(","));
+
+  if (button instanceof HTMLButtonElement && isEnabledButton(button)) {
+    button.click();
+    return true;
+  }
+
+  return false;
+}
+
+function isEnabledButton(button) {
+  return !button.disabled
+    && button.getAttribute("aria-disabled") !== "true"
+    && !button.matches("[disabled], .disabled, [data-disabled='true']");
 }
 
 function setNativeValue(field, value) {
