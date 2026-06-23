@@ -136,7 +136,7 @@
     "message": "Open ChatGPT when a Forvo page opens"
   },
   "optionsChatGptUrl": {
-    "message": "ChatGPT URL"
+    "message": "ChatGPT target chat URL"
   },
   "optionsChatGptPrompt": {
     "message": "ChatGPT prompt template"

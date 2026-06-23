@@ -10,6 +10,7 @@ Initial stable release for local testing.
 - Detects combining acute stress marks on Goroh pages.
 - Opens ChatGPT fallback when Goroh does not expose a stress mark.
 - Can open ChatGPT when a Forvo page opens, controlled by a separate options-page setting.
+- Labels the configured ChatGPT destination as a target chat URL.
 - Shows today's unique submitted pronunciation count on the toolbar badge.
 - Shows the refreshed total pronounced-word count from the signed-in Forvo profile in the popup.
 - Reuses the cached Forvo username for total-count refreshes and waits through Forvo security verification before reading the profile.

@@ -9,7 +9,7 @@ Stored settings may include:
 - hover delay and page hotkey
 - Goroh lookup mode
 - whether lookup tabs should be focused
-- ChatGPT fallback URL and prompt template
+- ChatGPT target chat URL and fallback prompt template
 - whether ChatGPT prompts should be submitted automatically
 - whether ChatGPT should open when a Forvo page opens
 - whether the toolbar badge should show today's submitted count
