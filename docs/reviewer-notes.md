@@ -12,3 +12,4 @@ Synthetic activation of Forvo's record control depends on Forvo's current page i
 
 The ChatGPT fallback fills the prompt composer. Automatic submission is disabled by default and is controlled by the user in the options page.
 
+The toolbar badge can show today's unique submitted pronunciation count. The count is derived from normalized Forvo recording URLs stored locally for the current day. If Forvo warns that a word was previously pronounced, the extension treats the send as a resubmission and does not increment the daily count.

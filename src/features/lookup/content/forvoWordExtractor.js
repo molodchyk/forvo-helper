@@ -1,4 +1,4 @@
-import { extractForvoWordFromUrl, normalizeLookupWord } from "../../lookup/core/word.js";
+import { extractForvoWordFromUrl, normalizeLookupWord } from "../core/word.js";
 
 export function getCurrentForvoWord(doc = document, href = location.href) {
   return extractWordFromHeading(doc) || extractWordFromPage(doc) || extractForvoWordFromUrl(href);

@@ -24,3 +24,11 @@
 - Purpose: handoff prompt for the ChatGPT content script
 - Retention: overwritten by new fallback and marked as inserted when filled
 - Quota risk: low
+
+## `forvoHelperDailySubmissions`
+
+- Area: `chrome.storage.local`
+- Owner: `src/features/recording`
+- Purpose: current local-day set of normalized Forvo recording URLs used for the popup and toolbar badge count
+- Retention: automatically reset when the local date changes
+- Quota risk: low for normal use; stores one compact entry per unique submitted recording URL for the current day

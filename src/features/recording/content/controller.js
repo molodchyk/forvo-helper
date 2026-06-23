@@ -7,7 +7,7 @@ import { eventMatchesHotkey } from "../core/hotkey.js";
 import { createCircleGestureState, gestureProgress, updateCircleGesture } from "../core/gesture.js";
 import { activateRecordButton } from "./activator.js";
 import { createRecordOverlay } from "./overlay.js";
-import { getCurrentForvoWord } from "./forvoWordExtractor.js";
+import { getCurrentForvoWord } from "../../lookup/content/forvoWordExtractor.js";
 import { findRecordButton } from "./recordButtonFinder.js";
 import { getRecordActivationPoint, isPointInRecordHoverArea } from "./recordGeometry.js";
 import { hasRepronunciationWarning } from "./repronunciationWarning.js";

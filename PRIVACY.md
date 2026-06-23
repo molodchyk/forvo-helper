@@ -13,7 +13,7 @@ Stored settings may include:
 - whether ChatGPT prompts should be submitted automatically
 - whether the toolbar badge should show today's submitted count
 
-The extension also stores a small local status record with the last detected word, the last Goroh stress result, the most recent pending ChatGPT prompt, and today's submitted Forvo recording URLs. This status is used only to keep the popup, toolbar badge, and fallback workflow consistent.
+The extension also stores local workflow records with the last detected word, the last Goroh stress result, the most recent pending ChatGPT prompt, and today's submitted Forvo recording URLs. These records are used only to keep the popup, toolbar badge, and fallback workflow consistent.
 
 Browser permissions:
 
