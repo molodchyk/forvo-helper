@@ -3,13 +3,17 @@ export async function getActiveTab() {
   return tab || null;
 }
 
-export async function openOrReuseTab({ url, matchPatterns, active = false, reuse = true }) {
+export async function openOrReuseTab({ url, matchPatterns, active = false, reuse = true, updateExistingUrl = true }) {
   if (reuse) {
     const tabs = await chrome.tabs.query({ url: matchPatterns });
     const existing = tabs.find((tab) => typeof tab.id === "number");
 
     if (existing) {
-      return chrome.tabs.update(existing.id, { url, active });
+      if (updateExistingUrl) {
+        return chrome.tabs.update(existing.id, { url, active });
+      }
+
+      return active ? chrome.tabs.update(existing.id, { active }) : existing;
     }
   }
 
@@ -50,4 +54,3 @@ export async function sendTabMessage(tabId, message) {
     return null;
   }
 }
-

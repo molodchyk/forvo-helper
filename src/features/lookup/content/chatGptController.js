@@ -26,15 +26,43 @@ async function fillPendingPrompt() {
 }
 
 async function insertPromptWithRetries(prompt, autoSubmit = false) {
-  for (let attempt = 0; attempt < 20; attempt += 1) {
-    const ok = insertPrompt(prompt, autoSubmit);
+  const ok = autoSubmit
+    ? await insertAndSubmitPromptWithRetries(prompt)
+    : await insertPromptOnlyWithRetries(prompt);
 
-    if (ok) {
-      sendRuntimeMessage({
-        type: MESSAGE_TYPES.CHATGPT_PROMPT_INSERTED,
-        prompt
-      });
+  if (ok) {
+    sendRuntimeMessage({
+      type: MESSAGE_TYPES.CHATGPT_PROMPT_INSERTED,
+      prompt
+    });
+  }
+
+  return ok;
+}
+
+async function insertPromptOnlyWithRetries(prompt) {
+  for (let attempt = 0; attempt < 60; attempt += 1) {
+    if (insertPrompt(prompt)) {
       return true;
+    }
+    await delay(500);
+  }
+
+  return false;
+}
+
+async function insertAndSubmitPromptWithRetries(prompt) {
+  for (let attempt = 0; attempt < 60; attempt += 1) {
+    const composer = findComposer();
+
+    if (composer) {
+      if (!composerContainsPrompt(composer, prompt)) {
+        insertPrompt(prompt);
+      }
+
+      if (composerContainsPrompt(composer, prompt) && clickSendButton()) {
+        return true;
+      }
     }
 
     await delay(500);
@@ -43,7 +71,7 @@ async function insertPromptWithRetries(prompt, autoSubmit = false) {
   return false;
 }
 
-function insertPrompt(prompt, autoSubmit) {
+function insertPrompt(prompt) {
   const composer = findComposer();
 
   if (!composer) {
@@ -58,10 +86,6 @@ function insertPrompt(prompt, autoSubmit) {
 
   if (!ok) {
     return false;
-  }
-
-  if (autoSubmit) {
-    retryClickSendButton();
   }
 
   return true;
@@ -110,6 +134,14 @@ function insertIntoEditableComposer(composer, prompt) {
   return composer.textContent?.includes(prompt);
 }
 
+function composerContainsPrompt(composer, prompt) {
+  if (composer instanceof HTMLTextAreaElement || composer instanceof HTMLInputElement) {
+    return composer.value === prompt;
+  }
+
+  return Boolean(composer.textContent?.includes(prompt));
+}
+
 function selectEditableContents(element) {
   const selection = element.ownerDocument.getSelection?.() || globalThis.getSelection?.();
 
@@ -155,14 +187,6 @@ function dispatchTextInputEvents(element, prompt) {
     data: prompt
   }));
   element.dispatchEvent(new Event("change", { bubbles: true }));
-}
-
-function retryClickSendButton(attempt = 0) {
-  if (clickSendButton() || attempt >= 10) {
-    return;
-  }
-
-  setTimeout(() => retryClickSendButton(attempt + 1), 250);
 }
 
 function clickSendButton() {

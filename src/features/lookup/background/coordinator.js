@@ -22,6 +22,7 @@ import { getActiveTab, openOrReuseTab, sendTabMessage, waitForTabComplete } from
 const GOROH_PATTERNS = ["https://goroh.pp.ua/*", "https://www.goroh.pp.ua/*"];
 const CHATGPT_PATTERNS = ["https://chatgpt.com/*", "https://chat.openai.com/*"];
 const DAILY_BADGE_ALARM = "forvo-helper:daily-badge-refresh";
+let chatGptPreloadPromise = null;
 
 export function registerLookupCoordinator() {
   chrome.runtime.onInstalled.addListener(() => {
@@ -49,6 +50,16 @@ export function registerLookupCoordinator() {
     if (command === "trigger-recording") {
       startRecordingOnActiveTab();
     }
+  });
+  chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
+    if (changeInfo.status === "complete") {
+      preloadChatGptForForvoUrl(tab.url);
+    }
+  });
+  chrome.tabs.onActivated.addListener(({ tabId }) => {
+    chrome.tabs.get(tabId)
+      .then((tab) => preloadChatGptForForvoUrl(tab.url))
+      .catch(() => {});
   });
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     handleMessage(message, sender)
@@ -260,7 +271,8 @@ async function openChatGptForWord(word, settings) {
     url: settings.lookup.chatGptUrl,
     matchPatterns: CHATGPT_PATTERNS,
     active: settings.lookup.focusLookupTabs,
-    reuse: settings.lookup.reuseLookupTabs
+    reuse: settings.lookup.reuseLookupTabs,
+    updateExistingUrl: false
   });
 
   if (tab.id) {
@@ -274,6 +286,50 @@ async function openChatGptForWord(word, settings) {
 
   await writeStatus({ lastAction: "chatgpt-fallback-opened" });
   return tab;
+}
+
+function preloadChatGptForForvoUrl(url) {
+  if (!isForvoUrl(url)) {
+    return;
+  }
+
+  preloadChatGptTab();
+}
+
+function preloadChatGptTab() {
+  if (chatGptPreloadPromise) {
+    return chatGptPreloadPromise;
+  }
+
+  chatGptPreloadPromise = (async () => {
+    const settings = await readSettings();
+
+    if (!settings.lookup.chatGptFallbackEnabled) {
+      return null;
+    }
+
+    return openOrReuseTab({
+      url: settings.lookup.chatGptUrl,
+      matchPatterns: CHATGPT_PATTERNS,
+      active: false,
+      reuse: true,
+      updateExistingUrl: false
+    });
+  })().finally(() => {
+    chatGptPreloadPromise = null;
+  });
+
+  return chatGptPreloadPromise;
+}
+
+function isForvoUrl(url) {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "https:"
+      && (parsed.hostname === "forvo.com" || parsed.hostname.endsWith(".forvo.com"));
+  } catch {
+    return false;
+  }
 }
 
 async function handleChatGptPromptInserted(message) {
