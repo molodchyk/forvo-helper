@@ -25,6 +25,7 @@ export const DEFAULT_SETTINGS = Object.freeze({
     reuseLookupTabs: true,
     focusLookupTabs: false,
     chatGptFallbackEnabled: true,
+    chatGptPreloadOnForvo: true,
     chatGptUrl: "https://chatgpt.com/",
     chatGptPromptTemplate: "Find the Ukrainian stress for \"{word}\". Reply with the word marked with an acute accent and one brief note if needed.",
     chatGptAutoSubmit: false
@@ -64,6 +65,7 @@ export function normalizeSettings(input = {}) {
       reuseLookupTabs: asBoolean(lookup.reuseLookupTabs, DEFAULT_SETTINGS.lookup.reuseLookupTabs),
       focusLookupTabs: asBoolean(lookup.focusLookupTabs, DEFAULT_SETTINGS.lookup.focusLookupTabs),
       chatGptFallbackEnabled: asBoolean(lookup.chatGptFallbackEnabled, DEFAULT_SETTINGS.lookup.chatGptFallbackEnabled),
+      chatGptPreloadOnForvo: asBoolean(lookup.chatGptPreloadOnForvo, DEFAULT_SETTINGS.lookup.chatGptPreloadOnForvo),
       chatGptUrl: normalizeChatGptUrl(lookup.chatGptUrl),
       chatGptPromptTemplate: normalizePromptTemplate(lookup.chatGptPromptTemplate),
       chatGptAutoSubmit: asBoolean(lookup.chatGptAutoSubmit, DEFAULT_SETTINGS.lookup.chatGptAutoSubmit)

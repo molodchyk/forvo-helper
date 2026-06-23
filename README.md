@@ -13,6 +13,7 @@ This project is not affiliated with Forvo, Goroh, OpenAI, or ChatGPT.
 - Optionally start recording after circling the record button with the pointer.
 - Open or reuse a Goroh lookup tab for the current Forvo word.
 - Detect Ukrainian stress marks on Goroh pages.
+- Optionally open or reuse a configured ChatGPT tab when a Forvo page opens.
 - Open or reuse a configured ChatGPT tab when Goroh has no stress mark.
 - Show today's unique submitted pronunciation count on the toolbar badge.
 - Treat Forvo's previously-pronounced warning as a resubmission instead of a new daily count.

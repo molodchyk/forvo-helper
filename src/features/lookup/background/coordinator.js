@@ -1,7 +1,9 @@
 import { MESSAGE_TYPES } from "../core/messages.js";
+import { buildChatGptReusePatterns } from "../core/chatGptUrl.js";
 import {
   buildGorohLookupUrl,
   createChatGptPrompt,
+  lookupWordsEquivalent,
   normalizeForvoRecordingUrl,
   normalizeLookupWord,
   preferReferenceWordCasing
@@ -20,10 +22,9 @@ import {
   writeSettings,
   writeStatus
 } from "../../../platform/chrome/storage.js";
-import { getActiveTab, openOrReuseTab, sendTabMessage, waitForTabComplete } from "../../../platform/chrome/tabs.js";
+import { getActiveTab, injectScriptFile, openOrReuseTab, sendTabMessage, waitForTabComplete } from "../../../platform/chrome/tabs.js";
 
 const GOROH_PATTERNS = ["https://goroh.pp.ua/*", "https://www.goroh.pp.ua/*"];
-const CHATGPT_PATTERNS = ["https://chatgpt.com/*", "https://chat.openai.com/*"];
 const DAILY_BADGE_ALARM = "forvo-helper:daily-badge-refresh";
 let chatGptPreloadPromise = null;
 
@@ -177,6 +178,10 @@ async function handleForvoWordDetected(message, sender) {
     await openGorohForWord(word, settings);
   }
 
+  if (settings.lookup.chatGptPreloadOnForvo) {
+    preloadChatGptTab().catch(() => {});
+  }
+
   return { word };
 }
 
@@ -246,8 +251,7 @@ async function handleGorohStressResult(message) {
 }
 
 function isStaleGorohResult(currentWord, resultWord) {
-  return Boolean(currentWord && resultWord)
-    && normalizeLookupWord(currentWord).toLocaleLowerCase("uk-UA") !== normalizeLookupWord(resultWord).toLocaleLowerCase("uk-UA");
+  return Boolean(currentWord && resultWord) && !lookupWordsEquivalent(currentWord, resultWord);
 }
 
 async function sendForvoStressPanelUpdate(tabId, payload) {
@@ -264,16 +268,13 @@ async function sendForvoStressPanelUpdate(tabId, payload) {
 async function openChatGptForWord(word, settings) {
   const existingPending = await readPendingChatGptPrompt();
   const prompt = createChatGptPrompt(settings.lookup.chatGptPromptTemplate, word);
-
-  if (existingPending?.word === word && existingPending?.prompt === prompt && !existingPending?.filledAt) {
-    return null;
-  }
-
+  const reusePending = existingPending?.word === word && existingPending?.prompt === prompt && !existingPending?.filledAt;
   const pending = {
     word,
     prompt,
     autoSubmit: settings.lookup.chatGptAutoSubmit,
-    createdAt: Date.now(),
+    createdAt: reusePending ? existingPending.createdAt : Date.now(),
+    lastOpenedAt: Date.now(),
     filledAt: 0
   };
 
@@ -281,7 +282,7 @@ async function openChatGptForWord(word, settings) {
 
   const tab = await openOrReuseTab({
     url: settings.lookup.chatGptUrl,
-    matchPatterns: CHATGPT_PATTERNS,
+    matchPatterns: buildChatGptReusePatterns(settings.lookup.chatGptUrl),
     active: settings.lookup.focusLookupTabs,
     reuse: settings.lookup.reuseLookupTabs,
     updateExistingUrl: false
@@ -289,6 +290,7 @@ async function openChatGptForWord(word, settings) {
 
   if (tab.id) {
     await waitForTabComplete(tab.id);
+    await ensureChatGptContentScript(tab.id);
     await sendTabMessage(tab.id, {
       type: MESSAGE_TYPES.SET_CHATGPT_PROMPT,
       prompt,
@@ -301,11 +303,11 @@ async function openChatGptForWord(word, settings) {
 }
 
 function preloadChatGptForForvoUrl(url) {
-  if (!isForvoUrl(url)) {
+  if (!isForvoPreloadUrl(url)) {
     return;
   }
 
-  preloadChatGptTab();
+  preloadChatGptTab().catch(() => {});
 }
 
 function preloadChatGptTab() {
@@ -316,17 +318,24 @@ function preloadChatGptTab() {
   chatGptPreloadPromise = (async () => {
     const settings = await readSettings();
 
-    if (!settings.lookup.chatGptFallbackEnabled) {
+    if (!settings.lookup.chatGptPreloadOnForvo) {
       return null;
     }
 
-    return openOrReuseTab({
+    const tab = await openOrReuseTab({
       url: settings.lookup.chatGptUrl,
-      matchPatterns: CHATGPT_PATTERNS,
+      matchPatterns: buildChatGptReusePatterns(settings.lookup.chatGptUrl),
       active: false,
       reuse: true,
       updateExistingUrl: false
     });
+
+    if (tab.id) {
+      await waitForTabComplete(tab.id);
+      await ensureChatGptContentScript(tab.id);
+    }
+
+    return tab;
   })().finally(() => {
     chatGptPreloadPromise = null;
   });
@@ -342,6 +351,49 @@ function isForvoUrl(url) {
   } catch {
     return false;
   }
+}
+
+function isForvoPreloadUrl(url) {
+  if (!isForvoUrl(url)) {
+    return false;
+  }
+
+  try {
+    const parsed = new URL(url);
+    return !isPathOrChild(parsed.pathname, "/account-info") && !isPathOrChild(parsed.pathname, "/user");
+  } catch {
+    return false;
+  }
+}
+
+function isPathOrChild(pathname, prefix) {
+  return pathname === prefix || pathname.startsWith(`${prefix}/`);
+}
+
+async function ensureChatGptContentScript(tabId) {
+  const ping = await sendTabMessage(tabId, { type: MESSAGE_TYPES.PING_CHATGPT });
+
+  if (ping?.ok) {
+    return true;
+  }
+
+  await injectScriptFile(tabId, "app/content/chatgpt.js");
+
+  for (let attempt = 0; attempt < 10; attempt += 1) {
+    const retryPing = await sendTabMessage(tabId, { type: MESSAGE_TYPES.PING_CHATGPT });
+
+    if (retryPing?.ok) {
+      return true;
+    }
+
+    await delay(150);
+  }
+
+  return false;
+}
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function handleChatGptPromptInserted(message) {

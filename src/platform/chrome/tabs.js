@@ -54,3 +54,19 @@ export async function sendTabMessage(tabId, message) {
     return null;
   }
 }
+
+export async function injectScriptFile(tabId, file) {
+  if (!chrome.scripting?.executeScript) {
+    return false;
+  }
+
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId },
+      files: [file]
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}

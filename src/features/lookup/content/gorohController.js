@@ -1,5 +1,5 @@
 import { MESSAGE_TYPES } from "../core/messages.js";
-import { extractGorohWordFromUrl, normalizeLookupWord } from "../core/word.js";
+import { extractGorohWordFromUrl, lookupWordsEquivalent, normalizeLookupWord } from "../core/word.js";
 import { hasStressMark, summarizeStressResult } from "../core/stress.js";
 import { addRuntimeMessageListener, sendRuntimeMessage } from "../../../platform/chrome/runtime.js";
 import { collectVisibleText } from "../../../platform/dom/visibleText.js";
@@ -19,7 +19,7 @@ export function startGorohController() {
 
 function reportStressResult() {
   const text = collectVisibleText(document.body);
-  const word = extractGorohWordFromUrl(location.href) || extractTitleWord();
+  const word = extractSuggestedEquivalentWord() || extractGorohWordFromUrl(location.href) || extractTitleWord();
   const stressedWord = extractStressedHeadingWord(word);
   const hasStress = hasStressMark(stressedWord) || hasStressMark(text);
 
@@ -82,15 +82,35 @@ function extractTitleWord() {
   return normalizeLookupWord(title);
 }
 
+function extractSuggestedEquivalentWord() {
+  const current = extractGorohWordFromUrl(location.href);
+
+  if (!current) {
+    return "";
+  }
+
+  const candidates = [...document.querySelectorAll("a[href]")];
+
+  for (const link of candidates) {
+    const text = normalizeLookupWord(link.textContent || "") || extractGorohWordFromUrl(link.href);
+    const hasVariantSeparator = text.includes("-") !== current.includes("-");
+
+    if (hasVariantSeparator && lookupWordsEquivalent(text, current)) {
+      return text;
+    }
+  }
+
+  return "";
+}
+
 function extractStressedHeadingWord(expectedWord) {
-  const expected = normalizeLookupWord(expectedWord).toLocaleLowerCase("uk-UA");
   const candidates = [...document.querySelectorAll("h2 span.uppercase, span.uppercase")]
     .map((element) => element.textContent?.replace(/\s+/g, " ").trim() || "")
     .filter(Boolean);
 
   return candidates.find((candidate) => {
     return hasStressMark(candidate)
-      && normalizeLookupWord(candidate).toLocaleLowerCase("uk-UA") === expected;
+      && lookupWordsEquivalent(candidate, expectedWord);
   }) || candidates.find(hasStressMark) || "";
 }
 

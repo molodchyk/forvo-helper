@@ -58,10 +58,27 @@ export function extractGorohWordFromUrl(href) {
 export function normalizeLookupWord(word) {
   return stripStress(String(word || ""))
     .replace(/\+/g, " ")
-    .replace(/[_-]+/g, " ")
+    .replace(/_/g, " ")
+    .replace(/[‐‑‒–—―]/gu, "-")
     .replace(/[^\p{L}\p{M}'’`\-\s]/gu, "")
+    .replace(/\s*-\s*/g, "-")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+export function normalizeLookupComparisonKey(word) {
+  return normalizeLookupWord(word)
+    .replace(/-/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLocaleLowerCase("uk-UA");
+}
+
+export function lookupWordsEquivalent(firstWord, secondWord) {
+  const first = normalizeLookupComparisonKey(firstWord);
+  const second = normalizeLookupComparisonKey(secondWord);
+
+  return Boolean(first && second && first === second);
 }
 
 export function preferReferenceWordCasing(referenceWord, fallbackWord) {
@@ -76,7 +93,7 @@ export function preferReferenceWordCasing(referenceWord, fallbackWord) {
     return fallback;
   }
 
-  return reference.toLocaleLowerCase("uk-UA") === fallback.toLocaleLowerCase("uk-UA")
+  return lookupWordsEquivalent(reference, fallback)
     ? reference
     : fallback;
 }

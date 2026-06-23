@@ -6,6 +6,8 @@ permission.storage: Stores extension settings and local workflow status.
 
 permission.tabs: Opens or reuses Goroh and ChatGPT tabs and sends extension messages to supported tabs.
 
+permission.scripting: Injects only extension-packaged content scripts into existing supported tabs when needed after extension reload.
+
 host_permission: Forvo, Goroh, and ChatGPT host permissions are limited to the supported workflow.
 
 remote_code: No remote executable code is used.

@@ -1,7 +1,7 @@
 import { MESSAGE_TYPES } from "../../lookup/core/messages.js";
 import {
-  normalizeForvoRecordingUrl,
-  normalizeLookupWord
+  lookupWordsEquivalent,
+  normalizeForvoRecordingUrl
 } from "../../lookup/core/word.js";
 import { eventMatchesHotkey } from "../core/hotkey.js";
 import { createCircleGestureState, gestureProgress, updateCircleGesture } from "../core/gesture.js";
@@ -373,8 +373,5 @@ class ForvoController {
 }
 
 function wordsMatch(first, second) {
-  const normalizedFirst = normalizeLookupWord(first).toLocaleLowerCase("uk-UA");
-  const normalizedSecond = normalizeLookupWord(second).toLocaleLowerCase("uk-UA");
-
-  return Boolean(normalizedFirst && normalizedSecond && normalizedFirst === normalizedSecond);
+  return lookupWordsEquivalent(first, second);
 }

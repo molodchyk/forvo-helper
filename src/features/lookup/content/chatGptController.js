@@ -3,7 +3,17 @@ import { addRuntimeMessageListener, sendRuntimeMessage } from "../../../platform
 import { readPendingChatGptPrompt } from "../../../platform/chrome/storage.js";
 
 export function startChatGptController() {
+  if (globalThis.__forvoHelperChatGptControllerStarted) {
+    return;
+  }
+  globalThis.__forvoHelperChatGptControllerStarted = true;
+
   addRuntimeMessageListener((message, _sender, sendResponse) => {
+    if (message?.type === MESSAGE_TYPES.PING_CHATGPT) {
+      sendResponse({ ok: true });
+      return false;
+    }
+
     if (message?.type !== MESSAGE_TYPES.SET_CHATGPT_PROMPT) {
       return false;
     }

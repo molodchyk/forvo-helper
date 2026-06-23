@@ -42,6 +42,7 @@ function renderSettings(doc, settings) {
   setValue(doc, "gorohLookupMode", normalized.lookup.gorohLookupMode);
   setChecked(doc, "focusLookupTabs", normalized.lookup.focusLookupTabs);
   setChecked(doc, "chatGptFallbackEnabled", normalized.lookup.chatGptFallbackEnabled);
+  setChecked(doc, "chatGptPreloadOnForvo", normalized.lookup.chatGptPreloadOnForvo);
   setValue(doc, "chatGptUrl", normalized.lookup.chatGptUrl);
   setValue(doc, "chatGptPromptTemplate", normalized.lookup.chatGptPromptTemplate);
   setChecked(doc, "chatGptAutoSubmit", normalized.lookup.chatGptAutoSubmit);
@@ -70,6 +71,7 @@ function readSettingsFromForm(doc, previousSettings) {
       gorohLookupMode: getValue(doc, "gorohLookupMode"),
       focusLookupTabs: getChecked(doc, "focusLookupTabs"),
       chatGptFallbackEnabled: getChecked(doc, "chatGptFallbackEnabled"),
+      chatGptPreloadOnForvo: getChecked(doc, "chatGptPreloadOnForvo"),
       chatGptUrl: getValue(doc, "chatGptUrl"),
       chatGptPromptTemplate: getValue(doc, "chatGptPromptTemplate"),
       chatGptAutoSubmit: getChecked(doc, "chatGptAutoSubmit")

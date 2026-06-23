@@ -6,6 +6,7 @@
 - Added keyboard, hover-delay, and pointer-circle recording triggers.
 - Added Goroh lookup and Ukrainian stress detection.
 - Added optional ChatGPT fallback prompt insertion.
+- Added optional ChatGPT preloading when Forvo pages open.
 - Added toolbar badge counts for today's unique submitted pronunciations.
 - Added popup refresh for the signed-in Forvo profile's total pronounced-word count.
 - Treated Forvo previously-pronounced warnings as resubmissions rather than new daily counts.

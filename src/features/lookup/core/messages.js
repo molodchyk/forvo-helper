@@ -6,6 +6,7 @@ export const MESSAGE_TYPES = Object.freeze({
   FORVO_STRESS_PANEL_UPDATE: "forvo-helper:forvo-stress-panel-update",
   GOROH_STRESS_RESULT: "forvo-helper:goroh-stress-result",
   FILL_GOROH_SEARCH: "forvo-helper:fill-goroh-search",
+  PING_CHATGPT: "forvo-helper:ping-chatgpt",
   SET_CHATGPT_PROMPT: "forvo-helper:set-chatgpt-prompt",
   CHATGPT_PROMPT_INSERTED: "forvo-helper:chatgpt-prompt-inserted",
   POPUP_REFRESH_FORVO_PROFILE_STATS: "forvo-helper:popup-refresh-forvo-profile-stats",

@@ -11,6 +11,7 @@ Stored settings may include:
 - whether lookup tabs should be focused
 - ChatGPT fallback URL and prompt template
 - whether ChatGPT prompts should be submitted automatically
+- whether ChatGPT should open when a Forvo page opens
 - whether the toolbar badge should show today's submitted count
 
 The extension also stores local workflow records with the last detected word, the last Goroh stress result, the most recent pending ChatGPT prompt, today's submitted Forvo recording URLs, and the last refreshed Forvo profile word count. These records are used only to keep the popup, toolbar badge, and fallback workflow consistent.
@@ -20,12 +21,13 @@ Browser permissions:
 - `storage`, used to save extension settings and local workflow status
 - `tabs`, used to open or reuse Goroh and ChatGPT tabs and send extension messages to supported tabs
 - `alarms`, used to refresh the local daily toolbar badge after midnight
+- `scripting`, used to attach the packaged ChatGPT content script to an existing ChatGPT tab after extension reload without reloading the chat
 
 Host permissions:
 
 - `https://forvo.com/*` and `https://*.forvo.com/*`, used to detect Forvo recording pages and activate the record control
 - `https://goroh.pp.ua/*` and `https://www.goroh.pp.ua/*`, used to search Goroh and detect stress marks on result pages
-- `https://chatgpt.com/*` and `https://chat.openai.com/*`, used only when the optional ChatGPT fallback opens or fills a prompt
+- `https://chatgpt.com/*` and `https://chat.openai.com/*`, used when the optional ChatGPT preload or fallback opens or fills a prompt
 
 Network behavior:
 

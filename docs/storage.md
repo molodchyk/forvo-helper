@@ -5,7 +5,7 @@
 - Area: `chrome.storage.sync`
 - Owner: `src/features/settings`
 - Shape version: `1`
-- Purpose: user configuration for appearance, recording triggers, Goroh lookup, ChatGPT fallback, and toolbar badge display
+- Purpose: user configuration for appearance, recording triggers, Goroh lookup, ChatGPT preload/fallback, and toolbar badge display
 - Retention: until reset or uninstall
 - Quota risk: low; values are short strings, booleans, and numbers
 

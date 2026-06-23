@@ -27,6 +27,12 @@ test("accepts daily badge visibility setting", () => {
   assert.equal(normalizeSettings({ stats: { showDailyBadge: true } }).stats.showDailyBadge, true);
 });
 
+test("accepts ChatGPT preload visibility setting", () => {
+  assert.equal(normalizeSettings({}).lookup.chatGptPreloadOnForvo, true);
+  assert.equal(normalizeSettings({ lookup: { chatGptPreloadOnForvo: false } }).lookup.chatGptPreloadOnForvo, false);
+  assert.equal(normalizeSettings({ lookup: { chatGptPreloadOnForvo: true } }).lookup.chatGptPreloadOnForvo, true);
+});
+
 test("accepts supported UI themes", () => {
   assert.equal(normalizeSettings({ appearance: { theme: "dark" } }).appearance.theme, "dark");
   assert.equal(normalizeSettings({ appearance: { theme: "light" } }).appearance.theme, "light");

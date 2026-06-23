@@ -132,6 +132,9 @@
   "optionsChatGptFallback": {
     "message": "Open ChatGPT when Goroh has no stress mark"
   },
+  "optionsChatGptPreload": {
+    "message": "Open ChatGPT when a Forvo page opens"
+  },
   "optionsChatGptUrl": {
     "message": "ChatGPT URL"
   },
