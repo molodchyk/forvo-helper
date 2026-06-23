@@ -71,7 +71,7 @@ export function formatDailyBadgeText(count) {
     return "";
   }
 
-  return count > 99 ? "99+" : String(count);
+  return count > 9999 ? "∞" : String(count);
 }
 
 function asString(value) {

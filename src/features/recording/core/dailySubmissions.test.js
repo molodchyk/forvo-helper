@@ -49,5 +49,9 @@ test("resets stale daily submission stats", () => {
 test("formats daily badge counts compactly", () => {
   assert.equal(formatDailyBadgeText(0), "");
   assert.equal(formatDailyBadgeText(12), "12");
-  assert.equal(formatDailyBadgeText(100), "99+");
+  assert.equal(formatDailyBadgeText(100), "100");
+  assert.equal(formatDailyBadgeText(999), "999");
+  assert.equal(formatDailyBadgeText(1000), "1000");
+  assert.equal(formatDailyBadgeText(9999), "9999");
+  assert.equal(formatDailyBadgeText(10000), "∞");
 });
