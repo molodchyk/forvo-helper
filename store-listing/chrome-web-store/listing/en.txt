@@ -12,11 +12,13 @@ Detect Ukrainian stress marks on Goroh result pages.
 Open ChatGPT and insert a fallback lookup prompt when Goroh does not show stress.
 Show today's unique submitted pronunciation count on the toolbar badge.
 Treat Forvo previously-pronounced warnings as resubmissions instead of new daily counts.
+Refresh and show your total Forvo pronounced-word count in the popup.
 
 Limitations:
 
 Browser microphone permission is still controlled by the browser and Forvo.
 ChatGPT automatic submission is off by default.
+The total Forvo count is a pronounced-word count from your Forvo profile, not a listen count.
 Forvo, Goroh, and ChatGPT page changes may require extension updates.
 
 Open source under the GPL-3.0 license: https://github.com/molodchyk/forvo-helper

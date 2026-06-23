@@ -12,6 +12,11 @@ import {
   normalizeDailySubmissionStats,
   registerDailySubmission
 } from "../../features/recording/core/dailySubmissions.js";
+import {
+  FORVO_PROFILE_STATS_KEY,
+  createDefaultForvoProfileStats,
+  normalizeForvoProfileStats
+} from "../../features/profile-stats/core/profileStats.js";
 
 export async function readSettings() {
   const result = await chrome.storage.sync.get(SETTINGS_KEY);
@@ -27,7 +32,7 @@ export async function writeSettings(settings) {
 export async function resetSettings() {
   await chrome.storage.sync.set({ [SETTINGS_KEY]: DEFAULT_SETTINGS });
   await chrome.storage.local.set({ [STATUS_KEY]: createDefaultStatus() });
-  await chrome.storage.local.remove(PENDING_CHATGPT_PROMPT_KEY);
+  await chrome.storage.local.remove([PENDING_CHATGPT_PROMPT_KEY, FORVO_PROFILE_STATS_KEY]);
   return DEFAULT_SETTINGS;
 }
 
@@ -58,6 +63,17 @@ export async function recordDailySubmission(submission) {
   const result = registerDailySubmission(current, submission);
   await chrome.storage.local.set({ [DAILY_SUBMISSIONS_KEY]: result.stats });
   return result;
+}
+
+export async function readForvoProfileStats() {
+  const result = await chrome.storage.local.get(FORVO_PROFILE_STATS_KEY);
+  return normalizeForvoProfileStats(result[FORVO_PROFILE_STATS_KEY] || createDefaultForvoProfileStats());
+}
+
+export async function writeForvoProfileStats(stats) {
+  const normalized = normalizeForvoProfileStats(stats);
+  await chrome.storage.local.set({ [FORVO_PROFILE_STATS_KEY]: normalized });
+  return normalized;
 }
 
 export async function writeStatus(patch) {

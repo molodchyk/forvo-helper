@@ -42,6 +42,30 @@
   "popupSubmittedCount": {
     "message": "{count} submitted"
   },
+  "popupForvoTotal": {
+    "message": "Forvo total"
+  },
+  "popupPronouncedCount": {
+    "message": "{count} pronounced"
+  },
+  "popupProfileNotRefreshed": {
+    "message": "Not refreshed yet"
+  },
+  "popupProfileHint": {
+    "message": "Refresh from Forvo profile"
+  },
+  "popupProfileMeta": {
+    "message": "{username} - updated {date}"
+  },
+  "popupProfileRefreshing": {
+    "message": "Refreshing..."
+  },
+  "popupProfileError": {
+    "message": "Could not refresh"
+  },
+  "popupRefreshProfileStats": {
+    "message": "Refresh total"
+  },
   "popupOpenOptions": {
     "message": "Options"
   },
@@ -71,18 +95,6 @@
   },
   "optionsShowDailyBadge": {
     "message": "Show today's submitted count on the toolbar badge"
-  },
-  "optionsForvoStats": {
-    "message": "Forvo stats"
-  },
-  "optionsForvoStatsEnabled": {
-    "message": "Enable Forvo stats source"
-  },
-  "optionsForvoStatsSourceUrl": {
-    "message": "Forvo pronunciations list URL"
-  },
-  "optionsForvoStatsSourceUrlPlaceholder": {
-    "message": "https://uk.forvo.com/account-info/pronunciations/"
   },
   "optionsRecording": {
     "message": "Recording"

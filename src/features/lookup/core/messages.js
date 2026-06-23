@@ -10,5 +10,6 @@ export const MESSAGE_TYPES = Object.freeze({
   CHATGPT_PROMPT_INSERTED: "forvo-helper:chatgpt-prompt-inserted",
   POPUP_START_RECORDING: "forvo-helper:popup-start-recording",
   POPUP_OPEN_GOROH: "forvo-helper:popup-open-goroh",
+  POPUP_REFRESH_FORVO_PROFILE_STATS: "forvo-helper:popup-refresh-forvo-profile-stats",
   GET_STATUS: "forvo-helper:get-status"
 });

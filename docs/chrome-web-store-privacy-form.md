@@ -28,11 +28,10 @@ data_usage.web_history: Not collected.
 
 data_usage.user_activity: Not collected.
 
-data_usage.website_content: Website content is read only on supported Forvo, Goroh, and ChatGPT pages to perform the user-enabled workflow.
+data_usage.website_content: Website content is read only on supported Forvo, Goroh, and ChatGPT pages to perform the user-enabled workflow, including refreshing the popup's Forvo pronounced-word count from Forvo account/profile pages.
 
 certification.no_sell_or_transfer: Certified. Data is not sold or transferred.
 
 certification.no_unrelated_use: Certified. Data is used only for the extension's stated purpose.
 
 certification.no_creditworthiness: Certified. Data is not used for creditworthiness or lending.
-

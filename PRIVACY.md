@@ -12,9 +12,8 @@ Stored settings may include:
 - ChatGPT fallback URL and prompt template
 - whether ChatGPT prompts should be submitted automatically
 - whether the toolbar badge should show today's submitted count
-- whether a Forvo stats source is enabled and which Forvo pronunciations list URL should be scanned
 
-The extension also stores local workflow records with the last detected word, the last Goroh stress result, the most recent pending ChatGPT prompt, and today's submitted Forvo recording URLs. These records are used only to keep the popup, toolbar badge, and fallback workflow consistent.
+The extension also stores local workflow records with the last detected word, the last Goroh stress result, the most recent pending ChatGPT prompt, today's submitted Forvo recording URLs, and the last refreshed Forvo profile word count. These records are used only to keep the popup, toolbar badge, and fallback workflow consistent.
 
 Browser permissions:
 
@@ -32,6 +31,7 @@ Network behavior:
 
 - The extension does not make background analytics, advertising, tracking, or telemetry requests.
 - The extension may open browser tabs to Goroh or ChatGPT when the user enables those workflow settings.
+- The extension may request the signed-in Forvo account page and public Forvo user profile page to refresh the popup's total pronounced-word count. It stores only the username, profile URL, total count, refresh time, and a short error message when refresh fails.
 - The extension does not run remote hosted JavaScript.
 
 Data sale and sharing:

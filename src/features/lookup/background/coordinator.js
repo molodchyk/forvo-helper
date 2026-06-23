@@ -7,10 +7,12 @@ import {
   preferReferenceWordCasing
 } from "../core/word.js";
 import { formatDailyBadgeText } from "../../recording/core/dailySubmissions.js";
+import { refreshForvoProfileStats } from "../../profile-stats/background/scanner.js";
 import { SETTINGS_KEY } from "../../settings/core/settings.js";
 import {
   readPendingChatGptPrompt,
   readDailySubmissionStats,
+  readForvoProfileStats,
   readSettings,
   readStatus,
   recordDailySubmission,
@@ -79,12 +81,15 @@ async function handleMessage(message, sender) {
       return {
         settings: await readSettings(),
         status: await readStatus(),
-        dailyStats: await readDailySubmissionStats()
+        dailyStats: await readDailySubmissionStats(),
+        profileStats: await readForvoProfileStats()
       };
     case MESSAGE_TYPES.POPUP_START_RECORDING:
       return startRecordingOnActiveTab();
     case MESSAGE_TYPES.POPUP_OPEN_GOROH:
       return openGorohFromStatus();
+    case MESSAGE_TYPES.POPUP_REFRESH_FORVO_PROFILE_STATS:
+      return { profileStats: await refreshForvoProfileStats() };
     case MESSAGE_TYPES.FORVO_WORD_DETECTED:
       return handleForvoWordDetected(message, sender);
     case MESSAGE_TYPES.RECORDING_TRIGGERED:
