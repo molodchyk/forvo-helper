@@ -26,7 +26,7 @@ async function fillPendingPrompt() {
 }
 
 async function insertPromptWithRetries(prompt, autoSubmit = false) {
-  for (let attempt = 0; attempt < 8; attempt += 1) {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
     const ok = insertPrompt(prompt, autoSubmit);
 
     if (ok) {
@@ -50,19 +50,18 @@ function insertPrompt(prompt, autoSubmit) {
     return false;
   }
 
-  composer.focus();
+  composer.focus({ preventScroll: true });
 
-  if (composer instanceof HTMLTextAreaElement || composer instanceof HTMLInputElement) {
-    setNativeValue(composer, prompt);
-  } else {
-    composer.textContent = prompt;
+  const ok = composer instanceof HTMLTextAreaElement || composer instanceof HTMLInputElement
+    ? insertIntoTextField(composer, prompt)
+    : insertIntoEditableComposer(composer, prompt);
+
+  if (!ok) {
+    return false;
   }
 
-  composer.dispatchEvent(new InputEvent("input", { bubbles: true, inputType: "insertText", data: prompt }));
-  composer.dispatchEvent(new Event("change", { bubbles: true }));
-
   if (autoSubmit) {
-    setTimeout(clickSendButton, 150);
+    setTimeout(clickSendButton, 250);
   }
 
   return true;
@@ -70,10 +69,13 @@ function insertPrompt(prompt, autoSubmit) {
 
 function findComposer() {
   const selectors = [
+    "div#prompt-textarea[contenteditable='true']",
+    "#prompt-textarea.ProseMirror[contenteditable='true']",
+    "div.ProseMirror[contenteditable='true']",
+    "[contenteditable='true'][aria-label*='Chat with ChatGPT' i]",
+    "div[data-testid*='composer' i][contenteditable='true']",
     "textarea#prompt-textarea",
     "textarea[data-testid*='composer' i]",
-    "div#prompt-textarea[contenteditable='true']",
-    "div[data-testid*='composer' i][contenteditable='true']",
     "form textarea",
     "textarea",
     "div[contenteditable='true']"
@@ -87,6 +89,72 @@ function findComposer() {
   }
 
   return null;
+}
+
+function insertIntoTextField(field, prompt) {
+  setNativeValue(field, prompt);
+  dispatchTextInputEvents(field, prompt);
+  return field.value === prompt;
+}
+
+function insertIntoEditableComposer(composer, prompt) {
+  selectEditableContents(composer);
+
+  if (document.queryCommandSupported?.("insertText") && document.execCommand("insertText", false, prompt)) {
+    dispatchTextInputEvents(composer, prompt);
+    return composer.textContent?.includes(prompt);
+  }
+
+  replaceEditableContents(composer, prompt);
+  dispatchTextInputEvents(composer, prompt);
+  return composer.textContent?.includes(prompt);
+}
+
+function selectEditableContents(element) {
+  const selection = element.ownerDocument.getSelection?.() || globalThis.getSelection?.();
+
+  if (!selection) {
+    return;
+  }
+
+  const range = element.ownerDocument.createRange();
+  range.selectNodeContents(element);
+  selection.removeAllRanges();
+  selection.addRange(range);
+}
+
+function replaceEditableContents(element, prompt) {
+  const paragraph = document.createElement("p");
+  paragraph.textContent = prompt;
+  element.replaceChildren(paragraph);
+
+  const selection = element.ownerDocument.getSelection?.() || globalThis.getSelection?.();
+  if (!selection) {
+    return;
+  }
+
+  const range = element.ownerDocument.createRange();
+  range.selectNodeContents(paragraph);
+  range.collapse(false);
+  selection.removeAllRanges();
+  selection.addRange(range);
+}
+
+function dispatchTextInputEvents(element, prompt) {
+  element.dispatchEvent(new InputEvent("beforeinput", {
+    bubbles: true,
+    cancelable: true,
+    composed: true,
+    inputType: "insertText",
+    data: prompt
+  }));
+  element.dispatchEvent(new InputEvent("input", {
+    bubbles: true,
+    composed: true,
+    inputType: "insertText",
+    data: prompt
+  }));
+  element.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
 function clickSendButton() {
