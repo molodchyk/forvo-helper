@@ -14,4 +14,4 @@ The ChatGPT fallback fills the prompt composer. Automatic submission is disabled
 
 The toolbar badge can show today's unique submitted pronunciation count. The count is derived from normalized Forvo recording URLs stored locally for the current day. If Forvo warns that a word was previously pronounced, the extension treats the send as a resubmission and does not increment the daily count.
 
-The popup can refresh a total pronounced-word count from the signed-in Forvo account page and public user profile page. Refresh opens a temporary inactive Forvo tab, reads the username first, then reads the public profile count and closes the tab. This is a word-count summary, not a listen-count metric.
+The popup can refresh a total pronounced-word count from the public Forvo user profile page. Refresh opens a temporary inactive Forvo tab and uses the cached username when available. The signed-in account page is opened only when the username has not been cached yet or when the cached public profile cannot be read. This is a word-count summary, not a listen-count metric.

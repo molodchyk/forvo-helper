@@ -1,9 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  buildCachedForvoProfileTarget,
   buildForvoUserProfileUrl,
   extractForvoPronouncedWordCount,
   extractForvoUsernameFromAccountPage,
+  isForvoProfileCountPageReady,
+  isForvoSecurityVerificationPage,
   normalizeForvoProfileStats,
   shouldRefreshForvoProfileStats
 } from "./profileStats.js";
@@ -49,6 +52,45 @@ test("builds only secure Forvo profile URLs", () => {
   assert.equal(buildForvoUserProfileUrl("molodchyk", "https://forvo.com"), "https://forvo.com/user/molodchyk/");
   assert.equal(buildForvoUserProfileUrl("molodchyk", "https://example.com"), "");
   assert.equal(buildForvoUserProfileUrl("bad/name"), "");
+});
+
+test("builds cached Forvo profile targets from stored username", () => {
+  assert.deepEqual(buildCachedForvoProfileTarget({}), {
+    username: "",
+    profileUrl: ""
+  });
+  assert.deepEqual(buildCachedForvoProfileTarget({ username: "molodchyk" }), {
+    username: "molodchyk",
+    profileUrl: "https://uk.forvo.com/user/molodchyk/"
+  });
+  assert.deepEqual(buildCachedForvoProfileTarget({
+    username: "molodchyk",
+    profileUrl: "https://forvo.com/user/molodchyk/#top"
+  }), {
+    username: "molodchyk",
+    profileUrl: "https://forvo.com/user/molodchyk/"
+  });
+});
+
+test("detects Forvo security verification pages as not ready", () => {
+  const html = `
+    <main>
+      <h1>uk.forvo.com</h1>
+      <h2>Performing security verification</h2>
+      <p>This page is displayed while the website verifies you are not a bot.</p>
+      <div>Verifying... Cloudflare</div>
+    </main>
+  `;
+
+  assert.equal(isForvoSecurityVerificationPage(html), true);
+  assert.equal(isForvoSecurityVerificationPage("Користувач(ка): molodchyk Вимовлених слів: 65"), false);
+});
+
+test("waits until a Forvo profile count page is readable", () => {
+  assert.equal(isForvoProfileCountPageReady("Performing security verification Verifying... Cloudflare"), false);
+  assert.equal(isForvoProfileCountPageReady("<main></main>"), false);
+  assert.equal(isForvoProfileCountPageReady("Користувач(ка): molodchyk"), true);
+  assert.equal(isForvoProfileCountPageReady("Вимовлених слів: 65"), true);
 });
 
 test("normalizes stored profile stats", () => {

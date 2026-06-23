@@ -1,17 +1,20 @@
 import { MESSAGE_TYPES } from "../../lookup/core/messages.js";
 import {
   extractForvoPronouncedWordCount,
-  extractForvoUsernameFromAccountPage
+  extractForvoUsernameFromAccountPage,
+  isForvoProfileCountPageReady,
+  isForvoSecurityVerificationPage
 } from "../core/profileStats.js";
 import { addRuntimeMessageListener } from "../../../platform/chrome/runtime.js";
 
 export function startForvoProfileStatsController(doc = document) {
   return addRuntimeMessageListener((message, _sender, sendResponse) => {
     if (message?.type === MESSAGE_TYPES.SCAN_FORVO_ACCOUNT_USERNAME) {
-      const username = extractForvoUsernameFromAccountPage(doc.documentElement?.outerHTML || "");
+      const html = doc.documentElement?.outerHTML || "";
+      const username = extractForvoUsernameFromAccountPage(html);
 
       sendResponse({
-        ready: true,
+        ready: !isForvoSecurityVerificationPage(html),
         ok: Boolean(username),
         username,
         url: location.href,
@@ -21,10 +24,11 @@ export function startForvoProfileStatsController(doc = document) {
     }
 
     if (message?.type === MESSAGE_TYPES.SCAN_FORVO_PROFILE_COUNT) {
-      const totalPronunciations = extractForvoPronouncedWordCount(doc.documentElement?.outerHTML || "");
+      const html = doc.documentElement?.outerHTML || "";
+      const totalPronunciations = extractForvoPronouncedWordCount(html);
 
       sendResponse({
-        ready: true,
+        ready: isForvoProfileCountPageReady(html),
         ok: Number.isFinite(totalPronunciations),
         totalPronunciations,
         url: location.href

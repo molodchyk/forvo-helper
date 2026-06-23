@@ -1,6 +1,7 @@
 import { MESSAGE_TYPES } from "../../lookup/core/messages.js";
 import {
   FORVO_ACCOUNT_INFO_URL,
+  buildCachedForvoProfileTarget,
   buildForvoUserProfileUrl
 } from "../core/profileStats.js";
 import {
@@ -13,8 +14,11 @@ export async function refreshForvoProfileStats(now = Date.now()) {
   let tabId = 0;
 
   try {
+    const current = await readForvoProfileStats();
+    const cachedTarget = buildCachedForvoProfileTarget(current);
+    const initialUrl = cachedTarget.profileUrl || FORVO_ACCOUNT_INFO_URL;
     const tab = await chrome.tabs.create({
-      url: FORVO_ACCOUNT_INFO_URL,
+      url: initialUrl,
       active: false
     });
     tabId = tab.id || 0;
@@ -24,51 +28,16 @@ export async function refreshForvoProfileStats(now = Date.now()) {
     }
 
     await waitForTabComplete(tabId);
-    const accountScan = await scanTabWithRetry(tabId, {
-      type: MESSAGE_TYPES.SCAN_FORVO_ACCOUNT_USERNAME
-    });
-    const username = accountScan?.username || "";
+    if (cachedTarget.profileUrl) {
+      const cachedScan = await scanCachedProfile(tabId, cachedTarget);
 
-    if (!username) {
-      throw new Error("Could not find the Forvo username. Sign in to Forvo and try again.");
+      if (cachedScan) {
+        return writeProfileCount(cachedScan, now);
+      }
     }
 
-    const profileUrl = buildForvoUserProfileUrl(username, accountScan.origin || FORVO_ACCOUNT_INFO_URL);
-
-    if (!profileUrl) {
-      throw new Error("Could not build a Forvo profile URL.");
-    }
-
-    const current = await readForvoProfileStats();
-    await writeAndBroadcastForvoProfileStats({
-      ...current,
-      username,
-      profileUrl,
-      lastError: ""
-    });
-
-    await chrome.tabs.update(tabId, {
-      url: profileUrl,
-      active: false
-    });
-    await waitForTabComplete(tabId);
-
-    const profileScan = await scanTabWithRetry(tabId, {
-      type: MESSAGE_TYPES.SCAN_FORVO_PROFILE_COUNT
-    });
-    const totalPronunciations = Number(profileScan?.totalPronunciations);
-
-    if (!Number.isFinite(totalPronunciations)) {
-      throw new Error("Could not find the pronounced-word count on the Forvo profile.");
-    }
-
-    return writeAndBroadcastForvoProfileStats({
-      username,
-      profileUrl,
-      totalPronunciations,
-      updatedAt: now,
-      lastError: ""
-    });
+    const target = await scanAccountUsername(tabId, current);
+    return scanProfileCount(tabId, target, now);
   } catch (error) {
     const current = await readForvoProfileStats();
 
@@ -83,6 +52,87 @@ export async function refreshForvoProfileStats(now = Date.now()) {
   }
 }
 
+async function scanCachedProfile(tabId, target) {
+  try {
+    return {
+      ...target,
+      totalPronunciations: await scanProfileCountFromCurrentTab(tabId)
+    };
+  } catch {
+    await chrome.tabs.update(tabId, {
+      url: FORVO_ACCOUNT_INFO_URL,
+      active: false
+    });
+    await waitForTabComplete(tabId);
+    return null;
+  }
+}
+
+async function scanAccountUsername(tabId, current) {
+  const accountScan = await scanTabWithRetry(tabId, {
+    type: MESSAGE_TYPES.SCAN_FORVO_ACCOUNT_USERNAME
+  });
+  const username = accountScan?.username || "";
+
+  if (!username) {
+    throw new Error("Could not find the Forvo username. Sign in to Forvo and try again.");
+  }
+
+  const profileUrl = buildForvoUserProfileUrl(username, accountScan.origin || FORVO_ACCOUNT_INFO_URL);
+
+  if (!profileUrl) {
+    throw new Error("Could not build a Forvo profile URL.");
+  }
+
+  await writeAndBroadcastForvoProfileStats({
+    ...current,
+    username,
+    profileUrl,
+    lastError: ""
+  });
+
+  return { username, profileUrl };
+}
+
+async function scanProfileCount(tabId, target, now) {
+  try {
+    await chrome.tabs.update(tabId, {
+      url: target.profileUrl,
+      active: false
+    });
+    await waitForTabComplete(tabId);
+  } catch {
+    throw new Error("Could not open the Forvo profile page.");
+  }
+
+  const totalPronunciations = await scanProfileCountFromCurrentTab(tabId);
+
+  return writeProfileCount({ ...target, totalPronunciations }, now);
+}
+
+function writeProfileCount(result, now) {
+  return writeAndBroadcastForvoProfileStats({
+    username: result.username,
+    profileUrl: result.profileUrl,
+    totalPronunciations: result.totalPronunciations,
+    updatedAt: now,
+    lastError: ""
+  });
+}
+
+async function scanProfileCountFromCurrentTab(tabId) {
+  const profileScan = await scanTabWithRetry(tabId, {
+    type: MESSAGE_TYPES.SCAN_FORVO_PROFILE_COUNT
+  });
+  const totalPronunciations = profileScan?.totalPronunciations;
+
+  if (!Number.isFinite(totalPronunciations)) {
+    throw new Error("Could not find the pronounced-word count on the Forvo profile.");
+  }
+
+  return totalPronunciations;
+}
+
 async function writeAndBroadcastForvoProfileStats(stats) {
   const normalized = await writeForvoProfileStats(stats);
 
@@ -94,7 +144,7 @@ async function writeAndBroadcastForvoProfileStats(stats) {
   return normalized;
 }
 
-async function scanTabWithRetry(tabId, message, timeoutMs = 10000) {
+async function scanTabWithRetry(tabId, message, timeoutMs = 60000) {
   const startedAt = Date.now();
 
   while (Date.now() - startedAt < timeoutMs) {

@@ -19,6 +19,22 @@ export function createDefaultForvoProfileStats() {
   return normalizeForvoProfileStats();
 }
 
+export function buildCachedForvoProfileTarget(stats) {
+  const normalized = normalizeForvoProfileStats(stats);
+
+  if (!normalized.username) {
+    return {
+      username: "",
+      profileUrl: ""
+    };
+  }
+
+  return {
+    username: normalized.username,
+    profileUrl: normalized.profileUrl || buildForvoUserProfileUrl(normalized.username, FORVO_ACCOUNT_INFO_URL)
+  };
+}
+
 export function shouldRefreshForvoProfileStats(stats, now = Date.now()) {
   const normalized = normalizeForvoProfileStats(stats);
 
@@ -64,6 +80,28 @@ export function extractForvoPronouncedWordCount(html) {
   }
 
   return null;
+}
+
+export function isForvoSecurityVerificationPage(html) {
+  const text = htmlToVisibleText(html).toLocaleLowerCase("en-US");
+
+  return text.includes("performing security verification")
+    || text.includes("verifying...")
+    || text.includes("cloudflare");
+}
+
+export function isForvoProfileCountPageReady(html) {
+  if (isForvoSecurityVerificationPage(html)) {
+    return false;
+  }
+
+  if (Number.isFinite(extractForvoPronouncedWordCount(html))) {
+    return true;
+  }
+
+  const text = htmlToVisibleText(html);
+
+  return /(?:Користувач(?:\(ка\))?|Статистика\s+користувача|User|User\s+statistics)/iu.test(text);
 }
 
 export function buildForvoUserProfileUrl(username, origin = "https://uk.forvo.com") {

@@ -8,14 +8,15 @@ The popup reports a safer metric: total pronounced words from the user's Forvo p
 
 ## Data Source
 
-1. Open `https://uk.forvo.com/account-info/` in a temporary inactive tab with the user's existing Forvo session.
-2. Extract only the Forvo username from the account page.
-3. Update the popup immediately with the username.
-4. Navigate the temporary tab to `https://uk.forvo.com/user/<username>/`.
-5. Extract the total pronounced-word count from the public profile page.
-6. Close the temporary tab.
+1. Use the cached username and public profile URL when they are already stored.
+2. If the username is missing, open `https://uk.forvo.com/account-info/` in a temporary inactive tab with the user's existing Forvo session and extract only the Forvo username.
+3. Update the popup immediately with the username when it is newly discovered.
+4. Open `https://uk.forvo.com/user/<username>/` in the temporary inactive tab.
+5. Wait while Forvo security verification is still showing.
+6. Extract the total pronounced-word count from the public profile page.
+7. Close the temporary tab.
 
-The extension stores only the username, public profile URL, total count, refresh time, and a short refresh error if the scan fails.
+If the cached public profile cannot be read, the extension falls back to the account page once to rediscover the username. The extension stores only the username, public profile URL, total count, refresh time, and a short refresh error if the scan fails.
 
 ## UI
 
