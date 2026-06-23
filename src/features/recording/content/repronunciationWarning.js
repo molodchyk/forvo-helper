@@ -1,5 +1,13 @@
-const REPRONUNCIATION_PATTERN = /previously\s+pronounced/i;
-const VOTES_REMOVED_PATTERN = /votes\s+will\s+also\s+be\s+removed/i;
+const REPRONUNCIATION_WARNING_PATTERNS = [
+  {
+    alreadyPronounced: /previously\s+pronounced/i,
+    consequence: /votes\s+will\s+also\s+be\s+removed/i
+  },
+  {
+    alreadyPronounced: /вже\s+записували/i,
+    consequence: /попередня\s+вимова\s+та\s+голоси\s+за\s+неї\s+будуть\s+втрачені/i
+  }
+];
 
 export function hasRepronunciationWarning(doc = document) {
   const notices = [
@@ -9,6 +17,8 @@ export function hasRepronunciationWarning(doc = document) {
 
   return notices.some((notice) => {
     const text = String(notice.textContent || "").replace(/\s+/g, " ").trim();
-    return REPRONUNCIATION_PATTERN.test(text) && VOTES_REMOVED_PATTERN.test(text);
+    return REPRONUNCIATION_WARNING_PATTERNS.some(({ alreadyPronounced, consequence }) => (
+      alreadyPronounced.test(text) && consequence.test(text)
+    ));
   });
 }

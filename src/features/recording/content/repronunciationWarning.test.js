@@ -22,6 +22,14 @@ test("detects Forvo previously-pronounced warning", () => {
   assert.equal(hasRepronunciationWarning(doc), true);
 });
 
+test("detects Ukrainian Forvo previously-pronounced warning", () => {
+  const doc = fakeDocument([
+    "Ви збираєтеся вимовити слово, яке колись вже записували. Попередня вимова та голоси за неї будуть втрачені. Цю дію не можна скасувати."
+  ]);
+
+  assert.equal(hasRepronunciationWarning(doc), true);
+});
+
 test("ignores unrelated Forvo error notices", () => {
   const doc = fakeDocument(["Please enable your microphone."]);
 
