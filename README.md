@@ -56,6 +56,7 @@ npm run verify:manifest
 npm run verify:imports
 npm run verify:locales
 npm run verify:package
+npm run generate:store-media
 ```
 
 ## Privacy

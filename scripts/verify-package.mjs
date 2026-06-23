@@ -16,7 +16,9 @@ for (const file of [
   "store-listing/chrome-web-store/media/icon-128.png",
   "store-listing/chrome-web-store/media/promo/small-promo.png",
   "store-listing/chrome-web-store/media/promo/marquee-promo.png",
-  "store-listing/chrome-web-store/media/screenshots/main.png"
+  "store-listing/chrome-web-store/media/screenshots/01-forvo-workflow.png",
+  "store-listing/chrome-web-store/media/screenshots/02-options.png",
+  "store-listing/chrome-web-store/media/screenshots/03-popup.png"
 ]) {
   assertExists(file);
 }
@@ -24,7 +26,9 @@ for (const file of [
 await assertPngSize("assets/icon-128.png", 128, 128);
 await assertPngSize("store-listing/chrome-web-store/media/promo/small-promo.png", 440, 280);
 await assertPngSize("store-listing/chrome-web-store/media/promo/marquee-promo.png", 1400, 560);
-await assertPngSize("store-listing/chrome-web-store/media/screenshots/main.png", 1280, 800);
+await assertPngSize("store-listing/chrome-web-store/media/screenshots/01-forvo-workflow.png", 1280, 800);
+await assertPngSize("store-listing/chrome-web-store/media/screenshots/02-options.png", 1280, 800);
+await assertPngSize("store-listing/chrome-web-store/media/screenshots/03-popup.png", 1280, 800);
 
 for (const file of await collectFiles(path.join("dist", "chrome"))) {
   if (!/\.(js|html|css)$/.test(file)) continue;

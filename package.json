@@ -6,6 +6,7 @@
   "description": "Browser extension that helps Forvo contributors record without mouse clicks and check Ukrainian stress via Goroh.",
   "scripts": {
     "generate:media": "node scripts/generate-media.mjs",
+    "generate:store-media": "node scripts/generate-store-media.mjs",
     "build": "npm run generate:media && node scripts/build-extension.mjs",
     "audit:file-sizes": "node scripts/audit-file-sizes.mjs",
     "audit:folder-density": "node scripts/audit-folder-density.mjs",

@@ -71,21 +71,6 @@ function iconPixel(x, y, width, height) {
   return [37, 99, 235, 255];
 }
 
-function mediaPixel(x, y, width, height) {
-  const header = y < height * 0.18;
-  const sidebar = x < width * 0.24 && y > height * 0.18;
-  const panel = x > width * 0.28 && x < width * 0.9 && y > height * 0.28 && y < height * 0.74;
-  const button = x > width * 0.42 && x < width * 0.57 && y > height * 0.43 && y < height * 0.66;
-  const ring = button && Math.abs(Math.hypot(x - width * 0.495, y - height * 0.545) - width * 0.058) < width * 0.012;
-
-  if (header) return [37, 99, 235, 255];
-  if (sidebar) return [232, 237, 245, 255];
-  if (ring) return [220, 38, 38, 255];
-  if (button) return [239, 100, 100, 255];
-  if (panel) return [255, 255, 255, 255];
-  return [246, 248, 251, 255];
-}
-
 async function writePng(relativePath, width, height, drawPixel) {
   const absolutePath = path.join(root, relativePath);
   await mkdir(path.dirname(absolutePath), { recursive: true });
@@ -97,9 +82,5 @@ for (const size of [16, 32, 48, 128]) {
 }
 
 await writePng("store-listing/chrome-web-store/media/icon-128.png", 128, 128, iconPixel);
-await writePng("store-listing/chrome-web-store/media/promo/small-promo.png", 440, 280, mediaPixel);
-await writePng("store-listing/chrome-web-store/media/promo/marquee-promo.png", 1400, 560, mediaPixel);
-await writePng("store-listing/chrome-web-store/media/screenshots/main.png", 1280, 800, mediaPixel);
 
-console.log("Generated extension icons and store media.");
-
+console.log("Generated extension icons.");
