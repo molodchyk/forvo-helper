@@ -111,6 +111,27 @@ async function handleForvoPronunciationSubmitted(message) {
   }
 
   const word = normalizeLookupWord(message.word);
+  const isRepronunciation = Boolean(message.isRepronunciation);
+
+  if (isRepronunciation) {
+    const stats = await readDailySubmissionStats();
+
+    await writeStatus({
+      lastWord: word || (await readStatus()).lastWord,
+      lastForvoUrl: message.url || "",
+      lastAction: "pronunciation-resubmitted",
+      lastError: ""
+    });
+    await refreshDailyBadge(stats);
+
+    return {
+      added: false,
+      dailyCount: stats.count,
+      normalizedUrl,
+      isRepronunciation: true
+    };
+  }
+
   const result = await recordDailySubmission({
     normalizedUrl,
     word,

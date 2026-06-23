@@ -10,6 +10,7 @@ import { createRecordOverlay } from "./overlay.js";
 import { getCurrentForvoWord } from "./forvoWordExtractor.js";
 import { findRecordButton } from "./recordButtonFinder.js";
 import { getRecordActivationPoint, isPointInRecordHoverArea } from "./recordGeometry.js";
+import { hasRepronunciationWarning } from "./repronunciationWarning.js";
 import { findSendPronunciationButton } from "./sendButtonFinder.js";
 import { createStressPanel } from "./stressPanel.js";
 import { addRuntimeMessageListener, sendRuntimeMessage } from "../../../platform/chrome/runtime.js";
@@ -339,7 +340,8 @@ class ForvoController {
       type: MESSAGE_TYPES.FORVO_PRONUNCIATION_SUBMITTED,
       word,
       url: location.href,
-      normalizedUrl
+      normalizedUrl,
+      isRepronunciation: hasRepronunciationWarning()
     });
   }
 
