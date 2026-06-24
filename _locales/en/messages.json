@@ -153,6 +153,15 @@
   "optionsReset": {
     "message": "Reset settings"
   },
+  "optionsResetPrompt": {
+    "message": "Reset all settings?"
+  },
+  "optionsResetConfirm": {
+    "message": "Confirm reset"
+  },
+  "optionsResetCancel": {
+    "message": "Cancel"
+  },
   "optionsSaved": {
     "message": "Saved"
   }

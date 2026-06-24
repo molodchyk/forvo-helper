@@ -4,6 +4,7 @@
 
 - Added an option to skip ChatGPT fallback prompts when the latest user message already matches the prompt.
 - Added local stress detection for words with a single Ukrainian vowel, skipping unnecessary Goroh and ChatGPT lookup.
+- Added a separate confirmation click before resetting options-page settings.
 
 ## 1.0.0
 

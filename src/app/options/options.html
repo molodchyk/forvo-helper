@@ -10,7 +10,14 @@
     <main class="page">
       <header class="page__header">
         <h1 data-i18n="optionsTitle">Forvo Helper Options</h1>
-        <button id="resetButton" class="button button--subtle" type="button" data-i18n="optionsReset">Reset settings</button>
+        <div class="reset-actions">
+          <button id="resetButton" class="button button--subtle" type="button" data-i18n="optionsReset">Reset settings</button>
+          <div id="resetConfirm" class="reset-confirm" hidden>
+            <span data-i18n="optionsResetPrompt">Reset all settings?</span>
+            <button id="confirmResetButton" class="button button--danger" type="button" data-i18n="optionsResetConfirm">Confirm reset</button>
+            <button id="cancelResetButton" class="button button--subtle" type="button" data-i18n="optionsResetCancel">Cancel</button>
+          </div>
+        </div>
       </header>
 
       <form id="optionsForm" class="settings-form">

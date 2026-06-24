@@ -8,23 +8,35 @@ export async function startOptions(doc = document) {
 
   const form = doc.getElementById("optionsForm");
   const resetButton = doc.getElementById("resetButton");
+  const resetConfirm = doc.getElementById("resetConfirm");
+  const confirmResetButton = doc.getElementById("confirmResetButton");
+  const cancelResetButton = doc.getElementById("cancelResetButton");
   const saveStatus = doc.getElementById("saveStatus");
   let settings = await readSettings();
 
   applyTheme(doc, settings.appearance.theme);
   renderSettings(doc, settings);
   form.addEventListener("input", () => {
+    hideResetConfirmation(resetConfirm);
     settings = readSettingsFromForm(doc, settings);
     saveSettings(settings, saveStatus);
   });
   form.addEventListener("change", () => {
+    hideResetConfirmation(resetConfirm);
     settings = readSettingsFromForm(doc, settings);
     saveSettings(settings, saveStatus);
   });
-  resetButton.addEventListener("click", async () => {
+  resetButton.addEventListener("click", () => {
+    showResetConfirmation(resetConfirm);
+  });
+  cancelResetButton.addEventListener("click", () => {
+    hideResetConfirmation(resetConfirm);
+  });
+  confirmResetButton.addEventListener("click", async () => {
     settings = await resetSettings();
     applyTheme(doc, settings.appearance.theme);
     renderSettings(doc, settings);
+    hideResetConfirmation(resetConfirm);
     showSaved(saveStatus);
   });
 }
@@ -93,6 +105,14 @@ function showSaved(saveStatus) {
   showSaved.timeoutId = setTimeout(() => {
     saveStatus.textContent = "";
   }, 1200);
+}
+
+function showResetConfirmation(resetConfirm) {
+  if (resetConfirm) resetConfirm.hidden = false;
+}
+
+function hideResetConfirmation(resetConfirm) {
+  if (resetConfirm) resetConfirm.hidden = true;
 }
 
 function getValue(doc, id) {
