@@ -49,12 +49,14 @@ test("normalizes stored Forvo stress panel status", () => {
   const status = normalizeStatus({
     lastForvoTabId: 42.4,
     lastStressedWord: "ЧЕМНЕ́НЬКИЙ",
-    lastStressSample: "sample"
+    lastStressSample: "sample",
+    lastStressSource: "local"
   });
 
   assert.equal(status.lastForvoTabId, 42);
   assert.equal(status.lastStressedWord, "ЧЕМНЕ́НЬКИЙ");
   assert.equal(status.lastStressSample, "sample");
+  assert.equal(status.lastStressSource, "local");
 });
 
 test("accepts supported ChatGPT URLs", () => {

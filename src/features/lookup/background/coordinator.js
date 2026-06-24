@@ -1,4 +1,5 @@
 import { MESSAGE_TYPES } from "../core/messages.js";
+import { createSingleVowelStress } from "../core/stress.js";
 import {
   buildGorohLookupUrl,
   lookupWordsEquivalent,
@@ -171,12 +172,21 @@ async function handleForvoWordDetected(message, sender) {
     lastWord: word,
     lastForvoUrl: sender.url || message.url || "",
     lastForvoTabId: sender.tab?.id || 0,
+    lastGorohUrl: "",
     lastStressState: "unknown",
+    lastStressSource: "",
     lastStressedWord: "",
     lastStressSample: "",
     lastAction: "forvo-word-detected",
     lastError: ""
   });
+
+  const localStress = createSingleVowelStress(word);
+
+  if (localStress) {
+    await handleLocalStressResult(word, localStress);
+    return { word, localStress: true };
+  }
 
   if (settings.lookup.autoGorohLookup) {
     await openGorohForWord(word, settings);
@@ -187,6 +197,29 @@ async function handleForvoWordDetected(message, sender) {
   }
 
   return { word };
+}
+
+async function handleLocalStressResult(word, stressedWord) {
+  const status = await writeStatus({
+    lastWord: word,
+    lastGorohUrl: "",
+    lastStressState: "found",
+    lastStressSource: "local",
+    lastStressCheckedAt: Date.now(),
+    lastStressedWord: stressedWord,
+    lastStressSample: "",
+    lastAction: "local-stress-single-vowel",
+    lastError: ""
+  });
+
+  await sendForvoStressPanelUpdate(status.lastForvoTabId, {
+    word,
+    gorohUrl: "",
+    stressState: status.lastStressState,
+    stressSource: status.lastStressSource,
+    stressedWord: status.lastStressedWord,
+    stressSample: ""
+  });
 }
 
 async function openGorohForWord(word, settings) {
@@ -232,6 +265,7 @@ async function handleGorohStressResult(message) {
     lastWord: word,
     lastGorohUrl: message.url || "",
     lastStressState: hasStress ? "found" : "missing",
+    lastStressSource: "goroh",
     lastStressCheckedAt: Date.now(),
     lastStressedWord: stressedWord,
     lastStressSample: stressSample,
@@ -243,6 +277,7 @@ async function handleGorohStressResult(message) {
     word,
     gorohUrl: status.lastGorohUrl,
     stressState: status.lastStressState,
+    stressSource: status.lastStressSource,
     stressedWord: status.lastStressedWord,
     stressSample: status.lastStressSample
   });

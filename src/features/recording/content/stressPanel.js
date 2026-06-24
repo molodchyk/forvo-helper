@@ -26,6 +26,7 @@ export function createStressPanel() {
 
       ensureMounted(panel);
       panel.dataset.state = result.stressState || "unknown";
+      label.textContent = labelText(result);
       value.textContent = text;
 
       if (result.gorohUrl) {
@@ -69,6 +70,10 @@ function displayText(result) {
   }
 
   return "";
+}
+
+function labelText(result) {
+  return result?.stressSource === "local" ? "Stress" : "Goroh";
 }
 
 export function matchDisplayCase(text, reference) {

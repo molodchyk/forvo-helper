@@ -13,7 +13,7 @@
 
 - Area: `chrome.storage.local`
 - Owner: `src/features/lookup`
-- Purpose: last detected word, last Goroh stress result, last workflow action
+- Purpose: last detected word, last stress result and source, last workflow action
 - Retention: overwritten by new activity or cleared on reset
 - Quota risk: low
 

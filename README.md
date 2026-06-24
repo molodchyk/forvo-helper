@@ -13,6 +13,7 @@ This project is not affiliated with Forvo, Goroh, OpenAI, or ChatGPT.
 - Optionally start recording after circling the record button with the pointer.
 - Open or reuse a Goroh lookup tab for the current Forvo word.
 - Detect Ukrainian stress marks on Goroh pages.
+- Mark obvious stress locally for words with a single Ukrainian vowel.
 - Optionally open or reuse a configured ChatGPT tab when a Forvo page opens.
 - Open or reuse a configured ChatGPT tab when Goroh has no stress mark.
 - Optionally skip sending a ChatGPT prompt when the latest user message already matches.
@@ -46,6 +47,8 @@ Run the release checks before packaging:
 ```powershell
 npm run release:check
 ```
+
+Automated Chrome launch smoke tests are not safe on this workstation because Cold Turkey and FocusMe may kill Chrome. See [docs/local-browser-testing.md](docs/local-browser-testing.md).
 
 Useful focused checks:
 

@@ -365,6 +365,7 @@ class ForvoController {
     this.stressPanel.render({
       word: currentWord,
       stressState: result.stressState || result.lastStressState,
+      stressSource: result.stressSource || result.lastStressSource,
       stressedWord: result.stressedWord || result.lastStressedWord,
       stressSample: result.stressSample || result.lastStressSample,
       gorohUrl: result.gorohUrl || result.lastGorohUrl

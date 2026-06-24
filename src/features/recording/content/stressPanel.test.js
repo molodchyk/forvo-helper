@@ -42,3 +42,8 @@ test("preserves uppercase when the Forvo word is uppercase", () => {
 test("preserves unusual mixed casing", () => {
   assert.equal(matchDisplayCase("TEST́", "TeSt"), "TEST́");
 });
+
+test("matches locally stressed single-vowel words to Forvo casing", () => {
+  assert.equal(matchDisplayCase("Че́н", "чен"), "че́н");
+  assert.equal(matchDisplayCase("че́н", "Чен"), "Че́н");
+});

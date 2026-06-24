@@ -15,7 +15,7 @@ Stored settings may include:
 - whether ChatGPT should open when a Forvo page opens
 - whether the toolbar badge should show today's submitted count
 
-The extension also stores local workflow records with the last detected word, the last Goroh stress result, the most recent pending ChatGPT prompt, today's submitted Forvo recording URLs, and the last refreshed Forvo profile word count. These records are used only to keep the popup, toolbar badge, and fallback workflow consistent.
+The extension also stores local workflow records with the last detected word, the last stress result and source, the most recent pending ChatGPT prompt, today's submitted Forvo recording URLs, and the last refreshed Forvo profile word count. These records are used only to keep the popup, toolbar badge, and fallback workflow consistent.
 
 Browser permissions:
 

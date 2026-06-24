@@ -33,6 +33,9 @@
   "popupStressFound": {
     "message": "Found on Goroh"
   },
+  "popupStressObvious": {
+    "message": "Obvious stress"
+  },
   "popupStressMissing": {
     "message": "Missing on Goroh"
   },

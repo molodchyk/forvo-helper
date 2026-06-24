@@ -41,12 +41,18 @@ function renderStatus(doc, status, dailyStats, profileStats) {
   const todayElement = doc.getElementById("todaySubmittedCount");
 
   wordElement.textContent = status.lastWord || messageOrDefault("popupNoWord", "No Forvo word detected");
-  stressElement.textContent = stressLabel(status.lastStressState);
+  stressElement.textContent = stressLabel(status);
   todayElement.textContent = submittedCountLabel(dailyStats.count || 0);
   renderProfileStats(doc, profileStats);
 }
 
-function stressLabel(state) {
+function stressLabel(status = {}) {
+  const state = status.lastStressState;
+
+  if (state === "found" && status.lastStressSource === "local") {
+    return messageOrDefault("popupStressObvious", "Obvious stress");
+  }
+
   if (state === "found") return messageOrDefault("popupStressFound", "Found on Goroh");
   if (state === "missing") return messageOrDefault("popupStressMissing", "Missing on Goroh");
   return messageOrDefault("popupStressUnknown", "Not checked yet");
