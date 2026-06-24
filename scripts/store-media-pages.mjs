@@ -222,6 +222,7 @@ export function optionsScreenshotHtml() {
       ${check("Open ChatGPT when Goroh has no stress mark", true)}
       ${check("Open ChatGPT when a Forvo page opens", true)}
       ${field("ChatGPT target chat URL", "https://chatgpt.com/c/...")}
+      ${check("Skip duplicate ChatGPT prompts", true)}
     </div>
     <div class="panel card wide">
       <h2>Appearance and status</h2>

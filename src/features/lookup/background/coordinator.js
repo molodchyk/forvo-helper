@@ -1,32 +1,34 @@
 import { MESSAGE_TYPES } from "../core/messages.js";
-import { buildChatGptReusePatterns } from "../core/chatGptUrl.js";
 import {
   buildGorohLookupUrl,
-  createChatGptPrompt,
   lookupWordsEquivalent,
   normalizeForvoRecordingUrl,
   normalizeLookupWord,
   preferReferenceWordCasing
 } from "../core/word.js";
+import {
+  handleChatGptPromptInserted,
+  handleChatGptPromptSkippedDuplicate,
+  openChatGptForWord,
+  preloadChatGptForForvoUrl,
+  preloadChatGptTab
+} from "./chatGptFallback.js";
 import { formatDailyBadgeText } from "../../recording/core/dailySubmissions.js";
 import { refreshForvoProfileStats } from "../../profile-stats/background/scanner.js";
 import { SETTINGS_KEY } from "../../settings/core/settings.js";
 import {
-  readPendingChatGptPrompt,
   readDailySubmissionStats,
   readForvoProfileStats,
   readSettings,
   readStatus,
   recordDailySubmission,
-  writePendingChatGptPrompt,
   writeSettings,
   writeStatus
 } from "../../../platform/chrome/storage.js";
-import { getActiveTab, injectScriptFile, openOrReuseTab, sendTabMessage, waitForTabComplete } from "../../../platform/chrome/tabs.js";
+import { getActiveTab, openOrReuseTab, sendTabMessage, waitForTabComplete } from "../../../platform/chrome/tabs.js";
 
 const GOROH_PATTERNS = ["https://goroh.pp.ua/*", "https://www.goroh.pp.ua/*"];
 const DAILY_BADGE_ALARM = "forvo-helper:daily-badge-refresh";
-let chatGptPreloadPromise = null;
 
 export function registerLookupCoordinator() {
   chrome.runtime.onInstalled.addListener(() => {
@@ -100,6 +102,8 @@ async function handleMessage(message, sender) {
       return handleGorohStressResult(message, sender);
     case MESSAGE_TYPES.CHATGPT_PROMPT_INSERTED:
       return handleChatGptPromptInserted(message);
+    case MESSAGE_TYPES.CHATGPT_PROMPT_SKIPPED_DUPLICATE:
+      return handleChatGptPromptSkippedDuplicate(message);
     default:
       return {};
   }
@@ -263,152 +267,6 @@ async function sendForvoStressPanelUpdate(tabId, payload) {
     type: MESSAGE_TYPES.FORVO_STRESS_PANEL_UPDATE,
     ...payload
   });
-}
-
-async function openChatGptForWord(word, settings) {
-  const existingPending = await readPendingChatGptPrompt();
-  const prompt = createChatGptPrompt(settings.lookup.chatGptPromptTemplate, word);
-  const reusePending = existingPending?.word === word && existingPending?.prompt === prompt && !existingPending?.filledAt;
-  const pending = {
-    word,
-    prompt,
-    autoSubmit: settings.lookup.chatGptAutoSubmit,
-    createdAt: reusePending ? existingPending.createdAt : Date.now(),
-    lastOpenedAt: Date.now(),
-    filledAt: 0
-  };
-
-  await writePendingChatGptPrompt(pending);
-
-  const tab = await openOrReuseTab({
-    url: settings.lookup.chatGptUrl,
-    matchPatterns: buildChatGptReusePatterns(settings.lookup.chatGptUrl),
-    active: settings.lookup.focusLookupTabs,
-    reuse: settings.lookup.reuseLookupTabs,
-    updateExistingUrl: false
-  });
-
-  if (tab.id) {
-    await waitForTabComplete(tab.id);
-    await ensureChatGptContentScript(tab.id);
-    await sendTabMessage(tab.id, {
-      type: MESSAGE_TYPES.SET_CHATGPT_PROMPT,
-      prompt,
-      autoSubmit: settings.lookup.chatGptAutoSubmit
-    });
-  }
-
-  await writeStatus({ lastAction: "chatgpt-fallback-opened" });
-  return tab;
-}
-
-function preloadChatGptForForvoUrl(url) {
-  if (!isForvoPreloadUrl(url)) {
-    return;
-  }
-
-  preloadChatGptTab().catch(() => {});
-}
-
-function preloadChatGptTab() {
-  if (chatGptPreloadPromise) {
-    return chatGptPreloadPromise;
-  }
-
-  chatGptPreloadPromise = (async () => {
-    const settings = await readSettings();
-
-    if (!settings.lookup.chatGptPreloadOnForvo) {
-      return null;
-    }
-
-    const tab = await openOrReuseTab({
-      url: settings.lookup.chatGptUrl,
-      matchPatterns: buildChatGptReusePatterns(settings.lookup.chatGptUrl),
-      active: false,
-      reuse: true,
-      updateExistingUrl: false
-    });
-
-    if (tab.id) {
-      await waitForTabComplete(tab.id);
-      await ensureChatGptContentScript(tab.id);
-    }
-
-    return tab;
-  })().finally(() => {
-    chatGptPreloadPromise = null;
-  });
-
-  return chatGptPreloadPromise;
-}
-
-function isForvoUrl(url) {
-  try {
-    const parsed = new URL(url);
-    return parsed.protocol === "https:"
-      && (parsed.hostname === "forvo.com" || parsed.hostname.endsWith(".forvo.com"));
-  } catch {
-    return false;
-  }
-}
-
-function isForvoPreloadUrl(url) {
-  if (!isForvoUrl(url)) {
-    return false;
-  }
-
-  try {
-    const parsed = new URL(url);
-    return !isPathOrChild(parsed.pathname, "/account-info") && !isPathOrChild(parsed.pathname, "/user");
-  } catch {
-    return false;
-  }
-}
-
-function isPathOrChild(pathname, prefix) {
-  return pathname === prefix || pathname.startsWith(`${prefix}/`);
-}
-
-async function ensureChatGptContentScript(tabId) {
-  const ping = await sendTabMessage(tabId, { type: MESSAGE_TYPES.PING_CHATGPT });
-
-  if (ping?.ok) {
-    return true;
-  }
-
-  await injectScriptFile(tabId, "app/content/chatgpt.js");
-
-  for (let attempt = 0; attempt < 10; attempt += 1) {
-    const retryPing = await sendTabMessage(tabId, { type: MESSAGE_TYPES.PING_CHATGPT });
-
-    if (retryPing?.ok) {
-      return true;
-    }
-
-    await delay(150);
-  }
-
-  return false;
-}
-
-function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function handleChatGptPromptInserted(message) {
-  const pending = await readPendingChatGptPrompt();
-
-  if (!pending || pending.prompt !== message.prompt) {
-    return {};
-  }
-
-  await writePendingChatGptPrompt({
-    ...pending,
-    filledAt: Date.now()
-  });
-  await writeStatus({ lastAction: "chatgpt-prompt-inserted" });
-  return {};
 }
 
 async function startRecordingOnActiveTab() {

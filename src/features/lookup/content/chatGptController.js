@@ -1,6 +1,17 @@
 import { MESSAGE_TYPES } from "../core/messages.js";
 import { addRuntimeMessageListener, sendRuntimeMessage } from "../../../platform/chrome/runtime.js";
 import { readPendingChatGptPrompt } from "../../../platform/chrome/storage.js";
+import {
+  latestUserMessageMatchesPrompt,
+  shouldWaitForChatGptThread
+} from "./chatGptThread.js";
+
+const INSERTED = "inserted";
+const SKIPPED_DUPLICATE = "skipped-duplicate";
+const FAILED = "failed";
+const RETRY_ATTEMPTS = 60;
+const RETRY_DELAY_MS = 500;
+const DUPLICATE_THREAD_WAIT_ATTEMPTS = 20;
 
 export function startChatGptController() {
   if (globalThis.__forvoHelperChatGptControllerStarted) {
@@ -18,7 +29,10 @@ export function startChatGptController() {
       return false;
     }
 
-    insertPromptWithRetries(message.prompt, message.autoSubmit).then((ok) => sendResponse({ ok }));
+    insertPromptWithRetries(message.prompt, {
+      autoSubmit: message.autoSubmit,
+      skipDuplicatePrompt: message.skipDuplicatePrompt
+    }).then((result) => sendResponse(result));
     return true;
   });
 
@@ -32,37 +46,78 @@ async function fillPendingPrompt() {
     return;
   }
 
-  await insertPromptWithRetries(pending.prompt, pending.autoSubmit);
+  await insertPromptWithRetries(pending.prompt, {
+    autoSubmit: pending.autoSubmit,
+    skipDuplicatePrompt: pending.skipDuplicatePrompt
+  });
 }
 
-async function insertPromptWithRetries(prompt, autoSubmit = false) {
-  const ok = autoSubmit
-    ? await insertAndSubmitPromptWithRetries(prompt)
-    : await insertPromptOnlyWithRetries(prompt);
+async function insertPromptWithRetries(prompt, options = {}) {
+  const result = options.autoSubmit
+    ? await insertAndSubmitPromptWithRetries(prompt, options)
+    : await insertPromptOnlyWithRetries(prompt, options);
 
-  if (ok) {
+  if (result === INSERTED) {
     sendRuntimeMessage({
       type: MESSAGE_TYPES.CHATGPT_PROMPT_INSERTED,
       prompt
     });
   }
 
-  return ok;
-}
-
-async function insertPromptOnlyWithRetries(prompt) {
-  for (let attempt = 0; attempt < 60; attempt += 1) {
-    if (insertPrompt(prompt)) {
-      return true;
-    }
-    await delay(500);
+  if (result === SKIPPED_DUPLICATE) {
+    sendRuntimeMessage({
+      type: MESSAGE_TYPES.CHATGPT_PROMPT_SKIPPED_DUPLICATE,
+      prompt
+    });
   }
 
-  return false;
+  return {
+    ok: result !== FAILED,
+    skippedDuplicate: result === SKIPPED_DUPLICATE
+  };
 }
 
-async function insertAndSubmitPromptWithRetries(prompt) {
-  for (let attempt = 0; attempt < 60; attempt += 1) {
+async function insertPromptOnlyWithRetries(prompt, options) {
+  let duplicateWaits = options.skipDuplicatePrompt ? DUPLICATE_THREAD_WAIT_ATTEMPTS : 0;
+
+  for (let attempt = 0; attempt < RETRY_ATTEMPTS; attempt += 1) {
+    const duplicateState = duplicatePromptState(prompt, options.skipDuplicatePrompt, duplicateWaits);
+
+    if (duplicateState === SKIPPED_DUPLICATE) {
+      return SKIPPED_DUPLICATE;
+    }
+
+    if (duplicateState === "wait") {
+      duplicateWaits -= 1;
+      await delay(RETRY_DELAY_MS);
+      continue;
+    }
+
+    if (insertPrompt(prompt)) {
+      return INSERTED;
+    }
+    await delay(RETRY_DELAY_MS);
+  }
+
+  return FAILED;
+}
+
+async function insertAndSubmitPromptWithRetries(prompt, options) {
+  let duplicateWaits = options.skipDuplicatePrompt ? DUPLICATE_THREAD_WAIT_ATTEMPTS : 0;
+
+  for (let attempt = 0; attempt < RETRY_ATTEMPTS; attempt += 1) {
+    const duplicateState = duplicatePromptState(prompt, options.skipDuplicatePrompt, duplicateWaits);
+
+    if (duplicateState === SKIPPED_DUPLICATE) {
+      return SKIPPED_DUPLICATE;
+    }
+
+    if (duplicateState === "wait") {
+      duplicateWaits -= 1;
+      await delay(RETRY_DELAY_MS);
+      continue;
+    }
+
     const composer = findComposer();
 
     if (composer) {
@@ -71,14 +126,30 @@ async function insertAndSubmitPromptWithRetries(prompt) {
       }
 
       if (composerContainsPrompt(composer, prompt) && clickSendButton()) {
-        return true;
+        return INSERTED;
       }
     }
 
-    await delay(500);
+    await delay(RETRY_DELAY_MS);
   }
 
-  return false;
+  return FAILED;
+}
+
+function duplicatePromptState(prompt, skipDuplicatePrompt, duplicateWaits) {
+  if (!skipDuplicatePrompt) {
+    return "continue";
+  }
+
+  if (latestUserMessageMatchesPrompt(document, prompt)) {
+    return SKIPPED_DUPLICATE;
+  }
+
+  if (duplicateWaits > 0 && shouldWaitForChatGptThread(document, globalThis.location?.href || "")) {
+    return "wait";
+  }
+
+  return "continue";
 }
 
 function insertPrompt(prompt) {

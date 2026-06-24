@@ -11,6 +11,7 @@ Open or reuse Goroh for the current Forvo word.
 Detect Ukrainian stress marks on Goroh result pages.
 Optionally open or reuse ChatGPT when a Forvo page opens.
 Open ChatGPT and insert a fallback lookup prompt when Goroh does not show stress.
+Skip duplicate ChatGPT prompts when the latest user message already matches.
 Show today's unique submitted pronunciation count on the toolbar badge.
 Treat Forvo previously-pronounced warnings as resubmissions instead of new daily counts.
 Refresh and show your total Forvo pronounced-word count in the popup.

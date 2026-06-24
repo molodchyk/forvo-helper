@@ -11,6 +11,7 @@ Stored settings may include:
 - whether lookup tabs should be focused
 - ChatGPT target chat URL and fallback prompt template
 - whether ChatGPT prompts should be submitted automatically
+- whether duplicate ChatGPT prompts should be skipped
 - whether ChatGPT should open when a Forvo page opens
 - whether the toolbar badge should show today's submitted count
 
@@ -27,7 +28,7 @@ Host permissions:
 
 - `https://forvo.com/*` and `https://*.forvo.com/*`, used to detect Forvo recording pages and activate the record control
 - `https://goroh.pp.ua/*` and `https://www.goroh.pp.ua/*`, used to search Goroh and detect stress marks on result pages
-- `https://chatgpt.com/*` and `https://chat.openai.com/*`, used when the optional ChatGPT preload or fallback opens or fills a prompt
+- `https://chatgpt.com/*` and `https://chat.openai.com/*`, used when the optional ChatGPT preload or fallback opens, fills a prompt, or compares the latest visible user message to avoid a duplicate prompt
 
 Network behavior:
 

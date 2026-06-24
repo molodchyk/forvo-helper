@@ -144,6 +144,9 @@
   "optionsChatGptAutoSubmit": {
     "message": "Submit ChatGPT prompt automatically"
   },
+  "optionsChatGptSkipDuplicate": {
+    "message": "Skip ChatGPT prompt when the latest user message already matches"
+  },
   "optionsReset": {
     "message": "Reset settings"
   },

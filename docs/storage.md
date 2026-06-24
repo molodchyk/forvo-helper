@@ -5,7 +5,7 @@
 - Area: `chrome.storage.sync`
 - Owner: `src/features/settings`
 - Shape version: `1`
-- Purpose: user configuration for appearance, recording triggers, Goroh lookup, ChatGPT preload/fallback, and toolbar badge display
+- Purpose: user configuration for appearance, recording triggers, Goroh lookup, ChatGPT preload/fallback, duplicate ChatGPT prompt prevention, and toolbar badge display
 - Retention: until reset or uninstall
 - Quota risk: low; values are short strings, booleans, and numbers
 
@@ -21,8 +21,8 @@
 
 - Area: `chrome.storage.local`
 - Owner: `src/features/lookup`
-- Purpose: handoff prompt for the ChatGPT content script
-- Retention: overwritten by new fallback and marked as inserted when filled
+- Purpose: handoff prompt and duplicate-prevention flags for the ChatGPT content script
+- Retention: overwritten by new fallback and marked as inserted or skipped when handled
 - Quota risk: low
 
 ## `forvoHelperDailySubmissions`

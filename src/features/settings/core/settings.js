@@ -28,7 +28,8 @@ export const DEFAULT_SETTINGS = Object.freeze({
     chatGptPreloadOnForvo: true,
     chatGptUrl: "https://chatgpt.com/",
     chatGptPromptTemplate: "Find the Ukrainian stress for \"{word}\". Reply with the word marked with an acute accent and one brief note if needed.",
-    chatGptAutoSubmit: false
+    chatGptAutoSubmit: false,
+    chatGptSkipDuplicatePrompt: true
   }
 });
 
@@ -68,7 +69,8 @@ export function normalizeSettings(input = {}) {
       chatGptPreloadOnForvo: asBoolean(lookup.chatGptPreloadOnForvo, DEFAULT_SETTINGS.lookup.chatGptPreloadOnForvo),
       chatGptUrl: normalizeChatGptUrl(lookup.chatGptUrl),
       chatGptPromptTemplate: normalizePromptTemplate(lookup.chatGptPromptTemplate),
-      chatGptAutoSubmit: asBoolean(lookup.chatGptAutoSubmit, DEFAULT_SETTINGS.lookup.chatGptAutoSubmit)
+      chatGptAutoSubmit: asBoolean(lookup.chatGptAutoSubmit, DEFAULT_SETTINGS.lookup.chatGptAutoSubmit),
+      chatGptSkipDuplicatePrompt: asBoolean(lookup.chatGptSkipDuplicatePrompt, DEFAULT_SETTINGS.lookup.chatGptSkipDuplicatePrompt)
     }
   };
 }

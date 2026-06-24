@@ -46,6 +46,7 @@ function renderSettings(doc, settings) {
   setValue(doc, "chatGptUrl", normalized.lookup.chatGptUrl);
   setValue(doc, "chatGptPromptTemplate", normalized.lookup.chatGptPromptTemplate);
   setChecked(doc, "chatGptAutoSubmit", normalized.lookup.chatGptAutoSubmit);
+  setChecked(doc, "chatGptSkipDuplicatePrompt", normalized.lookup.chatGptSkipDuplicatePrompt);
 }
 
 function readSettingsFromForm(doc, previousSettings) {
@@ -74,7 +75,8 @@ function readSettingsFromForm(doc, previousSettings) {
       chatGptPreloadOnForvo: getChecked(doc, "chatGptPreloadOnForvo"),
       chatGptUrl: getValue(doc, "chatGptUrl"),
       chatGptPromptTemplate: getValue(doc, "chatGptPromptTemplate"),
-      chatGptAutoSubmit: getChecked(doc, "chatGptAutoSubmit")
+      chatGptAutoSubmit: getChecked(doc, "chatGptAutoSubmit"),
+      chatGptSkipDuplicatePrompt: getChecked(doc, "chatGptSkipDuplicatePrompt")
     }
   });
 }

@@ -9,6 +9,7 @@ export const MESSAGE_TYPES = Object.freeze({
   PING_CHATGPT: "forvo-helper:ping-chatgpt",
   SET_CHATGPT_PROMPT: "forvo-helper:set-chatgpt-prompt",
   CHATGPT_PROMPT_INSERTED: "forvo-helper:chatgpt-prompt-inserted",
+  CHATGPT_PROMPT_SKIPPED_DUPLICATE: "forvo-helper:chatgpt-prompt-skipped-duplicate",
   POPUP_REFRESH_FORVO_PROFILE_STATS: "forvo-helper:popup-refresh-forvo-profile-stats",
   FORVO_PROFILE_STATS_UPDATED: "forvo-helper:forvo-profile-stats-updated",
   SCAN_FORVO_ACCOUNT_USERNAME: "forvo-helper:scan-forvo-account-username",

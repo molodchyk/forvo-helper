@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Added an option to skip ChatGPT fallback prompts when the latest user message already matches the prompt.
+
 ## 1.0.0
 
 - Initial Forvo Helper project.
