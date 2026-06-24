@@ -1,0 +1,168 @@
+{
+  "extensionName": {
+    "message": "Forvo Helper",
+    "description": "Extension name."
+  },
+  "extensionShortName": {
+    "message": "Forvo Helper",
+    "description": "Short extension name."
+  },
+  "extensionDescription": {
+    "message": "Починайте запис вимови на Forvo без кліків мишею й перевіряйте український наголос через Goroh.",
+    "description": "Manifest description."
+  },
+  "commandTriggerRecording": {
+    "message": "Запустити кнопку запису Forvo на поточній вкладці",
+    "description": "Keyboard command description."
+  },
+  "popupTitle": {
+    "message": "Forvo Helper"
+  },
+  "popupCurrentWord": {
+    "message": "Поточне слово"
+  },
+  "popupNoWord": {
+    "message": "Слово Forvo не виявлено"
+  },
+  "popupStress": {
+    "message": "Наголос"
+  },
+  "popupStressUnknown": {
+    "message": "Ще не перевірено"
+  },
+  "popupStressFound": {
+    "message": "Знайдено на Goroh"
+  },
+  "popupStressObvious": {
+    "message": "Очевидний наголос"
+  },
+  "popupStressMissing": {
+    "message": "На Goroh не знайдено"
+  },
+  "popupTodaySubmitted": {
+    "message": "Сьогодні"
+  },
+  "popupSubmittedCount": {
+    "message": "Надіслано: {count}"
+  },
+  "popupForvoTotal": {
+    "message": "Усього на Forvo"
+  },
+  "popupPronouncedCount": {
+    "message": "Вимовлено: {count}"
+  },
+  "popupProfileNotRefreshed": {
+    "message": "Ще не оновлено"
+  },
+  "popupProfileHint": {
+    "message": "Оновити з профілю Forvo"
+  },
+  "popupProfileMeta": {
+    "message": "{username} — оновлено {date}"
+  },
+  "popupProfileRefreshing": {
+    "message": "Оновлення..."
+  },
+  "popupProfileCounting": {
+    "message": "Пошук загальної кількості..."
+  },
+  "popupProfileError": {
+    "message": "Не вдалося оновити"
+  },
+  "popupRefreshProfileStats": {
+    "message": "Оновити"
+  },
+  "popupOpenOptions": {
+    "message": "Налаштування"
+  },
+  "optionsTitle": {
+    "message": "Налаштування Forvo Helper"
+  },
+  "optionsAppearance": {
+    "message": "Вигляд"
+  },
+  "optionsTheme": {
+    "message": "Тема"
+  },
+  "optionsThemeSystem": {
+    "message": "Системна"
+  },
+  "optionsThemeLight": {
+    "message": "Світла"
+  },
+  "optionsThemeDark": {
+    "message": "Темна"
+  },
+  "optionsShowDailyBadge": {
+    "message": "Показувати сьогоднішню кількість надісланих вимов на значку розширення"
+  },
+  "optionsRecording": {
+    "message": "Запис"
+  },
+  "optionsLookup": {
+    "message": "Пошук"
+  },
+  "optionsHoverEnabled": {
+    "message": "Починати запис після наведення на кнопку запису"
+  },
+  "optionsHoverDelay": {
+    "message": "Затримка наведення в секундах"
+  },
+  "optionsGestureEnabled": {
+    "message": "Починати запис після обведення кнопки запису вказівником"
+  },
+  "optionsPageHotkeyEnabled": {
+    "message": "Використовувати гарячу клавішу, коли Forvo у фокусі"
+  },
+  "optionsHotkey": {
+    "message": "Гаряча клавіша сторінки"
+  },
+  "optionsAutoLookup": {
+    "message": "Відкривати Goroh, коли виявлено слово Forvo"
+  },
+  "optionsGorohMode": {
+    "message": "Режим пошуку в Goroh"
+  },
+  "optionsGorohModeUrl": {
+    "message": "Пряме посилання на результат"
+  },
+  "optionsGorohModeSearch": {
+    "message": "Надсилання через поле пошуку"
+  },
+  "optionsFocusLookup": {
+    "message": "Фокусувати вкладки пошуку після відкриття"
+  },
+  "optionsChatGptFallback": {
+    "message": "Відкривати ChatGPT, коли Goroh не має наголосу"
+  },
+  "optionsChatGptPreload": {
+    "message": "Відкривати ChatGPT, коли відкривається сторінка Forvo"
+  },
+  "optionsChatGptUrl": {
+    "message": "Цільова URL-адреса чату ChatGPT"
+  },
+  "optionsChatGptPrompt": {
+    "message": "Шаблон запиту ChatGPT"
+  },
+  "optionsChatGptAutoSubmit": {
+    "message": "Автоматично надсилати запит ChatGPT"
+  },
+  "optionsChatGptSkipDuplicate": {
+    "message": "Не надсилати запит ChatGPT, якщо останнє повідомлення користувача вже збігається"
+  },
+  "optionsReset": {
+    "message": "Скинути налаштування"
+  },
+  "optionsResetPrompt": {
+    "message": "Скинути всі налаштування?"
+  },
+  "optionsResetConfirm": {
+    "message": "Підтвердити скидання"
+  },
+  "optionsResetCancel": {
+    "message": "Скасувати"
+  },
+  "optionsSaved": {
+    "message": "Збережено"
+  }
+}

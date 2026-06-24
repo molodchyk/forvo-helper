@@ -4,6 +4,7 @@ import process from "node:process";
 
 const root = process.cwd();
 const localeRoot = path.join(root, "_locales");
+const listingRoot = path.join(root, "store-listing", "chrome-web-store", "listing");
 const english = JSON.parse(await readFile(path.join(localeRoot, "en", "messages.json"), "utf8"));
 const englishKeys = Object.keys(english).sort();
 const failures = [];
@@ -14,6 +15,8 @@ for (const locale of await readdir(localeRoot)) {
   if (keys.join("\n") !== englishKeys.join("\n")) {
     failures.push(`${locale} locale keys do not match English.`);
   }
+
+  await verifyStoreListing(locale, messages.extensionName?.message || english.extensionName.message);
 }
 
 await verifyMessageReferences("manifest.json", await readFile(path.join(root, "manifest.json"), "utf8"));
@@ -47,6 +50,36 @@ function assertLocaleKey(file, key) {
   }
 }
 
+async function verifyStoreListing(locale, extensionName) {
+  const listingPath = path.join(listingRoot, `${locale}.txt`);
+  let listing = "";
+
+  try {
+    listing = await readFile(listingPath, "utf8");
+  } catch {
+    failures.push(`${locale} locale is missing Chrome Web Store listing text.`);
+    return;
+  }
+
+  const firstLine = listing.split(/\r?\n/).find((line) => line.trim());
+  if (!firstLine) {
+    failures.push(`${locale} Chrome Web Store listing is empty.`);
+    return;
+  }
+
+  if (firstLine.trim().startsWith("#") || firstLine.includes(extensionName)) {
+    failures.push(`${locale} Chrome Web Store listing must start with body text, not a title or extension name.`);
+  }
+
+  if (/\[[^\]]+\]\([^)]+\)/.test(listing)) {
+    failures.push(`${locale} Chrome Web Store listing must be plain text, not Markdown.`);
+  }
+
+  if (!listing.includes("GPL-3.0") || !listing.includes("https://github.com/molodchyk/forvo-helper")) {
+    failures.push(`${locale} Chrome Web Store listing must include the GPL-3.0 and GitHub footer.`);
+  }
+}
+
 async function collectFiles(relativePath) {
   const entries = await readdir(path.join(root, relativePath), { withFileTypes: true });
   const nested = [];
@@ -57,4 +90,3 @@ async function collectFiles(relativePath) {
   }
   return nested;
 }
-
