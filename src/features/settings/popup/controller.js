@@ -1,6 +1,6 @@
 import { MESSAGE_TYPES } from "../../lookup/core/messages.js";
 import { shouldRefreshForvoProfileStats } from "../../profile-stats/core/profileStats.js";
-import { summarizeRecordingHistory } from "../../recording/core/dailySubmissions.js";
+import { createRecordingHeatmap, summarizeRecordingHistory } from "../../recording/core/dailySubmissions.js";
 import { applyI18n, messageOrDefault } from "../../../platform/chrome/i18n.js";
 import { addRuntimeMessageListener } from "../../../platform/chrome/runtime.js";
 import { applyTheme } from "../../../platform/dom/theme.js";
@@ -53,6 +53,43 @@ function renderRecordingHistory(doc, recordingHistory = {}) {
 
   doc.getElementById("history7DayCount").textContent = formatCount(summary.last7Days);
   doc.getElementById("history30DayCount").textContent = formatCount(summary.last30Days);
+  renderHeatmap(doc, recordingHistory);
+}
+
+function renderHeatmap(doc, recordingHistory) {
+  const heatmapElement = doc.getElementById("popupRecordingHeatmap");
+  const heatmap = createRecordingHeatmap(recordingHistory);
+
+  if (!heatmapElement) {
+    return;
+  }
+
+  heatmapElement.textContent = "";
+  heatmapElement.setAttribute("aria-label", messageOrDefault(
+    "popupRecordingHistoryHeatmapLabel",
+    "Daily recordings for the last 13 weeks"
+  ));
+
+  for (const week of heatmap.weeks) {
+    for (const cell of week) {
+      const element = doc.createElement("span");
+      const label = recordingHistoryCellLabel(cell.date, cell.count);
+
+      element.className = "history-heatmap__cell";
+      element.dataset.level = String(cell.level);
+      if (cell.future) element.dataset.future = "true";
+      element.dataset.tooltip = label;
+      if (cell.count > 0) element.tabIndex = 0;
+      element.setAttribute("aria-label", label);
+      heatmapElement.append(element);
+    }
+  }
+}
+
+function recordingHistoryCellLabel(date, count) {
+  return messageOrDefault("popupRecordingHistoryDateCount", "{date}: {count} recordings")
+    .replace("{date}", date)
+    .replace("{count}", formatCount(count));
 }
 
 async function refreshProfileStats(doc, options = {}) {

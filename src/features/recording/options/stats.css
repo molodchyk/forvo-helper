@@ -56,16 +56,17 @@
 .history-heatmap {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 13px;
-  grid-template-rows: repeat(7, 13px);
-  gap: 5px;
+  grid-auto-columns: 12px;
+  grid-template-rows: repeat(7, 12px);
+  gap: 4px;
   width: max-content;
   max-width: 100%;
 }
 
 .history-heatmap__cell {
-  width: 13px;
-  height: 13px;
+  position: relative;
+  width: 12px;
+  height: 12px;
   border: 1px solid color-mix(in srgb, var(--fh-border) 70%, transparent);
   border-radius: 3px;
   box-sizing: border-box;
@@ -94,6 +95,36 @@
 
 .history-heatmap__cell[data-future="true"] {
   opacity: 0.28;
+}
+
+.history-heatmap__cell[data-tooltip]::after,
+.hourly-chart__column[data-tooltip]::after {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  bottom: calc(100% + 7px);
+  width: max-content;
+  max-width: 220px;
+  padding: 4px 6px;
+  border: 1px solid #64748b;
+  border-radius: 3px;
+  background: #111827;
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.22);
+  content: attr(data-tooltip);
+  font-size: 12px;
+  line-height: 1.25;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 0);
+  white-space: nowrap;
+}
+
+.history-heatmap__cell[data-tooltip]:hover::after,
+.history-heatmap__cell[data-tooltip]:focus-visible::after,
+.hourly-chart__column[data-tooltip]:hover::after,
+.hourly-chart__column[data-tooltip]:focus-visible::after {
+  opacity: 1;
 }
 
 .range-control {
@@ -140,10 +171,15 @@
 }
 
 .hourly-chart__column {
+  position: relative;
   display: flex;
   min-width: 0;
   height: 100%;
   align-items: end;
+}
+
+.hourly-chart__column[data-tooltip]::after {
+  bottom: calc(var(--tooltip-y, 0%) + 8px);
 }
 
 .hourly-chart__bar {

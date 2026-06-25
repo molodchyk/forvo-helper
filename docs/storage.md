@@ -30,7 +30,7 @@
 - Area: `chrome.storage.local`
 - Owner: `src/features/recording`
 - Shape version: `1`
-- Purpose: 400-day local recording history used for the popup summary, Options stats heatmap, hourly breakdown, 7-day and 30-day summaries, and today's toolbar badge count
+- Purpose: 400-day local recording history used for the popup summary and heatmap, Options stats heatmap, hourly breakdown, 7-day and 30-day summaries, and today's toolbar badge count
 - Retention: pruned to the last 400 local days and clearable from the Options stats tab
 - Quota risk: low for normal use; stores one compact entry per unique submitted recording URL per local day
 

@@ -218,7 +218,8 @@ function renderHeatmap(doc, recordingHistory) {
       element.className = "history-heatmap__cell";
       element.dataset.level = String(cell.level);
       if (cell.future) element.dataset.future = "true";
-      element.title = label;
+      element.dataset.tooltip = label;
+      if (cell.count > 0) element.tabIndex = 0;
       element.setAttribute("aria-label", label);
       heatmapElement.append(element);
     }
@@ -251,7 +252,9 @@ function renderHourlyBreakdown(doc, recordingHistory, rangeId) {
     column.className = "hourly-chart__column";
     column.dataset.count = String(bucket.count);
     if (bucket.hour === breakdown.peakHour) column.dataset.peak = "true";
-    column.title = label;
+    column.dataset.tooltip = label;
+    if (bucket.count > 0) column.tabIndex = 0;
+    column.style.setProperty("--tooltip-y", `${height}%`);
     column.setAttribute("aria-label", label);
     bar.className = "hourly-chart__bar";
     bar.style.height = `${height}%`;

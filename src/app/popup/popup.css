@@ -1,4 +1,5 @@
 @import "../../styles/tokens.css";
+@import "../../features/recording/options/stats.css";
 
 body {
   width: 360px;
@@ -73,6 +74,35 @@ dd {
   border: 1px solid var(--fh-border);
   border-radius: 8px;
   background: var(--fh-control);
+}
+
+.history-card {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--fh-border);
+  border-radius: 8px;
+  background: var(--fh-control);
+}
+
+.history-card h2 {
+  margin: 0;
+  color: var(--fh-muted);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.history-heatmap--popup {
+  grid-auto-columns: 9px;
+  grid-template-rows: repeat(7, 9px);
+  gap: 3px;
+}
+
+.history-heatmap--popup .history-heatmap__cell {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
 }
 
 .profile-stat__refresh {
