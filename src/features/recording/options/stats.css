@@ -74,23 +74,23 @@
 }
 
 .history-heatmap__cell[data-level="1"] {
-  border-color: #b7dfc5;
-  background: #d9f2e3;
+  border-color: color-mix(in srgb, var(--fh-accent) 35%, var(--fh-border));
+  background: color-mix(in srgb, var(--fh-accent) 18%, var(--fh-panel));
 }
 
 .history-heatmap__cell[data-level="2"] {
-  border-color: #82c99b;
-  background: #9edab3;
+  border-color: color-mix(in srgb, var(--fh-accent) 52%, var(--fh-border));
+  background: color-mix(in srgb, var(--fh-accent) 34%, var(--fh-panel));
 }
 
 .history-heatmap__cell[data-level="3"] {
-  border-color: #339663;
-  background: #55ad78;
+  border-color: color-mix(in srgb, var(--fh-accent) 70%, var(--fh-border));
+  background: color-mix(in srgb, var(--fh-accent) 56%, var(--fh-panel));
 }
 
 .history-heatmap__cell[data-level="4"] {
-  border-color: #17643c;
-  background: #207b4d;
+  border-color: color-mix(in srgb, var(--fh-accent) 88%, var(--fh-border));
+  background: color-mix(in srgb, var(--fh-accent) 76%, var(--fh-panel));
 }
 
 .history-heatmap__cell[data-future="true"] {

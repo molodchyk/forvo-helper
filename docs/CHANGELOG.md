@@ -8,6 +8,7 @@
 - Added Ukrainian extension UI strings and Chrome Web Store listing copy.
 - Added popup and Options recording-history heatmaps, an Options hourly breakdown, 400-day local retention, and separate history clearing.
 - Added a separate visual style picker under the Appearance theme setting.
+- Matched heatmap intensity colors to the selected visual style.
 
 ## 1.0.0
 
