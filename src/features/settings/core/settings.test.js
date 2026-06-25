@@ -9,8 +9,7 @@ test("normalizes invalid settings to safe defaults", () => {
       hotkey: ""
     },
     appearance: {
-      lightStyle: "unknown",
-      darkStyle: "unknown"
+      themeStyle: "unknown"
     },
     lookup: {
       gorohLookupMode: "unknown",
@@ -21,8 +20,7 @@ test("normalizes invalid settings to safe defaults", () => {
   assert.equal(settings.recording.hoverDelayMs, 5000);
   assert.equal(settings.recording.hotkey, DEFAULT_SETTINGS.recording.hotkey);
   assert.equal(settings.appearance.theme, DEFAULT_SETTINGS.appearance.theme);
-  assert.equal(settings.appearance.lightStyle, DEFAULT_SETTINGS.appearance.lightStyle);
-  assert.equal(settings.appearance.darkStyle, DEFAULT_SETTINGS.appearance.darkStyle);
+  assert.equal(settings.appearance.themeStyle, DEFAULT_SETTINGS.appearance.themeStyle);
   assert.equal(settings.stats.showDailyBadge, DEFAULT_SETTINGS.stats.showDailyBadge);
   assert.equal(settings.lookup.gorohLookupMode, DEFAULT_SETTINGS.lookup.gorohLookupMode);
   assert.equal(settings.lookup.chatGptUrl, DEFAULT_SETTINGS.lookup.chatGptUrl);
@@ -52,15 +50,15 @@ test("accepts supported UI themes", () => {
 });
 
 test("accepts supported UI style variants", () => {
-  const settings = normalizeSettings({
-    appearance: {
-      lightStyle: "mint",
-      darkStyle: "graphite"
-    }
-  });
+  assert.equal(normalizeSettings({ appearance: { themeStyle: "slate" } }).appearance.themeStyle, "slate");
+  assert.equal(normalizeSettings({ appearance: { themeStyle: "ocean" } }).appearance.themeStyle, "ocean");
+  assert.equal(normalizeSettings({ appearance: { themeStyle: "forest" } }).appearance.themeStyle, "forest");
+  assert.equal(normalizeSettings({ appearance: { themeStyle: "high-contrast" } }).appearance.themeStyle, "high-contrast");
+});
 
-  assert.equal(settings.appearance.lightStyle, "mint");
-  assert.equal(settings.appearance.darkStyle, "graphite");
+test("migrates split UI style variants to the single style setting", () => {
+  assert.equal(normalizeSettings({ appearance: { lightStyle: "mint" } }).appearance.themeStyle, "forest");
+  assert.equal(normalizeSettings({ appearance: { darkStyle: "graphite" } }).appearance.themeStyle, "slate");
 });
 
 test("normalizes stored Forvo stress panel status", () => {

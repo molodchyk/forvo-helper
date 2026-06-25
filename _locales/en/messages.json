@@ -99,23 +99,23 @@
   "optionsThemeDark": {
     "message": "Dark"
   },
-  "optionsLightStyle": {
-    "message": "Light style"
+  "optionsThemeStyle": {
+    "message": "Style"
   },
-  "optionsLightStyleClean": {
-    "message": "Clean"
+  "optionsThemeStyleDefault": {
+    "message": "Default"
   },
-  "optionsLightStyleMint": {
-    "message": "Mint"
+  "optionsThemeStyleSlate": {
+    "message": "Slate"
   },
-  "optionsDarkStyle": {
-    "message": "Dark style"
+  "optionsThemeStyleOcean": {
+    "message": "Ocean"
   },
-  "optionsDarkStyleMidnight": {
-    "message": "Midnight"
+  "optionsThemeStyleForest": {
+    "message": "Forest"
   },
-  "optionsDarkStyleGraphite": {
-    "message": "Graphite"
+  "optionsThemeStyleHighContrast": {
+    "message": "High contrast"
   },
   "optionsShowDailyBadge": {
     "message": "Show today's submitted count on the toolbar badge"

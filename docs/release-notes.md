@@ -17,4 +17,4 @@ Initial stable release for local testing.
 - Shows the refreshed total pronounced-word count from the signed-in Forvo profile in the popup.
 - Reuses the cached Forvo username for total-count refreshes and waits through Forvo security verification before reading the profile.
 - Does not increase the daily count when Forvo warns that the word was previously pronounced.
-- Offers system, light, and dark UI modes with dependent light and dark style variants.
+- Offers system, light, and dark UI modes with a separate visual style picker.

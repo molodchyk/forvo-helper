@@ -99,23 +99,23 @@
   "optionsThemeDark": {
     "message": "Темна"
   },
-  "optionsLightStyle": {
-    "message": "Стиль світлої теми"
+  "optionsThemeStyle": {
+    "message": "Стиль"
   },
-  "optionsLightStyleClean": {
-    "message": "Чистий"
+  "optionsThemeStyleDefault": {
+    "message": "Типовий"
   },
-  "optionsLightStyleMint": {
-    "message": "М'ятний"
+  "optionsThemeStyleSlate": {
+    "message": "Сланцевий"
   },
-  "optionsDarkStyle": {
-    "message": "Стиль темної теми"
+  "optionsThemeStyleOcean": {
+    "message": "Океанічний"
   },
-  "optionsDarkStyleMidnight": {
-    "message": "Опівнічний"
+  "optionsThemeStyleForest": {
+    "message": "Лісовий"
   },
-  "optionsDarkStyleGraphite": {
-    "message": "Графітовий"
+  "optionsThemeStyleHighContrast": {
+    "message": "Високий контраст"
   },
   "optionsShowDailyBadge": {
     "message": "Показувати сьогоднішню кількість надісланих вимов на значку розширення"

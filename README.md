@@ -23,7 +23,7 @@ This project is not affiliated with Forvo, Goroh, OpenAI, or ChatGPT.
 - Treat Forvo's previously-pronounced warning as a resubmission instead of a new daily count.
 - Refresh and show your total Forvo pronounced-word count in the popup.
 - Clear local recording history from Options without resetting extension settings.
-- Choose system, light, or dark UI plus dependent light and dark style variants for extension pages.
+- Choose system, light, or dark UI plus a separate visual style for extension pages.
 - Store all settings in Chrome extension storage.
 
 ## Load Unpacked

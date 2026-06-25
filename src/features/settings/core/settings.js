@@ -8,8 +8,7 @@ export const DEFAULT_SETTINGS = Object.freeze({
   version: 1,
   appearance: {
     theme: "system",
-    lightStyle: "clean",
-    darkStyle: "midnight"
+    themeStyle: "default"
   },
   stats: {
     showDailyBadge: true
@@ -39,8 +38,7 @@ export const DEFAULT_SETTINGS = Object.freeze({
 const GOROH_LOOKUP_MODES = new Set(["direct-url", "search-field"]);
 const CHATGPT_HOSTS = new Set(["chatgpt.com", "chat.openai.com"]);
 const THEMES = new Set(["system", "light", "dark"]);
-const LIGHT_STYLES = new Set(["clean", "mint"]);
-const DARK_STYLES = new Set(["midnight", "graphite"]);
+const THEME_STYLES = new Set(["default", "slate", "ocean", "forest", "high-contrast"]);
 
 export function normalizeSettings(input = {}) {
   const source = isPlainObject(input) ? input : {};
@@ -53,8 +51,7 @@ export function normalizeSettings(input = {}) {
     version: 1,
     appearance: {
       theme: THEMES.has(appearance.theme) ? appearance.theme : DEFAULT_SETTINGS.appearance.theme,
-      lightStyle: LIGHT_STYLES.has(appearance.lightStyle) ? appearance.lightStyle : DEFAULT_SETTINGS.appearance.lightStyle,
-      darkStyle: DARK_STYLES.has(appearance.darkStyle) ? appearance.darkStyle : DEFAULT_SETTINGS.appearance.darkStyle
+      themeStyle: normalizeThemeStyle(appearance)
     },
     stats: {
       showDailyBadge: asBoolean(stats.showDailyBadge, DEFAULT_SETTINGS.stats.showDailyBadge)
@@ -140,6 +137,22 @@ function normalizePromptTemplate(value) {
   }
 
   return text.includes("{word}") ? text : `${text} {word}`;
+}
+
+function normalizeThemeStyle(appearance) {
+  if (THEME_STYLES.has(appearance.themeStyle)) {
+    return appearance.themeStyle;
+  }
+
+  if (appearance.lightStyle === "mint") {
+    return "forest";
+  }
+
+  if (appearance.darkStyle === "graphite") {
+    return "slate";
+  }
+
+  return DEFAULT_SETTINGS.appearance.themeStyle;
 }
 
 function normalizeHotkeyValue(value, fallback) {

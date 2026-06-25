@@ -47,14 +47,12 @@ export async function startOptions(doc = document) {
     hideResetConfirmation(resetConfirm);
     hideResetConfirmation(clearHistoryConfirm);
     settings = readSettingsFromForm(doc, settings);
-    syncAppearanceStyleRows(doc, settings.appearance.theme);
     saveSettings(settings, saveStatus);
   });
   form.addEventListener("change", () => {
     hideResetConfirmation(resetConfirm);
     hideResetConfirmation(clearHistoryConfirm);
     settings = readSettingsFromForm(doc, settings);
-    syncAppearanceStyleRows(doc, settings.appearance.theme);
     saveSettings(settings, saveStatus);
   });
   resetButton.addEventListener("click", () => {
@@ -90,9 +88,7 @@ export async function startOptions(doc = document) {
 function renderSettings(doc, settings) {
   const normalized = normalizeSettings(settings);
   setValue(doc, "theme", normalized.appearance.theme);
-  setValue(doc, "lightStyle", normalized.appearance.lightStyle);
-  setValue(doc, "darkStyle", normalized.appearance.darkStyle);
-  syncAppearanceStyleRows(doc, normalized.appearance.theme);
+  setValue(doc, "themeStyle", normalized.appearance.themeStyle);
   setChecked(doc, "showDailyBadge", normalized.stats.showDailyBadge);
   setChecked(doc, "hoverEnabled", normalized.recording.hoverEnabled);
   setValue(doc, "hoverDelaySeconds", millisecondsToSeconds(normalized.recording.hoverDelayMs));
@@ -115,8 +111,7 @@ function readSettingsFromForm(doc, previousSettings) {
     ...previousSettings,
     appearance: {
       theme: getValue(doc, "theme"),
-      lightStyle: getValue(doc, "lightStyle"),
-      darkStyle: getValue(doc, "darkStyle")
+      themeStyle: getValue(doc, "themeStyle")
     },
     stats: {
       showDailyBadge: getChecked(doc, "showDailyBadge")
@@ -300,15 +295,6 @@ async function saveSettings(settings, saveStatus) {
   await writeSettings(settings);
   applyTheme(document, settings.appearance);
   showSaved(saveStatus);
-}
-
-function syncAppearanceStyleRows(doc, theme) {
-  const normalized = normalizeSettings({ appearance: { theme } }).appearance.theme;
-  const lightRow = doc.getElementById("lightStyleRow");
-  const darkRow = doc.getElementById("darkStyleRow");
-
-  if (lightRow) lightRow.hidden = normalized === "dark";
-  if (darkRow) darkRow.hidden = normalized === "light";
 }
 
 function showSaved(saveStatus) {
