@@ -66,6 +66,21 @@
             <span data-i18n="optionsHotkey">Page hotkey</span>
             <input id="hotkey" name="hotkey" type="text" autocomplete="off" spellcheck="false">
           </label>
+
+          <div class="settings-action-row">
+            <div>
+              <strong data-i18n="optionsRecordingHistory">Recording history</strong>
+              <p data-i18n="optionsRecordingHistoryDescription">Local heatmap history is kept for 400 days and can be cleared without changing settings.</p>
+            </div>
+            <div class="inline-actions">
+              <button id="clearRecordingHistoryButton" class="button button--subtle" type="button" data-i18n="optionsClearRecordingHistory">Clear history</button>
+              <div id="clearRecordingHistoryConfirm" class="reset-confirm" hidden>
+                <span data-i18n="optionsClearRecordingHistoryPrompt">Clear recording history?</span>
+                <button id="confirmClearRecordingHistoryButton" class="button button--danger" type="button" data-i18n="optionsClearRecordingHistoryConfirm">Confirm</button>
+                <button id="cancelClearRecordingHistoryButton" class="button button--subtle" type="button" data-i18n="optionsClearRecordingHistoryCancel">Cancel</button>
+              </div>
+            </div>
+          </div>
         </section>
 
         <section class="settings-section" aria-labelledby="lookupHeading">

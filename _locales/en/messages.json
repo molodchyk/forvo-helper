@@ -18,27 +18,6 @@
   "popupTitle": {
     "message": "Forvo Helper"
   },
-  "popupCurrentWord": {
-    "message": "Current word"
-  },
-  "popupNoWord": {
-    "message": "No Forvo word detected"
-  },
-  "popupStress": {
-    "message": "Stress"
-  },
-  "popupStressUnknown": {
-    "message": "Not checked yet"
-  },
-  "popupStressFound": {
-    "message": "Found on Goroh"
-  },
-  "popupStressObvious": {
-    "message": "Obvious stress"
-  },
-  "popupStressMissing": {
-    "message": "Missing on Goroh"
-  },
   "popupTodaySubmitted": {
     "message": "Today"
   },
@@ -87,24 +66,6 @@
   "popupRecordingHistoryDateCount": {
     "message": "{date}: {count} recordings"
   },
-  "popupClearRecordingHistory": {
-    "message": "Clear history"
-  },
-  "popupClearRecordingHistoryPrompt": {
-    "message": "Clear recording history?"
-  },
-  "popupClearRecordingHistoryConfirm": {
-    "message": "Confirm"
-  },
-  "popupClearRecordingHistoryCancel": {
-    "message": "Cancel"
-  },
-  "popupRecordingHistoryCleared": {
-    "message": "History cleared"
-  },
-  "popupRecordingHistoryClearError": {
-    "message": "Could not clear history"
-  },
   "popupOpenOptions": {
     "message": "Options"
   },
@@ -149,6 +110,30 @@
   },
   "optionsHotkey": {
     "message": "Page hotkey"
+  },
+  "optionsRecordingHistory": {
+    "message": "Recording history"
+  },
+  "optionsRecordingHistoryDescription": {
+    "message": "Local heatmap history is kept for 400 days and can be cleared without changing settings."
+  },
+  "optionsClearRecordingHistory": {
+    "message": "Clear history"
+  },
+  "optionsClearRecordingHistoryPrompt": {
+    "message": "Clear recording history?"
+  },
+  "optionsClearRecordingHistoryConfirm": {
+    "message": "Confirm"
+  },
+  "optionsClearRecordingHistoryCancel": {
+    "message": "Cancel"
+  },
+  "optionsRecordingHistoryCleared": {
+    "message": "Recording history cleared"
+  },
+  "optionsRecordingHistoryClearError": {
+    "message": "Could not clear recording history"
   },
   "optionsAutoLookup": {
     "message": "Open Goroh when a Forvo word is detected"

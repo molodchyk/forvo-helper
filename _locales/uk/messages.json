@@ -18,27 +18,6 @@
   "popupTitle": {
     "message": "Forvo Helper"
   },
-  "popupCurrentWord": {
-    "message": "Поточне слово"
-  },
-  "popupNoWord": {
-    "message": "Слово Forvo не виявлено"
-  },
-  "popupStress": {
-    "message": "Наголос"
-  },
-  "popupStressUnknown": {
-    "message": "Ще не перевірено"
-  },
-  "popupStressFound": {
-    "message": "Знайдено на Goroh"
-  },
-  "popupStressObvious": {
-    "message": "Очевидний наголос"
-  },
-  "popupStressMissing": {
-    "message": "На Goroh не знайдено"
-  },
   "popupTodaySubmitted": {
     "message": "Сьогодні"
   },
@@ -87,24 +66,6 @@
   "popupRecordingHistoryDateCount": {
     "message": "{date}: записів: {count}"
   },
-  "popupClearRecordingHistory": {
-    "message": "Очистити"
-  },
-  "popupClearRecordingHistoryPrompt": {
-    "message": "Очистити історію записів?"
-  },
-  "popupClearRecordingHistoryConfirm": {
-    "message": "Підтвердити"
-  },
-  "popupClearRecordingHistoryCancel": {
-    "message": "Скасувати"
-  },
-  "popupRecordingHistoryCleared": {
-    "message": "Історію очищено"
-  },
-  "popupRecordingHistoryClearError": {
-    "message": "Не вдалося очистити історію"
-  },
   "popupOpenOptions": {
     "message": "Налаштування"
   },
@@ -149,6 +110,30 @@
   },
   "optionsHotkey": {
     "message": "Гаряча клавіша сторінки"
+  },
+  "optionsRecordingHistory": {
+    "message": "Історія записів"
+  },
+  "optionsRecordingHistoryDescription": {
+    "message": "Локальна історія мапи зберігається 400 днів, і її можна очистити без зміни налаштувань."
+  },
+  "optionsClearRecordingHistory": {
+    "message": "Очистити історію"
+  },
+  "optionsClearRecordingHistoryPrompt": {
+    "message": "Очистити історію записів?"
+  },
+  "optionsClearRecordingHistoryConfirm": {
+    "message": "Підтвердити"
+  },
+  "optionsClearRecordingHistoryCancel": {
+    "message": "Скасувати"
+  },
+  "optionsRecordingHistoryCleared": {
+    "message": "Історію записів очищено"
+  },
+  "optionsRecordingHistoryClearError": {
+    "message": "Не вдалося очистити історію записів"
   },
   "optionsAutoLookup": {
     "message": "Відкривати Goroh, коли виявлено слово Forvo"

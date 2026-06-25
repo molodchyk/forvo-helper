@@ -9,28 +9,17 @@ export async function startPopup(doc = document) {
   applyI18n(doc);
 
   const state = await chrome.runtime.sendMessage({ type: MESSAGE_TYPES.GET_STATUS });
-  const status = state?.status || {};
   const dailyStats = state?.dailyStats || {};
   const profileStats = state?.profileStats || {};
-  let recordingHistory = state?.recordingHistory || {};
+  const recordingHistory = state?.recordingHistory || {};
 
   applyTheme(doc, state?.settings?.appearance?.theme);
-  renderStatus(doc, status, dailyStats, profileStats, recordingHistory);
+  renderStatus(doc, dailyStats, profileStats, recordingHistory);
   doc.getElementById("optionsButton").addEventListener("click", () => {
     chrome.runtime.openOptionsPage();
   });
   doc.getElementById("refreshProfileStatsButton").addEventListener("click", () => {
     refreshProfileStats(doc);
-  });
-  doc.getElementById("clearRecordingHistoryButton").addEventListener("click", () => {
-    showClearRecordingHistoryConfirmation(doc);
-  });
-  doc.getElementById("cancelClearRecordingHistoryButton").addEventListener("click", () => {
-    hideClearRecordingHistoryConfirmation(doc);
-  });
-  doc.getElementById("confirmClearRecordingHistoryButton").addEventListener("click", async () => {
-    const response = await clearRecordingHistory(doc);
-    recordingHistory = response.recordingHistory;
   });
   addRuntimeMessageListener((message, _sender, sendResponse) => {
     if (message?.type === MESSAGE_TYPES.FORVO_PROFILE_STATS_UPDATED) {
@@ -47,28 +36,12 @@ export async function startPopup(doc = document) {
   }
 }
 
-function renderStatus(doc, status, dailyStats, profileStats, recordingHistory) {
-  const wordElement = doc.getElementById("currentWord");
-  const stressElement = doc.getElementById("stressState");
+function renderStatus(doc, dailyStats, profileStats, recordingHistory) {
   const todayElement = doc.getElementById("todaySubmittedCount");
 
-  wordElement.textContent = status.lastWord || messageOrDefault("popupNoWord", "No Forvo word detected");
-  stressElement.textContent = stressLabel(status);
   todayElement.textContent = submittedCountLabel(dailyStats.count || 0);
   renderRecordingHistory(doc, recordingHistory);
   renderProfileStats(doc, profileStats);
-}
-
-function stressLabel(status = {}) {
-  const state = status.lastStressState;
-
-  if (state === "found" && status.lastStressSource === "local") {
-    return messageOrDefault("popupStressObvious", "Obvious stress");
-  }
-
-  if (state === "found") return messageOrDefault("popupStressFound", "Found on Goroh");
-  if (state === "missing") return messageOrDefault("popupStressMissing", "Missing on Goroh");
-  return messageOrDefault("popupStressUnknown", "Not checked yet");
 }
 
 function submittedCountLabel(count) {
@@ -107,49 +80,6 @@ function recordingHistoryCellLabel(date, count) {
   return messageOrDefault("popupRecordingHistoryDateCount", "{date}: {count} recordings")
     .replace("{date}", date)
     .replace("{count}", formatCount(count));
-}
-
-async function clearRecordingHistory(doc) {
-  const button = doc.getElementById("confirmClearRecordingHistoryButton");
-  const statusElement = doc.getElementById("recordingHistoryStatus");
-
-  button.disabled = true;
-
-  try {
-    const response = await chrome.runtime.sendMessage({ type: MESSAGE_TYPES.CLEAR_RECORDING_HISTORY });
-    const recordingHistory = response?.recordingHistory || {};
-    const dailyStats = response?.dailyStats || {};
-
-    doc.getElementById("todaySubmittedCount").textContent = submittedCountLabel(dailyStats.count || 0);
-    renderRecordingHistory(doc, recordingHistory);
-    hideClearRecordingHistoryConfirmation(doc);
-    showHistoryStatus(statusElement, messageOrDefault("popupRecordingHistoryCleared", "History cleared"));
-
-    return { recordingHistory };
-  } catch {
-    showHistoryStatus(statusElement, messageOrDefault("popupRecordingHistoryClearError", "Could not clear history"));
-    return { recordingHistory: {} };
-  } finally {
-    button.disabled = false;
-  }
-}
-
-function showClearRecordingHistoryConfirmation(doc) {
-  const confirmation = doc.getElementById("clearRecordingHistoryConfirm");
-  if (confirmation) confirmation.hidden = false;
-}
-
-function hideClearRecordingHistoryConfirmation(doc) {
-  const confirmation = doc.getElementById("clearRecordingHistoryConfirm");
-  if (confirmation) confirmation.hidden = true;
-}
-
-function showHistoryStatus(statusElement, text) {
-  statusElement.textContent = text;
-  clearTimeout(showHistoryStatus.timeoutId);
-  showHistoryStatus.timeoutId = setTimeout(() => {
-    statusElement.textContent = "";
-  }, 1400);
 }
 
 async function refreshProfileStats(doc, options = {}) {

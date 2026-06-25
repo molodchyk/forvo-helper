@@ -13,15 +13,7 @@
         <button id="optionsButton" class="icon-button" type="button" data-i18n-title="popupOpenOptions" title="Options">⚙</button>
       </header>
 
-      <dl class="status-list">
-        <div>
-          <dt data-i18n="popupCurrentWord">Current word</dt>
-          <dd id="currentWord" data-i18n="popupNoWord">No Forvo word detected</dd>
-        </div>
-        <div>
-          <dt data-i18n="popupStress">Stress</dt>
-          <dd id="stressState" data-i18n="popupStressUnknown">Not checked yet</dd>
-        </div>
+      <dl class="status-list status-list--compact">
         <div>
           <dt data-i18n="popupTodaySubmitted">Today</dt>
           <dd id="todaySubmittedCount">0 submitted</dd>
@@ -39,15 +31,8 @@
               <strong id="history30DayCount">0</strong>
             </p>
           </div>
-          <button id="clearRecordingHistoryButton" class="button history-card__clear" type="button" data-i18n="popupClearRecordingHistory">Clear history</button>
         </div>
         <div id="recordingHeatmap" class="history-heatmap" role="img"></div>
-        <div id="clearRecordingHistoryConfirm" class="clear-confirm" hidden>
-          <span data-i18n="popupClearRecordingHistoryPrompt">Clear recording history?</span>
-          <button id="confirmClearRecordingHistoryButton" class="button button--danger" type="button" data-i18n="popupClearRecordingHistoryConfirm">Confirm</button>
-          <button id="cancelClearRecordingHistoryButton" class="button" type="button" data-i18n="popupClearRecordingHistoryCancel">Cancel</button>
-        </div>
-        <p id="recordingHistoryStatus" class="history-status" role="status" aria-live="polite"></p>
       </section>
 
       <section class="profile-stat" aria-labelledby="profileStatsHeading">

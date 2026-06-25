@@ -1,4 +1,5 @@
 import { DEFAULT_SETTINGS, normalizeSettings } from "../core/settings.js";
+import { MESSAGE_TYPES } from "../../lookup/core/messages.js";
 import { applyI18n, messageOrDefault } from "../../../platform/chrome/i18n.js";
 import { readSettings, resetSettings, writeSettings } from "../../../platform/chrome/storage.js";
 import { applyTheme } from "../../../platform/dom/theme.js";
@@ -11,6 +12,10 @@ export async function startOptions(doc = document) {
   const resetConfirm = doc.getElementById("resetConfirm");
   const confirmResetButton = doc.getElementById("confirmResetButton");
   const cancelResetButton = doc.getElementById("cancelResetButton");
+  const clearHistoryButton = doc.getElementById("clearRecordingHistoryButton");
+  const clearHistoryConfirm = doc.getElementById("clearRecordingHistoryConfirm");
+  const confirmClearHistoryButton = doc.getElementById("confirmClearRecordingHistoryButton");
+  const cancelClearHistoryButton = doc.getElementById("cancelClearRecordingHistoryButton");
   const saveStatus = doc.getElementById("saveStatus");
   let settings = await readSettings();
 
@@ -18,11 +23,13 @@ export async function startOptions(doc = document) {
   renderSettings(doc, settings);
   form.addEventListener("input", () => {
     hideResetConfirmation(resetConfirm);
+    hideResetConfirmation(clearHistoryConfirm);
     settings = readSettingsFromForm(doc, settings);
     saveSettings(settings, saveStatus);
   });
   form.addEventListener("change", () => {
     hideResetConfirmation(resetConfirm);
+    hideResetConfirmation(clearHistoryConfirm);
     settings = readSettingsFromForm(doc, settings);
     saveSettings(settings, saveStatus);
   });
@@ -38,6 +45,15 @@ export async function startOptions(doc = document) {
     renderSettings(doc, settings);
     hideResetConfirmation(resetConfirm);
     showSaved(saveStatus);
+  });
+  clearHistoryButton.addEventListener("click", () => {
+    showResetConfirmation(clearHistoryConfirm);
+  });
+  cancelClearHistoryButton.addEventListener("click", () => {
+    hideResetConfirmation(clearHistoryConfirm);
+  });
+  confirmClearHistoryButton.addEventListener("click", async () => {
+    await clearRecordingHistory(confirmClearHistoryButton, clearHistoryConfirm, saveStatus);
   });
 }
 
@@ -113,6 +129,28 @@ function showResetConfirmation(resetConfirm) {
 
 function hideResetConfirmation(resetConfirm) {
   if (resetConfirm) resetConfirm.hidden = true;
+}
+
+async function clearRecordingHistory(button, confirmation, saveStatus) {
+  button.disabled = true;
+
+  try {
+    await chrome.runtime.sendMessage({ type: MESSAGE_TYPES.CLEAR_RECORDING_HISTORY });
+    hideResetConfirmation(confirmation);
+    showStatus(saveStatus, messageOrDefault("optionsRecordingHistoryCleared", "Recording history cleared"));
+  } catch {
+    showStatus(saveStatus, messageOrDefault("optionsRecordingHistoryClearError", "Could not clear recording history"));
+  } finally {
+    button.disabled = false;
+  }
+}
+
+function showStatus(saveStatus, text) {
+  saveStatus.textContent = text;
+  clearTimeout(showSaved.timeoutId);
+  showSaved.timeoutId = setTimeout(() => {
+    saveStatus.textContent = "";
+  }, 1600);
 }
 
 function getValue(doc, id) {

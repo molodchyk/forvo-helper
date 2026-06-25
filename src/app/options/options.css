@@ -69,6 +69,31 @@ h2 {
   grid-template-columns: 1fr;
 }
 
+.settings-action-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
+  align-items: start;
+  gap: 16px;
+  padding-top: 4px;
+}
+
+.settings-action-row strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.settings-action-row p {
+  margin: 0;
+  color: var(--fh-muted);
+  font-size: 13px;
+}
+
+.inline-actions {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+
 input,
 select,
 textarea,
@@ -162,8 +187,13 @@ textarea {
   }
 
   .reset-actions,
+  .inline-actions,
   .reset-confirm {
     justify-items: start;
     justify-content: start;
+  }
+
+  .settings-action-row {
+    grid-template-columns: 1fr;
   }
 }
