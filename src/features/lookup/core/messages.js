@@ -12,6 +12,7 @@ export const MESSAGE_TYPES = Object.freeze({
   CHATGPT_PROMPT_SKIPPED_DUPLICATE: "forvo-helper:chatgpt-prompt-skipped-duplicate",
   POPUP_REFRESH_FORVO_PROFILE_STATS: "forvo-helper:popup-refresh-forvo-profile-stats",
   FORVO_PROFILE_STATS_UPDATED: "forvo-helper:forvo-profile-stats-updated",
+  CLEAR_RECORDING_HISTORY: "forvo-helper:clear-recording-history",
   SCAN_FORVO_ACCOUNT_USERNAME: "forvo-helper:scan-forvo-account-username",
   SCAN_FORVO_PROFILE_COUNT: "forvo-helper:scan-forvo-profile-count",
   GET_STATUS: "forvo-helper:get-status"

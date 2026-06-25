@@ -14,14 +14,17 @@ Optionally open or reuse ChatGPT when a Forvo page opens.
 Open ChatGPT and insert a fallback lookup prompt when Goroh does not show stress.
 Skip duplicate ChatGPT prompts when the latest user message already matches.
 Show today's unique submitted pronunciation count on the toolbar badge.
+Show a compact 13-week recording-history heatmap with 7-day and 30-day totals.
 Treat Forvo previously-pronounced warnings as resubmissions instead of new daily counts.
 Refresh and show your total Forvo pronounced-word count in the popup.
+Clear local recording history without resetting extension settings.
 
 Limitations:
 
 Browser microphone permission is still controlled by the browser and Forvo.
 ChatGPT automatic submission is off by default.
 The total Forvo count is a pronounced-word count from your Forvo profile, not a listen count.
+Recording history is local, starts when the extension observes submissions, and is retained for 400 days unless cleared.
 Forvo, Goroh, and ChatGPT page changes may require extension updates.
 
 Open source under the GPL-3.0 license: https://github.com/molodchyk/forvo-helper

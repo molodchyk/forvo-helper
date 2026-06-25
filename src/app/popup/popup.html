@@ -28,6 +28,28 @@
         </div>
       </dl>
 
+      <section class="history-card" aria-labelledby="recordingHistoryHeading">
+        <div class="history-card__header">
+          <div>
+            <h2 id="recordingHistoryHeading" data-i18n="popupRecordingHistory">Recording history</h2>
+            <p class="history-summary">
+              <span data-i18n="popupRecordingHistory7Days">7 days</span>
+              <strong id="history7DayCount">0</strong>
+              <span data-i18n="popupRecordingHistory30Days">30 days</span>
+              <strong id="history30DayCount">0</strong>
+            </p>
+          </div>
+          <button id="clearRecordingHistoryButton" class="button history-card__clear" type="button" data-i18n="popupClearRecordingHistory">Clear history</button>
+        </div>
+        <div id="recordingHeatmap" class="history-heatmap" role="img"></div>
+        <div id="clearRecordingHistoryConfirm" class="clear-confirm" hidden>
+          <span data-i18n="popupClearRecordingHistoryPrompt">Clear recording history?</span>
+          <button id="confirmClearRecordingHistoryButton" class="button button--danger" type="button" data-i18n="popupClearRecordingHistoryConfirm">Confirm</button>
+          <button id="cancelClearRecordingHistoryButton" class="button" type="button" data-i18n="popupClearRecordingHistoryCancel">Cancel</button>
+        </div>
+        <p id="recordingHistoryStatus" class="history-status" role="status" aria-live="polite"></p>
+      </section>
+
       <section class="profile-stat" aria-labelledby="profileStatsHeading">
         <div>
           <h2 id="profileStatsHeading" data-i18n="popupForvoTotal">Forvo total</h2>

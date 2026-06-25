@@ -25,13 +25,22 @@
 - Retention: overwritten by new fallback and marked as inserted or skipped when handled
 - Quota risk: low
 
+## `forvoHelperRecordingHistory`
+
+- Area: `chrome.storage.local`
+- Owner: `src/features/recording`
+- Shape version: `1`
+- Purpose: 400-day local recording history used for the popup heatmap, 7-day and 30-day summaries, and today's toolbar badge count
+- Retention: pruned to the last 400 local days and clearable from the popup
+- Quota risk: low for normal use; stores one compact entry per unique submitted recording URL per local day
+
 ## `forvoHelperDailySubmissions`
 
 - Area: `chrome.storage.local`
 - Owner: `src/features/recording`
-- Purpose: current local-day set of normalized Forvo recording URLs used for the popup and toolbar badge count
-- Retention: automatically reset when the local date changes
-- Quota risk: low for normal use; stores one compact entry per unique submitted recording URL for the current day
+- Purpose: legacy current-day submission key from earlier builds
+- Retention: migrated into `forvoHelperRecordingHistory` on read and then removed
+- Quota risk: low
 
 ## `forvoHelperProfileStats`
 

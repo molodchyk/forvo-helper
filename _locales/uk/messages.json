@@ -72,6 +72,39 @@
   "popupRefreshProfileStats": {
     "message": "Оновити"
   },
+  "popupRecordingHistory": {
+    "message": "Історія записів"
+  },
+  "popupRecordingHistory7Days": {
+    "message": "7 днів"
+  },
+  "popupRecordingHistory30Days": {
+    "message": "30 днів"
+  },
+  "popupRecordingHistoryHeatmapLabel": {
+    "message": "Щоденні записи за останні 13 тижнів"
+  },
+  "popupRecordingHistoryDateCount": {
+    "message": "{date}: записів: {count}"
+  },
+  "popupClearRecordingHistory": {
+    "message": "Очистити"
+  },
+  "popupClearRecordingHistoryPrompt": {
+    "message": "Очистити історію записів?"
+  },
+  "popupClearRecordingHistoryConfirm": {
+    "message": "Підтвердити"
+  },
+  "popupClearRecordingHistoryCancel": {
+    "message": "Скасувати"
+  },
+  "popupRecordingHistoryCleared": {
+    "message": "Історію очищено"
+  },
+  "popupRecordingHistoryClearError": {
+    "message": "Не вдалося очистити історію"
+  },
   "popupOpenOptions": {
     "message": "Налаштування"
   },

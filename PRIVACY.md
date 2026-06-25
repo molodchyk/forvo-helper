@@ -15,11 +15,11 @@ Stored settings may include:
 - whether ChatGPT should open when a Forvo page opens
 - whether the toolbar badge should show today's submitted count
 
-The extension also stores local workflow records with the last detected word, the last stress result and source, the most recent pending ChatGPT prompt, today's submitted Forvo recording URLs, and the last refreshed Forvo profile word count. These records are used only to keep the popup, toolbar badge, and fallback workflow consistent.
+The extension also stores local workflow records with the last detected word, the last stress result and source, the most recent pending ChatGPT prompt, local recording history for the last 400 days, and the last refreshed Forvo profile word count. Recording history stores normalized Forvo recording URLs per local day so the popup heatmap and toolbar badge can count unique newly submitted recordings. It can be cleared from the popup without resetting settings. These records are used only to keep the popup, toolbar badge, and fallback workflow consistent.
 
 Browser permissions:
 
-- `storage`, used to save extension settings and local workflow status
+- `storage`, used to save extension settings, local workflow status, and local recording history
 - `tabs`, used to open or reuse Goroh and ChatGPT tabs and send extension messages to supported tabs
 - `alarms`, used to refresh the local daily toolbar badge after midnight
 - `scripting`, used to attach the packaged ChatGPT content script to an existing ChatGPT tab after extension reload without reloading the chat
@@ -45,4 +45,4 @@ Data sale and sharing:
 Chrome sync:
 
 - Settings are stored in Chrome sync storage when available, so Chrome may sync them through the user's browser profile according to the user's Chrome sync settings.
-- Runtime status is stored locally and is not intended to sync between devices.
+- Runtime status and recording history are stored locally and are not intended to sync between devices.

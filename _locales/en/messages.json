@@ -72,6 +72,39 @@
   "popupRefreshProfileStats": {
     "message": "Refresh total"
   },
+  "popupRecordingHistory": {
+    "message": "Recording history"
+  },
+  "popupRecordingHistory7Days": {
+    "message": "7 days"
+  },
+  "popupRecordingHistory30Days": {
+    "message": "30 days"
+  },
+  "popupRecordingHistoryHeatmapLabel": {
+    "message": "Daily recordings for the last 13 weeks"
+  },
+  "popupRecordingHistoryDateCount": {
+    "message": "{date}: {count} recordings"
+  },
+  "popupClearRecordingHistory": {
+    "message": "Clear history"
+  },
+  "popupClearRecordingHistoryPrompt": {
+    "message": "Clear recording history?"
+  },
+  "popupClearRecordingHistoryConfirm": {
+    "message": "Confirm"
+  },
+  "popupClearRecordingHistoryCancel": {
+    "message": "Cancel"
+  },
+  "popupRecordingHistoryCleared": {
+    "message": "History cleared"
+  },
+  "popupRecordingHistoryClearError": {
+    "message": "Could not clear history"
+  },
   "popupOpenOptions": {
     "message": "Options"
   },

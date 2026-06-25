@@ -2,6 +2,7 @@ import {
   DAILY_SUBMISSIONS_KEY,
   DEFAULT_SETTINGS,
   PENDING_CHATGPT_PROMPT_KEY,
+  RECORDING_HISTORY_KEY,
   SETTINGS_KEY,
   STATUS_KEY,
   createDefaultStatus,
@@ -9,8 +10,11 @@ import {
   normalizeStatus
 } from "../../features/settings/core/settings.js";
 import {
+  getDailySubmissionStatsFromHistory,
+  migrateDailySubmissionStatsToHistory,
   normalizeDailySubmissionStats,
-  registerDailySubmission
+  normalizeRecordingHistory,
+  registerRecordingSubmission
 } from "../../features/recording/core/dailySubmissions.js";
 import {
   FORVO_PROFILE_STATS_KEY,
@@ -42,27 +46,57 @@ export async function readStatus() {
 }
 
 export async function readDailySubmissionStats() {
-  const result = await chrome.storage.local.get(DAILY_SUBMISSIONS_KEY);
-  const stats = normalizeDailySubmissionStats(result[DAILY_SUBMISSIONS_KEY]);
-
-  if (result[DAILY_SUBMISSIONS_KEY]?.date !== stats.date) {
-    await chrome.storage.local.set({ [DAILY_SUBMISSIONS_KEY]: stats });
-  }
-
-  return stats;
+  return getDailySubmissionStatsFromHistory(await readRecordingHistory());
 }
 
 export async function writeDailySubmissionStats(stats) {
-  const normalized = normalizeDailySubmissionStats(stats);
-  await chrome.storage.local.set({ [DAILY_SUBMISSIONS_KEY]: normalized });
+  const current = await readRecordingHistory();
+  const dateKey = stats?.date;
+  const normalized = normalizeDailySubmissionStats(stats, dateKey);
+  const history = normalizeRecordingHistory({
+    version: 1,
+    days: {
+      ...current.days,
+      [normalized.date]: normalized
+    }
+  });
+
+  await chrome.storage.local.set({ [RECORDING_HISTORY_KEY]: history });
+  await chrome.storage.local.remove(DAILY_SUBMISSIONS_KEY);
   return normalized;
 }
 
+export async function readRecordingHistory() {
+  const result = await chrome.storage.local.get([RECORDING_HISTORY_KEY, DAILY_SUBMISSIONS_KEY]);
+  const hasHistory = result[RECORDING_HISTORY_KEY] !== undefined;
+  const hasLegacyDailyStats = result[DAILY_SUBMISSIONS_KEY] !== undefined;
+  const migration = migrateDailySubmissionStatsToHistory(
+    result[RECORDING_HISTORY_KEY],
+    result[DAILY_SUBMISSIONS_KEY]
+  );
+
+  if (hasHistory || hasLegacyDailyStats) {
+    await chrome.storage.local.set({ [RECORDING_HISTORY_KEY]: migration.history });
+  }
+
+  if (hasLegacyDailyStats) {
+    await chrome.storage.local.remove(DAILY_SUBMISSIONS_KEY);
+  }
+
+  return migration.history;
+}
+
 export async function recordDailySubmission(submission) {
-  const current = await readDailySubmissionStats();
-  const result = registerDailySubmission(current, submission);
-  await chrome.storage.local.set({ [DAILY_SUBMISSIONS_KEY]: result.stats });
+  const current = await readRecordingHistory();
+  const result = registerRecordingSubmission(current, submission);
+  await chrome.storage.local.set({ [RECORDING_HISTORY_KEY]: result.history });
   return result;
+}
+
+export async function clearRecordingHistory() {
+  const history = normalizeRecordingHistory({});
+  await chrome.storage.local.remove([RECORDING_HISTORY_KEY, DAILY_SUBMISSIONS_KEY]);
+  return history;
 }
 
 export async function readForvoProfileStats() {

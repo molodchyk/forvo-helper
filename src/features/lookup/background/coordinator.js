@@ -18,8 +18,10 @@ import { formatDailyBadgeText } from "../../recording/core/dailySubmissions.js";
 import { refreshForvoProfileStats } from "../../profile-stats/background/scanner.js";
 import { SETTINGS_KEY } from "../../settings/core/settings.js";
 import {
+  clearRecordingHistory,
   readDailySubmissionStats,
   readForvoProfileStats,
+  readRecordingHistory,
   readSettings,
   readStatus,
   recordDailySubmission,
@@ -86,10 +88,13 @@ async function handleMessage(message, sender) {
         settings: await readSettings(),
         status: await readStatus(),
         dailyStats: await readDailySubmissionStats(),
+        recordingHistory: await readRecordingHistory(),
         profileStats: await readForvoProfileStats()
       };
     case MESSAGE_TYPES.POPUP_REFRESH_FORVO_PROFILE_STATS:
       return { profileStats: await refreshForvoProfileStats() };
+    case MESSAGE_TYPES.CLEAR_RECORDING_HISTORY:
+      return handleClearRecordingHistory();
     case MESSAGE_TYPES.FORVO_WORD_DETECTED:
       return handleForvoWordDetected(message, sender);
     case MESSAGE_TYPES.RECORDING_TRIGGERED:
@@ -108,6 +113,18 @@ async function handleMessage(message, sender) {
     default:
       return {};
   }
+}
+
+async function handleClearRecordingHistory() {
+  const recordingHistory = await clearRecordingHistory();
+  const dailyStats = await readDailySubmissionStats();
+
+  await refreshDailyBadge(dailyStats);
+
+  return {
+    recordingHistory,
+    dailyStats
+  };
 }
 
 async function handleForvoPronunciationSubmitted(message) {

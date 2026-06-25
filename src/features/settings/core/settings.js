@@ -2,6 +2,7 @@ export const SETTINGS_KEY = "forvoHelperSettings";
 export const STATUS_KEY = "forvoHelperStatus";
 export const PENDING_CHATGPT_PROMPT_KEY = "forvoHelperPendingChatGptPrompt";
 export const DAILY_SUBMISSIONS_KEY = "forvoHelperDailySubmissions";
+export const RECORDING_HISTORY_KEY = "forvoHelperRecordingHistory";
 
 export const DEFAULT_SETTINGS = Object.freeze({
   version: 1,
