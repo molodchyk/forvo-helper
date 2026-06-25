@@ -13,7 +13,7 @@ export async function startPopup(doc = document) {
   const profileStats = state?.profileStats || {};
   const recordingHistory = state?.recordingHistory || {};
 
-  applyTheme(doc, state?.settings?.appearance?.theme);
+  applyTheme(doc, state?.settings?.appearance);
   renderStatus(doc, dailyStats, profileStats, recordingHistory);
   doc.getElementById("optionsButton").addEventListener("click", () => {
     chrome.runtime.openOptionsPage();

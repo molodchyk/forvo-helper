@@ -7,6 +7,7 @@
 - Added a separate confirmation click before resetting options-page settings.
 - Added Ukrainian extension UI strings and Chrome Web Store listing copy.
 - Added popup and Options recording-history heatmaps, an Options hourly breakdown, 400-day local retention, and separate history clearing.
+- Added dependent light and dark style variants under the Appearance theme setting.
 
 ## 1.0.0
 

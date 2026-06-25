@@ -5,7 +5,7 @@ Forvo Helper is a local browser extension for Forvo recording and Ukrainian stre
 Stored settings may include:
 
 - recording trigger settings
-- extension appearance preference
+- extension appearance mode and style preferences
 - hover delay and page hotkey
 - Goroh lookup mode
 - whether lookup tabs should be focused

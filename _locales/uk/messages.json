@@ -99,6 +99,24 @@
   "optionsThemeDark": {
     "message": "Темна"
   },
+  "optionsLightStyle": {
+    "message": "Стиль світлої теми"
+  },
+  "optionsLightStyleClean": {
+    "message": "Чистий"
+  },
+  "optionsLightStyleMint": {
+    "message": "М'ятний"
+  },
+  "optionsDarkStyle": {
+    "message": "Стиль темної теми"
+  },
+  "optionsDarkStyleMidnight": {
+    "message": "Опівнічний"
+  },
+  "optionsDarkStyleGraphite": {
+    "message": "Графітовий"
+  },
   "optionsShowDailyBadge": {
     "message": "Показувати сьогоднішню кількість надісланих вимов на значку розширення"
   },

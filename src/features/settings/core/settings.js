@@ -7,7 +7,9 @@ export const RECORDING_HISTORY_KEY = "forvoHelperRecordingHistory";
 export const DEFAULT_SETTINGS = Object.freeze({
   version: 1,
   appearance: {
-    theme: "system"
+    theme: "system",
+    lightStyle: "clean",
+    darkStyle: "midnight"
   },
   stats: {
     showDailyBadge: true
@@ -37,6 +39,8 @@ export const DEFAULT_SETTINGS = Object.freeze({
 const GOROH_LOOKUP_MODES = new Set(["direct-url", "search-field"]);
 const CHATGPT_HOSTS = new Set(["chatgpt.com", "chat.openai.com"]);
 const THEMES = new Set(["system", "light", "dark"]);
+const LIGHT_STYLES = new Set(["clean", "mint"]);
+const DARK_STYLES = new Set(["midnight", "graphite"]);
 
 export function normalizeSettings(input = {}) {
   const source = isPlainObject(input) ? input : {};
@@ -48,7 +52,9 @@ export function normalizeSettings(input = {}) {
   return {
     version: 1,
     appearance: {
-      theme: THEMES.has(appearance.theme) ? appearance.theme : DEFAULT_SETTINGS.appearance.theme
+      theme: THEMES.has(appearance.theme) ? appearance.theme : DEFAULT_SETTINGS.appearance.theme,
+      lightStyle: LIGHT_STYLES.has(appearance.lightStyle) ? appearance.lightStyle : DEFAULT_SETTINGS.appearance.lightStyle,
+      darkStyle: DARK_STYLES.has(appearance.darkStyle) ? appearance.darkStyle : DEFAULT_SETTINGS.appearance.darkStyle
     },
     stats: {
       showDailyBadge: asBoolean(stats.showDailyBadge, DEFAULT_SETTINGS.stats.showDailyBadge)

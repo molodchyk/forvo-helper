@@ -35,7 +35,7 @@ export async function startOptions(doc = document) {
   let dailyStats = currentState.dailyStats || {};
   let hourlyRangeId = RECORDING_HOURLY_RANGES.YEAR.id;
 
-  applyTheme(doc, settings.appearance.theme);
+  applyTheme(doc, settings.appearance);
   renderSettings(doc, settings);
   renderStats(doc, dailyStats, recordingHistory, hourlyRangeId);
   setupTabs(doc);
@@ -47,12 +47,14 @@ export async function startOptions(doc = document) {
     hideResetConfirmation(resetConfirm);
     hideResetConfirmation(clearHistoryConfirm);
     settings = readSettingsFromForm(doc, settings);
+    syncAppearanceStyleRows(doc, settings.appearance.theme);
     saveSettings(settings, saveStatus);
   });
   form.addEventListener("change", () => {
     hideResetConfirmation(resetConfirm);
     hideResetConfirmation(clearHistoryConfirm);
     settings = readSettingsFromForm(doc, settings);
+    syncAppearanceStyleRows(doc, settings.appearance.theme);
     saveSettings(settings, saveStatus);
   });
   resetButton.addEventListener("click", () => {
@@ -63,7 +65,7 @@ export async function startOptions(doc = document) {
   });
   confirmResetButton.addEventListener("click", async () => {
     settings = await resetSettings();
-    applyTheme(doc, settings.appearance.theme);
+    applyTheme(doc, settings.appearance);
     renderSettings(doc, settings);
     hideResetConfirmation(resetConfirm);
     showSaved(saveStatus);
@@ -88,6 +90,9 @@ export async function startOptions(doc = document) {
 function renderSettings(doc, settings) {
   const normalized = normalizeSettings(settings);
   setValue(doc, "theme", normalized.appearance.theme);
+  setValue(doc, "lightStyle", normalized.appearance.lightStyle);
+  setValue(doc, "darkStyle", normalized.appearance.darkStyle);
+  syncAppearanceStyleRows(doc, normalized.appearance.theme);
   setChecked(doc, "showDailyBadge", normalized.stats.showDailyBadge);
   setChecked(doc, "hoverEnabled", normalized.recording.hoverEnabled);
   setValue(doc, "hoverDelaySeconds", millisecondsToSeconds(normalized.recording.hoverDelayMs));
@@ -109,7 +114,9 @@ function readSettingsFromForm(doc, previousSettings) {
   return normalizeSettings({
     ...previousSettings,
     appearance: {
-      theme: getValue(doc, "theme")
+      theme: getValue(doc, "theme"),
+      lightStyle: getValue(doc, "lightStyle"),
+      darkStyle: getValue(doc, "darkStyle")
     },
     stats: {
       showDailyBadge: getChecked(doc, "showDailyBadge")
@@ -291,8 +298,17 @@ function hourlyBucketLabel(hour, count) {
 
 async function saveSettings(settings, saveStatus) {
   await writeSettings(settings);
-  applyTheme(document, settings.appearance.theme);
+  applyTheme(document, settings.appearance);
   showSaved(saveStatus);
+}
+
+function syncAppearanceStyleRows(doc, theme) {
+  const normalized = normalizeSettings({ appearance: { theme } }).appearance.theme;
+  const lightRow = doc.getElementById("lightStyleRow");
+  const darkRow = doc.getElementById("darkStyleRow");
+
+  if (lightRow) lightRow.hidden = normalized === "dark";
+  if (darkRow) darkRow.hidden = normalized === "light";
 }
 
 function showSaved(saveStatus) {

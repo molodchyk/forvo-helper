@@ -99,6 +99,24 @@
   "optionsThemeDark": {
     "message": "Dark"
   },
+  "optionsLightStyle": {
+    "message": "Light style"
+  },
+  "optionsLightStyleClean": {
+    "message": "Clean"
+  },
+  "optionsLightStyleMint": {
+    "message": "Mint"
+  },
+  "optionsDarkStyle": {
+    "message": "Dark style"
+  },
+  "optionsDarkStyleMidnight": {
+    "message": "Midnight"
+  },
+  "optionsDarkStyleGraphite": {
+    "message": "Graphite"
+  },
   "optionsShowDailyBadge": {
     "message": "Show today's submitted count on the toolbar badge"
   },
