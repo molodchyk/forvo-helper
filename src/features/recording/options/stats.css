@@ -56,17 +56,17 @@
 .history-heatmap {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 12px;
-  grid-template-rows: repeat(7, 12px);
-  gap: 4px;
+  grid-auto-columns: 13px;
+  grid-template-rows: repeat(7, 13px);
+  gap: 3px;
   width: max-content;
   max-width: 100%;
 }
 
 .history-heatmap__cell {
   position: relative;
-  width: 12px;
-  height: 12px;
+  width: 13px;
+  height: 13px;
   border: 1px solid color-mix(in srgb, var(--fh-border) 70%, transparent);
   border-radius: 3px;
   box-sizing: border-box;
@@ -220,17 +220,6 @@
   .stats-summary div + div {
     border-top: 1px solid var(--fh-border);
     border-left: 0;
-  }
-
-  .history-heatmap {
-    grid-auto-columns: 11px;
-    grid-template-rows: repeat(7, 11px);
-    gap: 4px;
-  }
-
-  .history-heatmap__cell {
-    width: 11px;
-    height: 11px;
   }
 
   .hourly-chart {
