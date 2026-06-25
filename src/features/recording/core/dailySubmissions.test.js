@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  createRecordingHourlyBreakdown,
   createRecordingHeatmap,
   formatDailyBadgeText,
   getDailySubmissionStatsFromHistory,
@@ -194,4 +195,42 @@ test("recording heatmap uses fixed count intensity levels", () => {
   assert.equal(getRecordingHeatmapLevel(10), 3);
   assert.equal(getRecordingHeatmapLevel(19), 3);
   assert.equal(getRecordingHeatmapLevel(20), 4);
+});
+
+test("recording hourly breakdown counts the first submission hour", () => {
+  const first = registerRecordingSubmission({}, {
+    normalizedUrl: "https://forvo.com/word-record/test/uk/"
+  }, new Date(2026, 5, 25, 10, 0));
+  const retry = registerRecordingSubmission(first.history, {
+    normalizedUrl: "https://forvo.com/word-record/test/uk/"
+  }, new Date(2026, 5, 25, 15, 0));
+  const breakdown = createRecordingHourlyBreakdown(retry.history, new Date(2026, 5, 25, 18, 0), 30);
+
+  assert.equal(breakdown.total, 1);
+  assert.equal(breakdown.buckets[10].count, 1);
+  assert.equal(breakdown.buckets[15].count, 0);
+  assert.equal(breakdown.peakHour, 10);
+});
+
+test("recording hourly breakdown filters by local date range", () => {
+  const oldSubmission = registerRecordingSubmission({}, {
+    normalizedUrl: "https://forvo.com/word-record/old/uk/"
+  }, new Date(2026, 4, 10, 9, 0));
+  const recentSubmission = registerRecordingSubmission(oldSubmission.history, {
+    normalizedUrl: "https://forvo.com/word-record/recent/uk/"
+  }, new Date(2026, 5, 25, 14, 0));
+  const breakdown = createRecordingHourlyBreakdown(recentSubmission.history, new Date(2026, 5, 25, 18, 0), 30);
+
+  assert.equal(breakdown.total, 1);
+  assert.equal(breakdown.buckets[9].count, 0);
+  assert.equal(breakdown.buckets[14].count, 1);
+});
+
+test("recording hourly breakdown reports empty history without a peak", () => {
+  const breakdown = createRecordingHourlyBreakdown({}, new Date(2026, 5, 25, 18, 0), 365);
+
+  assert.equal(breakdown.total, 0);
+  assert.equal(breakdown.maxCount, 0);
+  assert.equal(breakdown.peakHour, null);
+  assert.equal(breakdown.buckets.length, 24);
 });

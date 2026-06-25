@@ -14,10 +14,11 @@ Optionally open or reuse ChatGPT when a Forvo page opens.
 Open ChatGPT and insert a fallback lookup prompt when Goroh does not show stress.
 Skip duplicate ChatGPT prompts when the latest user message already matches.
 Show today's unique submitted pronunciation count on the toolbar badge.
-Show a compact 13-week recording-history heatmap with 7-day and 30-day totals.
+Show popup recording summaries for today, 7 days, and 30 days.
+Show a 13-week recording-history heatmap and hourly breakdown in the Options stats tab.
 Treat Forvo previously-pronounced warnings as resubmissions instead of new daily counts.
 Refresh and show your total Forvo pronounced-word count in the popup.
-Clear local recording history without resetting extension settings.
+Clear local recording history from Options without resetting extension settings.
 
 Limitations:
 

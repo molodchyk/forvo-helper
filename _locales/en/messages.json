@@ -72,6 +72,18 @@
   "optionsTitle": {
     "message": "Forvo Helper Options"
   },
+  "optionsTabRecording": {
+    "message": "Recording"
+  },
+  "optionsTabLookup": {
+    "message": "Lookup"
+  },
+  "optionsTabStats": {
+    "message": "Stats"
+  },
+  "optionsTabAppearance": {
+    "message": "Appearance"
+  },
   "optionsAppearance": {
     "message": "Appearance"
   },
@@ -96,6 +108,18 @@
   "optionsLookup": {
     "message": "Lookup"
   },
+  "optionsStats": {
+    "message": "Stats"
+  },
+  "optionsStatsToday": {
+    "message": "Today"
+  },
+  "optionsStats7Days": {
+    "message": "7 days"
+  },
+  "optionsStats30Days": {
+    "message": "30 days"
+  },
   "optionsHoverEnabled": {
     "message": "Start recording after hovering over the record button"
   },
@@ -115,7 +139,46 @@
     "message": "Recording history"
   },
   "optionsRecordingHistoryDescription": {
-    "message": "Local heatmap history is kept for 400 days and can be cleared without changing settings."
+    "message": "Local recording history is kept for 400 days."
+  },
+  "optionsRecordingHistoryData": {
+    "message": "Recording history data"
+  },
+  "optionsRecordingHistoryClearDescription": {
+    "message": "Clearing history does not reset extension settings."
+  },
+  "optionsRecordingHistoryHeatmapLabel": {
+    "message": "Daily recordings for the last 13 weeks"
+  },
+  "optionsRecordingHistoryDateCount": {
+    "message": "{date}: {count} recordings"
+  },
+  "optionsHourlyBreakdown": {
+    "message": "Hourly breakdown"
+  },
+  "optionsHourlyBreakdownDescription": {
+    "message": "Recordings first submitted in each hour of the day."
+  },
+  "optionsHourlyRangeMonth": {
+    "message": "1 month"
+  },
+  "optionsHourlyRangeQuarter": {
+    "message": "3 months"
+  },
+  "optionsHourlyRangeYear": {
+    "message": "1 year"
+  },
+  "optionsHourlyBreakdownChartLabel": {
+    "message": "Hourly recording volume"
+  },
+  "optionsHourlyBucketCount": {
+    "message": "{hour}: {count} recordings"
+  },
+  "optionsHourlyPeak": {
+    "message": "Peak: {hour} - {count} recordings"
+  },
+  "optionsHourlyNoData": {
+    "message": "No recordings in this range"
   },
   "optionsClearRecordingHistory": {
     "message": "Clear history"

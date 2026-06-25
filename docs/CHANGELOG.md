@@ -6,7 +6,7 @@
 - Added local stress detection for words with a single Ukrainian vowel, skipping unnecessary Goroh and ChatGPT lookup.
 - Added a separate confirmation click before resetting options-page settings.
 - Added Ukrainian extension UI strings and Chrome Web Store listing copy.
-- Added a popup recording-history heatmap with 400-day local retention and separate history clearing.
+- Added an Options stats tab with a 13-week recording-history heatmap, hourly breakdown, 400-day local retention, and separate history clearing.
 
 ## 1.0.0
 

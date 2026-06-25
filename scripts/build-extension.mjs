@@ -38,6 +38,7 @@ await copyDirectory("src/styles", "styles");
 await copyFile("src/app/content/forvo.css", "app/content/forvo.css");
 await copyFile("src/app/options/options.html", "app/options/options.html");
 await copyFile("src/app/options/options.css", "app/options/options.css");
+await copyFile("src/features/recording/options/stats.css", "features/recording/options/stats.css");
 await copyFile("src/app/popup/popup.html", "app/popup/popup.html");
 await copyFile("src/app/popup/popup.css", "app/popup/popup.css");
 

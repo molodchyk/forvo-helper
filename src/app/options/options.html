@@ -20,27 +20,16 @@
         </div>
       </header>
 
+      <nav class="options-tabs" role="tablist">
+        <button id="recordingTab" class="options-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="recordingPanel" data-tab-target="recordingPanel" data-i18n="optionsTabRecording">Recording</button>
+        <button id="lookupTab" class="options-tab" type="button" role="tab" aria-selected="false" aria-controls="lookupPanel" data-tab-target="lookupPanel" data-i18n="optionsTabLookup">Lookup</button>
+        <button id="statsTab" class="options-tab" type="button" role="tab" aria-selected="false" aria-controls="statsPanel" data-tab-target="statsPanel" data-i18n="optionsTabStats">Stats</button>
+        <button id="appearanceTab" class="options-tab" type="button" role="tab" aria-selected="false" aria-controls="appearancePanel" data-tab-target="appearancePanel" data-i18n="optionsTabAppearance">Appearance</button>
+      </nav>
+
       <form id="optionsForm" class="settings-form">
-        <section class="settings-section" aria-labelledby="appearanceHeading">
-          <h2 id="appearanceHeading" data-i18n="optionsAppearance">Appearance</h2>
-
-          <label class="field-row">
-            <span data-i18n="optionsTheme">Theme</span>
-            <select id="theme" name="theme">
-              <option value="system" data-i18n="optionsThemeSystem">System</option>
-              <option value="light" data-i18n="optionsThemeLight">Light</option>
-              <option value="dark" data-i18n="optionsThemeDark">Dark</option>
-            </select>
-          </label>
-
-          <label class="check-row">
-            <input id="showDailyBadge" name="showDailyBadge" type="checkbox">
-            <span data-i18n="optionsShowDailyBadge">Show today's submitted count on the toolbar badge</span>
-          </label>
-        </section>
-
-        <section class="settings-section" aria-labelledby="recordingHeading">
-          <h2 id="recordingHeading" data-i18n="optionsRecording">Recording</h2>
+        <section id="recordingPanel" class="settings-section" role="tabpanel" aria-labelledby="recordingTab">
+          <h2 data-i18n="optionsRecording">Recording</h2>
 
           <label class="check-row">
             <input id="hoverEnabled" name="hoverEnabled" type="checkbox">
@@ -66,25 +55,10 @@
             <span data-i18n="optionsHotkey">Page hotkey</span>
             <input id="hotkey" name="hotkey" type="text" autocomplete="off" spellcheck="false">
           </label>
-
-          <div class="settings-action-row">
-            <div>
-              <strong data-i18n="optionsRecordingHistory">Recording history</strong>
-              <p data-i18n="optionsRecordingHistoryDescription">Local heatmap history is kept for 400 days and can be cleared without changing settings.</p>
-            </div>
-            <div class="inline-actions">
-              <button id="clearRecordingHistoryButton" class="button button--subtle" type="button" data-i18n="optionsClearRecordingHistory">Clear history</button>
-              <div id="clearRecordingHistoryConfirm" class="reset-confirm" hidden>
-                <span data-i18n="optionsClearRecordingHistoryPrompt">Clear recording history?</span>
-                <button id="confirmClearRecordingHistoryButton" class="button button--danger" type="button" data-i18n="optionsClearRecordingHistoryConfirm">Confirm</button>
-                <button id="cancelClearRecordingHistoryButton" class="button button--subtle" type="button" data-i18n="optionsClearRecordingHistoryCancel">Cancel</button>
-              </div>
-            </div>
-          </div>
         </section>
 
-        <section class="settings-section" aria-labelledby="lookupHeading">
-          <h2 id="lookupHeading" data-i18n="optionsLookup">Lookup</h2>
+        <section id="lookupPanel" class="settings-section" role="tabpanel" aria-labelledby="lookupTab" hidden>
+          <h2 data-i18n="optionsLookup">Lookup</h2>
 
           <label class="check-row">
             <input id="autoGorohLookup" name="autoGorohLookup" type="checkbox">
@@ -115,7 +89,7 @@
           </label>
 
           <label class="field-row">
-            <span data-i18n="optionsChatGptUrl">ChatGPT URL</span>
+            <span data-i18n="optionsChatGptUrl">ChatGPT target chat URL</span>
             <input id="chatGptUrl" name="chatGptUrl" type="url">
           </label>
 
@@ -132,6 +106,85 @@
           <label class="check-row">
             <input id="chatGptSkipDuplicatePrompt" name="chatGptSkipDuplicatePrompt" type="checkbox">
             <span data-i18n="optionsChatGptSkipDuplicate">Skip ChatGPT prompt when the latest user message already matches</span>
+          </label>
+        </section>
+
+        <section id="statsPanel" class="settings-section" role="tabpanel" aria-labelledby="statsTab" hidden>
+          <h2 data-i18n="optionsStats">Stats</h2>
+
+          <div class="stats-summary">
+            <div>
+              <span data-i18n="optionsStatsToday">Today</span>
+              <strong id="statsTodayCount">0</strong>
+            </div>
+            <div>
+              <span data-i18n="optionsStats7Days">7 days</span>
+              <strong id="stats7DayCount">0</strong>
+            </div>
+            <div>
+              <span data-i18n="optionsStats30Days">30 days</span>
+              <strong id="stats30DayCount">0</strong>
+            </div>
+          </div>
+
+          <label class="check-row">
+            <input id="showDailyBadge" name="showDailyBadge" type="checkbox">
+            <span data-i18n="optionsShowDailyBadge">Show today's submitted count on the toolbar badge</span>
+          </label>
+
+          <section class="stats-block" aria-labelledby="recordingHistoryHeading">
+            <div class="stats-block__header">
+              <div>
+                <h3 id="recordingHistoryHeading" data-i18n="optionsRecordingHistory">Recording history</h3>
+                <p data-i18n="optionsRecordingHistoryDescription">Local recording history is kept for 400 days.</p>
+              </div>
+            </div>
+            <div id="optionsRecordingHeatmap" class="history-heatmap" role="img"></div>
+          </section>
+
+          <section class="stats-block" aria-labelledby="hourlyBreakdownHeading">
+            <div class="stats-block__header stats-block__header--split">
+              <div>
+                <h3 id="hourlyBreakdownHeading" data-i18n="optionsHourlyBreakdown">Hourly breakdown</h3>
+                <p data-i18n="optionsHourlyBreakdownDescription">Recordings first submitted in each hour of the day.</p>
+              </div>
+              <div class="range-control" role="group">
+                <button class="range-button" type="button" data-hourly-range="1m" aria-pressed="false" data-i18n="optionsHourlyRangeMonth">1 month</button>
+                <button class="range-button" type="button" data-hourly-range="3m" aria-pressed="false" data-i18n="optionsHourlyRangeQuarter">3 months</button>
+                <button class="range-button is-active" type="button" data-hourly-range="1y" aria-pressed="true" data-i18n="optionsHourlyRangeYear">1 year</button>
+              </div>
+            </div>
+            <div id="hourlyChart" class="hourly-chart" role="img"></div>
+            <div id="hourlyAxis" class="hourly-axis" aria-hidden="true"></div>
+            <p id="hourlyPeakSummary" class="stats-note"></p>
+          </section>
+
+          <div class="settings-action-row">
+            <div>
+              <strong data-i18n="optionsRecordingHistoryData">Recording history data</strong>
+              <p data-i18n="optionsRecordingHistoryClearDescription">Clearing history does not reset extension settings.</p>
+            </div>
+            <div class="inline-actions">
+              <button id="clearRecordingHistoryButton" class="button button--subtle button--compact" type="button" data-i18n="optionsClearRecordingHistory">Clear history</button>
+              <div id="clearRecordingHistoryConfirm" class="reset-confirm" hidden>
+                <span data-i18n="optionsClearRecordingHistoryPrompt">Clear recording history?</span>
+                <button id="confirmClearRecordingHistoryButton" class="button button--danger button--compact" type="button" data-i18n="optionsClearRecordingHistoryConfirm">Confirm</button>
+                <button id="cancelClearRecordingHistoryButton" class="button button--subtle button--compact" type="button" data-i18n="optionsClearRecordingHistoryCancel">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="appearancePanel" class="settings-section" role="tabpanel" aria-labelledby="appearanceTab" hidden>
+          <h2 data-i18n="optionsAppearance">Appearance</h2>
+
+          <label class="field-row">
+            <span data-i18n="optionsTheme">Theme</span>
+            <select id="theme" name="theme">
+              <option value="system" data-i18n="optionsThemeSystem">System</option>
+              <option value="light" data-i18n="optionsThemeLight">Light</option>
+              <option value="dark" data-i18n="optionsThemeDark">Dark</option>
+            </select>
           </label>
         </section>
       </form>

@@ -72,6 +72,18 @@
   "optionsTitle": {
     "message": "Налаштування Forvo Helper"
   },
+  "optionsTabRecording": {
+    "message": "Запис"
+  },
+  "optionsTabLookup": {
+    "message": "Пошук"
+  },
+  "optionsTabStats": {
+    "message": "Статистика"
+  },
+  "optionsTabAppearance": {
+    "message": "Вигляд"
+  },
   "optionsAppearance": {
     "message": "Вигляд"
   },
@@ -96,6 +108,18 @@
   "optionsLookup": {
     "message": "Пошук"
   },
+  "optionsStats": {
+    "message": "Статистика"
+  },
+  "optionsStatsToday": {
+    "message": "Сьогодні"
+  },
+  "optionsStats7Days": {
+    "message": "7 днів"
+  },
+  "optionsStats30Days": {
+    "message": "30 днів"
+  },
   "optionsHoverEnabled": {
     "message": "Починати запис після наведення на кнопку запису"
   },
@@ -115,7 +139,46 @@
     "message": "Історія записів"
   },
   "optionsRecordingHistoryDescription": {
-    "message": "Локальна історія мапи зберігається 400 днів, і її можна очистити без зміни налаштувань."
+    "message": "Локальна історія записів зберігається 400 днів."
+  },
+  "optionsRecordingHistoryData": {
+    "message": "Дані історії записів"
+  },
+  "optionsRecordingHistoryClearDescription": {
+    "message": "Очищення історії не скидає налаштування розширення."
+  },
+  "optionsRecordingHistoryHeatmapLabel": {
+    "message": "Щоденні записи за останні 13 тижнів"
+  },
+  "optionsRecordingHistoryDateCount": {
+    "message": "{date}: записів: {count}"
+  },
+  "optionsHourlyBreakdown": {
+    "message": "Погодинний розподіл"
+  },
+  "optionsHourlyBreakdownDescription": {
+    "message": "Записи, уперше надіслані в кожну годину доби."
+  },
+  "optionsHourlyRangeMonth": {
+    "message": "1 місяць"
+  },
+  "optionsHourlyRangeQuarter": {
+    "message": "3 місяці"
+  },
+  "optionsHourlyRangeYear": {
+    "message": "1 рік"
+  },
+  "optionsHourlyBreakdownChartLabel": {
+    "message": "Погодинний обсяг записів"
+  },
+  "optionsHourlyBucketCount": {
+    "message": "{hour}: записів: {count}"
+  },
+  "optionsHourlyPeak": {
+    "message": "Пік: {hour} — записів: {count}"
+  },
+  "optionsHourlyNoData": {
+    "message": "У цьому діапазоні немає записів"
   },
   "optionsClearRecordingHistory": {
     "message": "Очистити історію"

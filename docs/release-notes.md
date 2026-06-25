@@ -12,7 +12,8 @@ Initial stable release for local testing.
 - Can open ChatGPT when a Forvo page opens, controlled by a separate options-page setting.
 - Labels the configured ChatGPT destination as a target chat URL.
 - Shows today's unique submitted pronunciation count on the toolbar badge.
-- Shows a compact 13-week local recording-history heatmap with 7-day and 30-day totals in the popup.
+- Shows today, 7-day, and 30-day recording summaries in the popup.
+- Shows a compact 13-week local recording-history heatmap and hourly breakdown in the Options stats tab.
 - Shows the refreshed total pronounced-word count from the signed-in Forvo profile in the popup.
 - Reuses the cached Forvo username for total-count refreshes and waits through Forvo security verification before reading the profile.
 - Does not increase the daily count when Forvo warns that the word was previously pronounced.

@@ -5,7 +5,7 @@ single_purpose:
 Helps Forvo contributors start recording without mouse clicks and check Ukrainian word stress through Goroh.
 
 permission.storage:
-Stores extension settings, local workflow status, and local recording history for the popup heatmap.
+Stores extension settings, local workflow status, and local recording history for the popup summary, toolbar badge, and Options stats tab.
 
 permission.tabs:
 Opens or reuses supported Forvo, Goroh, and ChatGPT tabs and sends extension messages to supported tabs.

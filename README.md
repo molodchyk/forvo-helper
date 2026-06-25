@@ -18,10 +18,11 @@ This project is not affiliated with Forvo, Goroh, OpenAI, or ChatGPT.
 - Open or reuse a configured ChatGPT tab when Goroh has no stress mark.
 - Optionally skip sending a ChatGPT prompt when the latest user message already matches.
 - Show today's unique submitted pronunciation count on the toolbar badge.
-- Show a compact 13-week recording-history heatmap in the popup.
+- Show today, 7-day, and 30-day recording summaries in the popup.
+- Show a 13-week recording-history heatmap and hourly breakdown in the Options stats tab.
 - Treat Forvo's previously-pronounced warning as a resubmission instead of a new daily count.
 - Refresh and show your total Forvo pronounced-word count in the popup.
-- Clear local recording history without resetting extension settings.
+- Clear local recording history from Options without resetting extension settings.
 - Choose system, light, or dark UI for extension pages.
 - Store all settings in Chrome extension storage.
 
@@ -67,7 +68,7 @@ npm run generate:store-media
 
 ## Privacy
 
-Forvo Helper stores user settings, a small local status record, and local recording history for the popup heatmap. It does not collect analytics, show ads, sell data, or send telemetry.
+Forvo Helper stores user settings, a small local status record, and local recording history for the popup summary, toolbar badge, and Options stats tab. It does not collect analytics, show ads, sell data, or send telemetry.
 
 The extension uses content scripts only on Forvo, Goroh, and ChatGPT pages listed in `manifest.json`. It does not inject remote executable code.
 

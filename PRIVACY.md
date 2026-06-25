@@ -15,7 +15,7 @@ Stored settings may include:
 - whether ChatGPT should open when a Forvo page opens
 - whether the toolbar badge should show today's submitted count
 
-The extension also stores local workflow records with the last detected word, the last stress result and source, the most recent pending ChatGPT prompt, local recording history for the last 400 days, and the last refreshed Forvo profile word count. Recording history stores normalized Forvo recording URLs per local day so the popup heatmap and toolbar badge can count unique newly submitted recordings. It can be cleared from the popup without resetting settings. These records are used only to keep the popup, toolbar badge, and fallback workflow consistent.
+The extension also stores local workflow records with the last detected word, the last stress result and source, the most recent pending ChatGPT prompt, local recording history for the last 400 days, and the last refreshed Forvo profile word count. Recording history stores normalized Forvo recording URLs, words, source URLs, first and last observed submission timestamps, and attempt counts per local day so the popup summary, toolbar badge, and Options stats tab can count unique newly submitted recordings. It can be cleared from the Options stats tab without resetting settings. These records are used only to keep the popup, toolbar badge, stats, and fallback workflow consistent.
 
 Browser permissions:
 

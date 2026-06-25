@@ -2,6 +2,11 @@ export const RECORDING_HISTORY_VERSION = 1;
 export const RECORDING_HISTORY_RETENTION_DAYS = 400;
 export const RECORDING_HEATMAP_WEEKS = 13;
 export const RECORDING_HEATMAP_DAYS_PER_WEEK = 7;
+export const RECORDING_HOURLY_RANGES = Object.freeze({
+  MONTH: { id: "1m", days: 30 },
+  QUARTER: { id: "3m", days: 90 },
+  YEAR: { id: "1y", days: 365 }
+});
 
 export function getLocalDateKey(date = new Date()) {
   const year = date.getFullYear();
@@ -196,6 +201,57 @@ export function summarizeRecordingHistory(historyInput = {}, now = new Date()) {
   return {
     last7Days: countRecordingHistoryDays(historyInput, 7, now),
     last30Days: countRecordingHistoryDays(historyInput, 30, now)
+  };
+}
+
+export function createRecordingHourlyBreakdown(historyInput = {}, now = new Date(), rangeDays = RECORDING_HOURLY_RANGES.YEAR.days) {
+  const normalizedRangeDays = Math.max(1, asInteger(rangeDays, RECORDING_HOURLY_RANGES.YEAR.days));
+  const history = normalizeRecordingHistory(historyInput, now);
+  const todayKey = getLocalDateKey(now);
+  const startKey = getLocalDateKey(addLocalDays(startOfLocalDay(now), -(normalizedRangeDays - 1)));
+  const buckets = Array.from({ length: 24 }, (_unused, hour) => ({
+    hour,
+    count: 0,
+    share: 0
+  }));
+
+  for (const [dateKey, day] of Object.entries(history.days)) {
+    if (dateKey < startKey || dateKey > todayKey) {
+      continue;
+    }
+
+    for (const entry of Object.values(day.entries)) {
+      const submittedAt = asTimestamp(entry.firstSubmittedAt);
+
+      if (!submittedAt) {
+        continue;
+      }
+
+      const submittedDate = new Date(submittedAt);
+      const submittedDateKey = getLocalDateKey(submittedDate);
+
+      if (submittedDateKey !== dateKey) {
+        continue;
+      }
+
+      buckets[submittedDate.getHours()].count += 1;
+    }
+  }
+
+  const maxCount = Math.max(0, ...buckets.map((bucket) => bucket.count));
+  const total = buckets.reduce((sum, bucket) => sum + bucket.count, 0);
+  const peak = maxCount > 0 ? buckets.find((bucket) => bucket.count === maxCount) : null;
+
+  return {
+    rangeDays: normalizedRangeDays,
+    total,
+    maxCount,
+    peakHour: peak?.hour ?? null,
+    peakCount: peak?.count || 0,
+    buckets: buckets.map((bucket) => ({
+      ...bucket,
+      share: maxCount > 0 ? bucket.count / maxCount : 0
+    }))
   };
 }
 
